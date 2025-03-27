@@ -7,7 +7,9 @@ const TableHeader = ({ columns }) => {
         {columns.map(({ key, label }) => (
           <th key={key}>{label}</th>
         ))}
+        <th>Actions</th>
       </tr>
+      
     </thead>
   );
 };

@@ -4,6 +4,7 @@ import BarangayClearanceForm from "./BarangayClearanceForm";
 import SearchBar from "../Shared/Table/SearchBar";
 import TableHeader from "../Shared/Table/TableHeader";
 import TableRow from "../Shared/Table/TableRow";
+import BarangayClearanceFaceCapture from "./BarangayClearanceFaceCapture";
 
 const BarangayClearanceTable = () => {
   const context = useContext(BarangayClearanceContext);
@@ -101,6 +102,7 @@ const BarangayClearanceTable = () => {
         </button>
       </div>
       <BarangayClearanceForm />
+      <BarangayClearanceFaceCapture />
     </div>
   );
 };
