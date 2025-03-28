@@ -14,7 +14,13 @@ const BarangayClearanceForm = () => {
     isEditing,
     selectedData,
     setSelectedData,
-    addOrUpdateRecord
+    addOrUpdateRecord,
+    isFaceCaptureVisible,
+    setFaceCaptureVisible,
+    savedImagePath,
+    setSavedImagePath,
+    image,
+    setImage
   } = useContext(BarangayClearanceContext);
 
   const initialFormState = {
@@ -38,27 +44,66 @@ const BarangayClearanceForm = () => {
     tinNumber: "",
     orNumber: "",
     contactNumber: "",
-    findings: ""
+    findings: "",
+    faceFileName: "placeholder.jpg",
   };
 
   const [formState, setFormState] = useState(initialFormState);
+  
+
+  const handleOpenFaceCapture = () => {
+    setFaceCaptureVisible(true);
+    setImage(false);
+  };
 
   // Populate form fields when `selectedData` changes
   useEffect(() => {
-    if (selectedData) {
-      setFormState((prev) => ({
-        ...initialFormState, // Ensure all fields are initialized
-        ...selectedData // Populate with selectedData
-      }));
+    if (isEditing && selectedData) {
+      setFormState(selectedData); // Load the selected record into the form state
+  
+      // Set the image to the saved image path
+      const savedImagePath = `/assets/faces/${selectedData.faceFileName}`;
+      setImage(savedImagePath);
     } else {
-      setFormState(initialFormState); // Reset to initial state
+      // Reset to placeholder image for new records
+      setImage(`/assets/faces/placeholder.jpg`);
     }
-  }, [selectedData]);
+  }, [isEditing, selectedData]);
 
   // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormState((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSaveImage = async () => {
+    if (image) {
+      try {
+        // Delete the old image if it exists and is not the placeholder
+        if (formState.faceFileName && formState.faceFileName !== "placeholder.jpg") {
+          await window.api.deleteImage(formState.faceFileName);
+        }
+  
+        // Save the new image
+        const response = await window.api.saveImage(image);
+        const filePath = response.filePath;
+  
+        // Extract the file name from the saved image path
+        const fileName = filePath.split("\\").pop();
+  
+        // Update the form state with the new file name
+        setFormState((prev) => ({
+          ...prev,
+          faceFileName: fileName,
+        }));
+  
+        return fileName;
+      } catch (error) {
+        console.error("Error saving image:", error);
+        return null;
+      }
+    }
+    return formState.faceFileName || "placeholder.jpg"; // Return the existing file name or placeholder
   };
 
   // Reset form fields
@@ -68,10 +113,33 @@ const BarangayClearanceForm = () => {
   };
 
   // Handle form submission
-  const handleSubmit = () => {
-    addOrUpdateRecord(formState); // Add or update the record
-    resetForm();
-    setIsModalOpen(false);
+  const handleSubmit = async () => {
+    try {
+      // Save the image and get the file name
+      const fileName = await handleSaveImage();
+  
+      // Prepare the record for submission
+      const record = {
+        ...formState,
+        faceFileName: fileName, // Include the updated faceFileName
+        id: selectedData?.id, // Include the id for updating
+      };
+  
+      if (isEditing) {
+        console.log("Updating record:", record);
+      } else {
+        console.log("Adding new record:", record);
+      }
+  
+      // Save the record to the database
+      await addOrUpdateRecord(record);
+  
+      // Reset the form and close the modal
+      resetForm();
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error("Error submitting the form:", error);
+    }
   };
 
   const handleEdit = (record) => {
@@ -155,9 +223,9 @@ const BarangayClearanceForm = () => {
                   buttonText="SCAN" />
                 <BiometricsSectionFace
                   label="Face 3:"
-                  buttonText="SUBMIT"
-                  onButtonClick={() => console.log("Open Photo Modal")}
-                  canvasId="add-canvas"
+                  buttonText={!isFaceCaptureVisible && image ? "CHANGE" : "SUBMIT"} // Dynamically set button text
+                  onButtonClick={handleOpenFaceCapture}
+                  savedImagePath={!isFaceCaptureVisible || image}
                 />
               </div>
             </div>

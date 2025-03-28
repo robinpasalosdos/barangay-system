@@ -7,7 +7,9 @@ export const BarangayProvider = ({ children }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [selectedData, setSelectedData] = useState(null);
-
+  const [isFaceCaptureVisible, setFaceCaptureVisible] = useState(false); // Add this state
+  const [savedImagePath, setSavedImagePath] = useState(null);
+  const [image, setImage] = useState(null);
   // Fetch all records
   const fetchRecords = async () => {
     try {
@@ -21,6 +23,9 @@ export const BarangayProvider = ({ children }) => {
   // Add or update a record
   const addOrUpdateRecord = async (record) => {
     try {
+      if (!record.faceFileName) {
+        record.faceFileName = "placeholder.jpg";
+      }
       if (isEditing) {
         // Update logic
         await window.api.updateRecord(record); // Call the IPC method for updating
@@ -61,8 +66,14 @@ export const BarangayProvider = ({ children }) => {
         setIsEditing,
         selectedData,
         setSelectedData,
+        isFaceCaptureVisible,
+        setFaceCaptureVisible,
         addOrUpdateRecord,
         deleteRecord,
+        savedImagePath,
+        setSavedImagePath,
+        image,
+        setImage,
       }}
     >
       {children}

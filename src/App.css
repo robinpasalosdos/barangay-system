@@ -349,11 +349,6 @@ button{
 .modal .face{
     width: 149px;
     height: 153px;
-}
-
-.modal #canvas, .modal #add-canvas{
-    width: 149px;
-    height: 153px;
     object-fit: cover;
     border-radius: 10px;
 }

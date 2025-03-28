@@ -1,76 +1,7 @@
-const { app, BrowserWindow, ipcMain, screen } = require("electron");
+const { ipcMain } = require("electron");
+const db = require("../db/db");
+const fs = require("fs");
 const path = require("path");
-const sqlite3 = require("sqlite3").verbose();
-
-// Initialize SQLite database
-const db = new sqlite3.Database("barangay.db", (err) => {
-  if (err) {
-    console.error("Error opening database:", err.message);
-  } else {
-    console.log("Connected to SQLite database.");
-  }
-});
-
-// Create the table if it doesn't exist
-db.run(
-  `CREATE TABLE IF NOT EXISTS barangay_clearance (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    barangayClearanceNumber TEXT,
-    documentDate TEXT,
-    orDate TEXT,
-    documentNumber TEXT,
-    lastName TEXT,
-    firstName TEXT,
-    middleName TEXT,
-    birthdate TEXT,
-    birthplace TEXT,
-    age INTEGER,
-    address TEXT,
-    civilStatus TEXT,
-    gender TEXT,
-    purpose TEXT,
-    cedulaNumber TEXT,
-    placeIssued TEXT,
-    dateIssued TEXT,
-    tinNumber TEXT,
-    orNumber TEXT,
-    contactNumber TEXT,
-    findings TEXT
-  )`,
-  (err) => {
-    if (err) {
-      console.error("Error creating table:", err.message);
-    } else {
-      console.log("Table created or already exists.");
-    }
-  }
-);
-
-let mainWindow;
-
-app.on("ready", () => {
-  console.log("Electron app is ready");
-  // Get the primary display's work area size
-  const { width, height } = screen.getPrimaryDisplay().workAreaSize;
-
-  // Create the main window
-  mainWindow = new BrowserWindow({
-    width: width,
-    height: height,
-    webPreferences: {
-      preload: path.join(__dirname, "preload.js"), // Preload script for IPC
-      contextIsolation: true,
-      enableRemoteModule: false,
-      nodeIntegration: false,
-    },
-  });
-
-  // Load the React app
-  mainWindow.loadURL("http://localhost:5173");
-
-  // Open DevTools (optional, for debugging)
-  // mainWindow.webContents.openDevTools();
-});
 
 // IPC handlers for database operations
 ipcMain.handle("fetch-records", async () => {
@@ -110,7 +41,8 @@ ipcMain.handle("update-record", async (event, record) => {
         tinNumber = ?,
         orNumber = ?,
         contactNumber = ?,
-        findings = ?
+        findings = ?,
+        faceFileName = ?
       WHERE id = ?`,
       [
         record.barangayClearanceNumber,
@@ -134,7 +66,8 @@ ipcMain.handle("update-record", async (event, record) => {
         record.orNumber,
         record.contactNumber,
         record.findings,
-        record.id, // Use the record's ID for the WHERE clause
+        record.faceFileName,
+        record.id,
       ],
       function (err) {
         if (err) {
@@ -172,8 +105,9 @@ ipcMain.handle("add-record", async (event, record) => {
         tinNumber,
         orNumber,
         contactNumber,
-        findings
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        findings,
+        faceFileName
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         record.barangayClearanceNumber,
         record.documentDate,
@@ -196,6 +130,7 @@ ipcMain.handle("add-record", async (event, record) => {
         record.orNumber,
         record.contactNumber,
         record.findings,
+        record.faceFileName
       ],
       function (err) {
         if (err) {
@@ -222,15 +157,34 @@ ipcMain.handle("delete-record", async (event, id) => {
   });
 });
 
-// Handle app close
-app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") {
-    app.quit();
-  }
-});
+ipcMain.handle("save-image", async (event, imageData) => {
+  try {
+    // Validate the Base64 image data
+    if (!imageData.startsWith("data:image/")) {
+      throw new Error("Invalid image data");
+    }
 
-app.on("activate", () => {
-  if (BrowserWindow.getAllWindows().length === 0) {
-    app.emit("ready");
+    // Decode the Base64 image data
+    const base64Data = imageData.replace(/^data:image\/\w+;base64,/, "");
+    const buffer = Buffer.from(base64Data, "base64");
+
+    // Define the folder and file path
+    const folderPath = path.join(__dirname, "../../public/assets/faces"); // Securely resolve the path
+    const filePath = path.join(folderPath, `image-${Date.now()}.jpg`);
+
+    // Ensure the folder exists
+    if (!fs.existsSync(folderPath)) {
+      fs.mkdirSync(folderPath, { recursive: true }); // Create the folder if it doesn't exist
+    }
+
+    // Save the image to the file
+    fs.writeFileSync(filePath, buffer);
+    console.log("Image saved successfully:", filePath);
+
+    // Return success response
+    return { success: true, filePath };
+  } catch (error) {
+    console.error("Error saving image:", error);
+    throw error; // Throw the error so the renderer process can handle it
   }
 });
