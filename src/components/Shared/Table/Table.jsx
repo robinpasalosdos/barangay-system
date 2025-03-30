@@ -30,7 +30,7 @@ const Table = ({ columns }) => {
     <div className="content">
       <div className="table-container">
         <div>
-            <h2>BARANGAY CLEARANCE</h2>
+            <h2>POLICE CLEARANCE</h2>
             <SearchBar
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}

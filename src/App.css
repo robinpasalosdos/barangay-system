@@ -168,7 +168,7 @@ th:first-child, td:first-child {
     white-space: normal;
     overflow: visible;
     text-overflow: unset;
-    width: 10px;
+    width: 60px;
 }
 
 th:not(:first-child), td:not(:first-child) {
