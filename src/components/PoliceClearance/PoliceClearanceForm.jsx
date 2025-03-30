@@ -4,7 +4,7 @@ import { Context } from "../../context/Context";
 import useForm from "../../hooks/useForm";
 import Form from "../Shared/Form/Form";
 
-const BarangayClearanceForm = () => {
+const PoliceClearanceForm = () => {
   const {
     isModalOpen,
     setIsModalOpen,
@@ -84,4 +84,4 @@ const BarangayClearanceForm = () => {
   );
 };
 
-export default BarangayClearanceForm;
+export default PoliceClearanceForm;
