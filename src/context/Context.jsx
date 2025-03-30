@@ -1,8 +1,8 @@
 import React, { createContext, useState, useEffect } from "react";
 
-export const BarangayClearanceContext = createContext();
+export const Context = createContext();
 
-export const BarangayProvider = ({ children }) => {
+export const Provider = ({ children }) => {
   const [data, setData] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -10,6 +10,7 @@ export const BarangayProvider = ({ children }) => {
   const [isFaceCaptureVisible, setFaceCaptureVisible] = useState(false); // Add this state
   const [savedImagePath, setSavedImagePath] = useState(null);
   const [image, setImage] = useState(null);
+  const [isFaceChanged, setIsFaceChanged] = useState(false); 
   // Fetch all records
   const fetchRecords = async () => {
     try {
@@ -56,7 +57,7 @@ export const BarangayProvider = ({ children }) => {
   }, []);
 
   return (
-    <BarangayClearanceContext.Provider
+    <Context.Provider
       value={{
         data,
         setData,
@@ -74,9 +75,11 @@ export const BarangayProvider = ({ children }) => {
         setSavedImagePath,
         image,
         setImage,
+        isFaceChanged,
+        setIsFaceChanged
       }}
     >
       {children}
-    </BarangayClearanceContext.Provider>
+    </Context.Provider>
   );
 };
