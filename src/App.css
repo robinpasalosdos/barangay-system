@@ -225,7 +225,7 @@ body{
     background: #D9D9D9;
 }
 
-#modal, #photo-modal {
+#modal, #photo-modal, .user-status-form {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -254,7 +254,7 @@ body{
     z-index: 1001;
 }
 
-select,  input{
+#modal select,  #modal input, .table-container input, .user-status-form input[type="text"], .user-status-form input[type="password"] {
     all: unset;
     font-size: 10px;
     text-indent: 12px;
@@ -266,7 +266,7 @@ select,  input{
     border: 2px solid rgba(255, 255, 255, 0.2); /* Creates space for the border */
 }
 
-input:focus, select:focus {
+#modal input:focus, #modal select:focus {
     border: 2px solid rgba(255, 255, 255, 0.8);
 }
 
@@ -504,6 +504,35 @@ button{
 
 #photo-modal > div > div:last-child > div:last-child div:last-child{
     justify-content: end;
+}
+
+.user-status-form{
+    display: flex;
+    flex-direction: column;
+    color: #ffffff;
+    padding: 30px;
+    align-items: center;
+    gap: 20px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    border-radius: 20px;
+    width: 300px;
+    background: #022539;
+}
+
+
+.user-status-form input[type="checkbox"] {
+    width: 15px;
+    height: 15px;
+}
+
+.user-status-form label{
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 

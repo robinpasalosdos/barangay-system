@@ -1,23 +1,25 @@
 import React from "react";
-import { Provider } from "./context/Context";
+import { MainProvider } from "./context/Context";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import PoliceClearanceTable from "./components/PoliceClearance/PoliceClearanceTable";
+import PoliceClearance from "./components/PoliceClearance/PoliceClearance";
+import UserStatus from "./components/UserStatus/UserStatus";
 import SideBar from "./SideBar";
 import "./App.css";
 
 const App = () => {
     return (
-        <Provider>
+        <MainProvider>
             <Router>
                 <div className="main-container">
                     <SideBar />
                     <Routes>
-                        <Route path="/" element={<PoliceClearanceTable />} />
+                        <Route path="/" element={<PoliceClearance />} />
+                        <Route path="/user-status" element={<UserStatus />} />
                         {/* <Route path="/police-clearance" element={<PoliceClearanceTable />} /> */}
                     </Routes>
                 </div>
             </Router>
-        </Provider>
+        </MainProvider>
     );
 };
 

@@ -59,7 +59,7 @@ const useForm = (
     try {
       // Delete the old image if it exists and is not the placeholder
       // Save the new image
-      const response = await window.api.saveImage(image);
+      const response = await window.api.savePoliceClearanceImage(image);
 
       if (!response || !response.filePath) {
         throw new Error("Invalid response from saveImage");

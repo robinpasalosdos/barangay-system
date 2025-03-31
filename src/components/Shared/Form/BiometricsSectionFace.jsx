@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
-import { Context } from "../../../context/Context";
+import { PoliceClearanceContext } from "../../../context/PoliceClearanceContext";
 
 const BiometricsSectionFace = ({ label, buttonText, onButtonClick }) => {
-  const { image, isFaceCaptureVisible } = useContext(Context); // Access image from context
+  const { image, isFaceCaptureVisible } = useContext(PoliceClearanceContext); // Access image from context
 
   return (
     <div>

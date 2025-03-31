@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import '../../App.css';
-import { Context } from "../../context/Context";
+import { PoliceClearanceContext } from "../../context/PoliceClearanceContext";
 import useForm from "../../hooks/useForm";
 import Form from "../Shared/Form/Form";
 
@@ -18,7 +18,7 @@ const PoliceClearanceForm = () => {
     setIsFaceChanged,
     image,
     setImage
-  } = useContext(Context);
+  } = useContext(PoliceClearanceContext);
 
   const initialFormState = {
     barangayClearanceNumber: "",

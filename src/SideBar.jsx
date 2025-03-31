@@ -13,11 +13,11 @@ const SideBar = () => {
                     </li>
                     <li>
                     <div />
-                    <Link to="/">Barangay Clearance</Link>
+                    <Link to="/">Police Clearance</Link>
                     </li>
                     <li>
                     <div />
-                    <Link to="/police-clearance">Police Clearance</Link>
+                    <Link to="/user-status">User Status</Link>
                     </li>
                 </ul>
                 <h3>TOOLS</h3>

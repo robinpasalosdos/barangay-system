@@ -3,6 +3,8 @@ const path = require("path");
 
 require("./src/db/db.js");
 require("./src/ipc/ipcHandler.js");
+require("./src/ipc/userStatusIpcHandler.js");
+
 
 let mainWindow;
 
@@ -22,6 +24,14 @@ app.on("ready", () => {
   });
 
   mainWindow.loadURL("http://localhost:5173");
+
+  if (process.env.NODE_ENV === "development") {
+    const { default: installExtension, REACT_DEVELOPER_TOOLS } = require("electron-devtools-installer");
+  
+    installExtension(REACT_DEVELOPER_TOOLS)
+      .then((name) => console.log(`Added Extension:  ${name}`))
+      .catch((err) => console.log("An error occurred: ", err));
+  }
 });
 
 app.on("window-all-closed", () => {
@@ -35,3 +45,4 @@ app.on("activate", () => {
     app.emit("ready");
   }
 });
+

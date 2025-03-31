@@ -1,6 +1,6 @@
 import React, { useRef, useContext } from "react";
 import Webcam from "react-webcam";
-import { Context } from "../../context/Context";
+import { Context } from "../../context/PoliceClearanceContext";
 
 const BarangayClearanceFaceCapture = () => {
   const 

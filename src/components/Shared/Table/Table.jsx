@@ -1,36 +1,27 @@
-import React, { useContext } from "react";
-import PoliceClearanceForm from "../../PoliceClearance/PoliceClearanceForm";
+import React from "react";
 import SearchBar from "./SearchBar";
 import TableHeader from "./TableHeader";
 import TableRow from "./TableRow";
-import PoliceClearanceFaceCapture from "../../PoliceClearance/PoliceClearanceFaceCapture";
-import { Context } from "../../../context/Context";
-import useTable from "../../../hooks/useTable";
-
-const Table = ({ columns }) => {
-  const context = useContext(Context);
- 
-  const {
-    data,
-    setIsModalOpen,
-    setIsEditing,
-    setSelectedData,
-    deleteRecord,
-  } = context;
-
-  const {
-    searchQuery,
-    setSearchQuery,
-    filteredData,
-    handleManage,
-  } = useTable(data, setSelectedData, setIsEditing, setIsModalOpen);
 
 
+const Table = ({ 
+  columns, 
+  searchQuery,
+  setSearchQuery,
+  filteredData,
+  handleManage,
+  deleteRecord,
+  setIsModalOpen,
+  setIsEditing,
+  setSelectedData,
+  featureName,
+  additionalComponents
+}) => {
   return (
     <div className="content">
       <div className="table-container">
         <div>
-            <h2>POLICE CLEARANCE</h2>
+            <h2>{featureName}</h2>
             <SearchBar
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
@@ -63,10 +54,8 @@ const Table = ({ columns }) => {
             Add New Record
           </button>
         </div>
-
       </div>
-      <PoliceClearanceForm />
-      <PoliceClearanceFaceCapture />
+      {additionalComponents && additionalComponents()}
     </div>
   );
 };

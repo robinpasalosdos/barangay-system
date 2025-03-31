@@ -8,7 +8,8 @@ const db = new sqlite3.Database("barangay.db", (err) => {
   }
 });
 
-// Create the table if it doesn't exist
+// Create the barangay_clearance table if it doesn't exist
+console.log("Creating barangay_clearance table...");
 db.run(
   `CREATE TABLE IF NOT EXISTS barangay_clearance (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -37,9 +38,36 @@ db.run(
   )`,
   (err) => {
     if (err) {
-      console.error("Error creating table:", err.message);
+      console.error("Error creating barangay_clearance table:", err.message);
     } else {
-      console.log("Table created or already exists.");
+      console.log("Barangay Clearance table created or already exists.");
+    }
+  }
+);
+
+// Create the users table if it doesn't exist
+console.log("Creating users table...");
+db.run(
+  `CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    userName TEXT,
+    password TEXT,
+    policeClearance TEXT,
+    citizenInformation TEXT,
+    warrantBooking TEXT,
+    rogueDirectory TEXT,
+    userStatus TEXT,
+    addUSerAction TEXT,
+    deleteUSerAction TEXT, 
+    printUSerAction TEXT,
+    editUSerAction TEXT,
+    searchUSerAction TEXT
+  )`,
+  (err) => {
+    if (err) {
+      console.error("Error creating users table:", err.message);
+    } else {
+      console.log("Users table created or already exists.");
     }
   }
 );
