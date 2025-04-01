@@ -17,3 +17,6 @@ lerna-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+barangay.db
+public/assets/faces/

@@ -6,7 +6,7 @@ const TableRow = ({ record, columns, handleManage, deleteRecord }) => {
     <tr>
       {columns.map(({ key, render }) => (
         <td key={key}>
-          {render ? render(record[key], record) : record[key]}
+          {render ? render(record) : record[key]}
         </td>
       ))}
       <td>

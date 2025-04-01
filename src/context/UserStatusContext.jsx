@@ -20,9 +20,6 @@ export const UserStatusProvider = ({ children }) => {
   // Add or update a record
   const addOrUpdateRecord = async (record) => {
     try {
-      if (!record.faceFileName) {
-        record.faceFileName = "placeholder.jpg";
-      }
       if (isEditing) {
         // Update logic
         await window.api.updateUser(record); // Call the IPC method for updating

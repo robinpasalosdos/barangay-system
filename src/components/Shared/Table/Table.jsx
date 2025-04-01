@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
 import SearchBar from "./SearchBar";
 import TableHeader from "./TableHeader";
 import TableRow from "./TableRow";
+import { MainContext } from '../../../context/Context'
 
 
 const Table = ({ 
@@ -17,16 +18,19 @@ const Table = ({
   featureName,
   additionalComponents
 }) => {
+  const { user } = useContext(MainContext);
   return (
     <div className="content">
       <div className="table-container">
         <div>
             <h2>{featureName}</h2>
-            <SearchBar
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            placeholder="Search by name, purpose, or gender"
-            />
+            {user && user.searchUSerAction && (
+              <SearchBar
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              placeholder="Search by name, purpose, or gender"
+              />
+            )}
         </div>
         <table>
             <TableHeader columns={columns} />
@@ -43,7 +47,8 @@ const Table = ({
           </tbody>
         </table>
         <div>
-          <button
+          {user && user.addUSerAction && (
+            <button
             className="blue"
             onClick={() => {
               setIsModalOpen(true);
@@ -53,6 +58,7 @@ const Table = ({
           >
             Add New Record
           </button>
+          )}
         </div>
       </div>
       {additionalComponents && additionalComponents()}

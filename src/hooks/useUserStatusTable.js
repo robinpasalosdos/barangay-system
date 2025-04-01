@@ -8,7 +8,7 @@ const useUserStatusTable = (data, setSelectedData, setIsEditing, setIsModalOpen)
   useEffect(() => {
     const filtered = data.filter((record) => {
       return (
-        record.userName.toLowerCase().includes(searchQuery.toLowerCase())
+        record.username.toLowerCase().includes(searchQuery.toLowerCase())
       );
     });
     setFilteredData(filtered);

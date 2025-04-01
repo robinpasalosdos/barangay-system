@@ -4,21 +4,42 @@ import { UserStatusContext } from "../../context/UserStatusContext";
 import useUserStatusTable from "../../hooks/useUserStatusTable";
 import UserForm from "./Form";
 
-
 const UserStatus = () => {
-  const columns = [
-    { key: "userName", label: "Username" },
-  ];
-  const context = useContext(UserStatusContext);
- 
+
   const {
     data,
     setIsModalOpen,
     setIsEditing,
     setSelectedData,
     deleteRecord,
-  } = context;
+  } = useContext(UserStatusContext);
 
+  const columns = [
+    { key: "username", label: "Username" },
+    { key: "pages", label: "Pages", render: (record) =>
+      [
+        record.policeClearance && "PC",
+        record.citizenInformation && "CI",
+        record.warrantBooking && "WB",
+        record.rogueDirectory && "RD",
+        record.userStatus && "US"
+      ]
+        .filter(Boolean)
+        .join(", ")
+    },
+    { key: "userActions", label: "User Actions", render: (record) =>
+      [
+        record.addUSerAction && "add",
+        record.searchUSerAction && "search",
+        record.editUSerAction && "edit",
+        record.printUSerAction && "print",
+        record.deleteUSerAction && "delete"
+      ]
+        .filter(Boolean)
+        .join(", ")
+    },
+  ];
+ 
   const {
     searchQuery,
     setSearchQuery,

@@ -11,9 +11,20 @@ export const MainProvider = ({ children }) => {
     appTitle: "Barangay System",
     user: null, // Shared user information
   });
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState(null);
 
   return (
-    <MainContext.Provider value={{ globalState, setGlobalState }}>
+    <MainContext.Provider
+      value={{
+        globalState,
+        setGlobalState,
+        isAuthenticated,
+        setIsAuthenticated,
+        user,
+        setUser
+      }}
+    >
       {/* Wrap feature-specific providers */}
       <UserStatusProvider>
         <PoliceClearanceProvider>

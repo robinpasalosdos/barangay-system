@@ -4,6 +4,7 @@ const path = require("path");
 require("./src/db/db.js");
 require("./src/ipc/ipcHandler.js");
 require("./src/ipc/userStatusIpcHandler.js");
+require("./src/ipc/loginIpcHandler.js");
 
 
 let mainWindow;

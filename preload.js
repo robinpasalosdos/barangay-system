@@ -10,4 +10,5 @@ contextBridge.exposeInMainWorld("api", {
   addUser: (record) => ipcRenderer.invoke("add-user", record),
   updateUser: (record) => ipcRenderer.invoke("update-user", record),
   deleteUser: (id) => ipcRenderer.invoke("delete-user", id),
+  login: (credentials) => ipcRenderer.invoke("login", credentials)
 });

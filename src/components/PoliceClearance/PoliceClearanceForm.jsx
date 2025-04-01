@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import '../../App.css';
 import { PoliceClearanceContext } from "../../context/PoliceClearanceContext";
 import useForm from "../../hooks/useForm";
-import Form from "../Shared/Form/Form";
+import Form from "./Form";
 
 const PoliceClearanceForm = () => {
   const {

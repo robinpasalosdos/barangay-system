@@ -8,7 +8,7 @@ const allQuery = promisify(db.all.bind(db));
 const runQuery = promisify(db.run.bind(db));
 
 const columns = [
-    "userName",
+    "username",
     "password",
     "policeClearance",
     "citizenInformation",

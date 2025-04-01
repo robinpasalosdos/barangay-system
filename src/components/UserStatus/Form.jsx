@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import CheckBox from "../Shared/Form/CheckBox";
 import InputField from "../Shared/Form/InputField";
 import { UserStatusContext } from "../../context/UserStatusContext";
+import { MainContext } from "../../context/Context";
 
 const UserForm = () => {
   const 
@@ -14,8 +15,13 @@ const UserForm = () => {
     addOrUpdateRecord,
   } = useContext(UserStatusContext);
 
+  const {
+    user,
+    setUser
+  } = useContext(MainContext);
+
   const initialFormState = {
-    userName: "",
+    username: "",
     password: "",
     policeClearance: false,
     citizenInformation: false,
@@ -40,16 +46,16 @@ const UserForm = () => {
       if (isEditing && selectedData) {
         setFormState({
           ...selectedData,
-          policeClearance: selectedData.policeClearance === "1",
-          citizenInformation: selectedData.citizenInformation === "1",
-          warrantBooking: selectedData.warrantBooking === "1",
-          rogueDirectory: selectedData.rogueDirectory === "1",
-          userStatus: selectedData.userStatus === "1",
-          addUSerAction: selectedData.addUSerAction === "1",
-          deleteUSerAction: selectedData.deleteUSerAction === "1",
-          printUSerAction: selectedData.printUSerAction === "1",
-          editUSerAction: selectedData.editUSerAction === "1",
-          searchUSerAction: selectedData.searchUSerAction === "1",
+          policeClearance: selectedData.policeClearance === 1,
+          citizenInformation: selectedData.citizenInformation === 1,
+          warrantBooking: selectedData.warrantBooking === 1,
+          rogueDirectory: selectedData.rogueDirectory === 1,
+          userStatus: selectedData.userStatus === 1,
+          addUSerAction: selectedData.addUSerAction === 1,
+          deleteUSerAction: selectedData.deleteUSerAction === 1,
+          printUSerAction: selectedData.printUSerAction === 1,
+          editUSerAction: selectedData.editUSerAction === 1,
+          searchUSerAction: selectedData.searchUSerAction === 1
         });
       } else {
         setFormState(initialFormState);
@@ -76,8 +82,10 @@ const UserForm = () => {
       }
 
       await addOrUpdateRecord(record);
+      user.username === record.username && setUser(record);
       resetForm();
       setIsModalOpen(false);
+
     } catch (error) {
       console.error("Error submitting the form:", error);
     }
@@ -91,10 +99,10 @@ const UserForm = () => {
 
       {/* User Name Input */}
       <InputField
-        id="userName"
-        name="userName"
+        id="username"
+        name="username"
         label="User Name"
-        value={formState.userName || ""}
+        value={formState.username || ""}
         onChange={handleChange}
         placeholder="Enter user name"
       />
