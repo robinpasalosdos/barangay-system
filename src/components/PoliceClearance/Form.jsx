@@ -1,9 +1,9 @@
 import React from "react";
-import InputField from "./InputField";
-import SelectField from "./SelectField";
-import FormButtons from "./FormButtons";
-import BiometricsSectionFinger from "./BiometricsSectionFinger";
-import BiometricsSectionFace from "./BiometricsSectionFace";
+import InputField from "../Shared/Form/InputField";
+import SelectField from "../Shared/Form/SelectField";
+import FormButtons from "../Shared/Form/FormButtons";
+import BiometricsSectionFinger from "../Shared/Form/BiometricsSectionFinger";
+import BiometricsSectionFace from "../Shared/Form/BiometricsSectionFace";
 
 const Form = ({
   formState,
