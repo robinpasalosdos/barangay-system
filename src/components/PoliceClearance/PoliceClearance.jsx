@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import Table from "../Shared/Table/Table";
-import { PoliceClearanceContext } from "../../context/PoliceClearanceContext";
+import { PoliceClearanceContext } from "../../context";
 import useTable from "../../hooks/useTable";
 import PoliceClearanceFaceCapture from "./PoliceClearanceFaceCapture";
 import PoliceClearanceForm from "./PoliceClearanceForm";
@@ -31,7 +31,7 @@ const PoliceClearance = () => {
     setSearchQuery,
     filteredData,
     handleManage,
-  } = useTable(data, setSelectedData, setIsEditing, setIsModalOpen);
+  } = useTable(data, setSelectedData, setIsEditing, setIsModalOpen, ["documentNumber"]);
 
   return (
     <Table 

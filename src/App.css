@@ -98,6 +98,29 @@
     background: #716FE7;
 }
 
+.login-container {
+    border-radius: 20px;
+    padding: 30px;
+}
+
+.login-container button {
+    background: #0075FF;
+    margin-top: 20px;
+    width: 100%;
+}
+
+
+.login-container h2{
+    color: #ffffff;
+    margin-bottom: 20px;
+}
+
+.login-container > div{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
 .table-container {
     background: #022539;
     padding: 50px 50px 40px;
@@ -113,10 +136,6 @@
 
 .table-container div {
     display: flex;
-}
-
-.table-container ~ div {
-    width: 100%;
 }
 
 .table-container > div:first-child {
@@ -225,17 +244,6 @@ body{
     background: #D9D9D9;
 }
 
-#modal, #photo-modal, .user-status-form {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1000;
-    border-radius: 20px;
-    width: 750px;
-    background: #022539;
-}
-
 #photoModalOverlay, #modalOverlay {
     display: none;
     position: fixed;
@@ -247,14 +255,22 @@ body{
     align-items: center;
     justify-content: center;
 }
-#modalOverlay{
-    z-index: 999;
-}
-#photoModalOverlay{
-    z-index: 1001;
+
+#modal, #photo-modal, .user-status-form, .login-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    border-radius: 20px;
+    background: #022539;
 }
 
-#modal select,  #modal input, .table-container input, .user-status-form input[type="text"], .user-status-form input[type="password"] {
+#modal {
+    width: 750px;
+}
+
+#modal select,  #modal input, .table-container input, .user-status-form input[type="text"], .user-status-form input[type="password"], .login-container input {
     all: unset;
     font-size: 10px;
     text-indent: 12px;
@@ -268,6 +284,11 @@ body{
 
 #modal input:focus, #modal select:focus {
     border: 2px solid rgba(255, 255, 255, 0.8);
+}
+
+#modal select {
+    display: flex;
+    align-items: center;
 }
 
 .select-wrapper {
@@ -383,6 +404,13 @@ button{
     
 }
 
+.modal label{
+    font-weight: 200;
+    font-size: 10px;
+    color: #ffffff;
+    text-indent: 5px;
+}
+
 .modal .face{
     width: 149px;
     height: 153px;
@@ -420,14 +448,74 @@ button{
     justify-content: end;                        
 }
 
-#photo-modal {
-    background-image: url('../assets/wp9649930.jpg');
-    width: 397px;
+.wmodal > div:first-child > div:last-child > div div {
+    flex-direction: column;
+    gap: 3px;
+    justify-content: end;                        
+}
+
+.wmodal {
+    display: flex;
+    flex-direction: column;
+    padding: 30px 40px;
+    gap: 20px;
     border-radius: 20px;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+}
+
+.wmodal div {
+    display: flex;
+}
+
+.wmodal > div {
+    gap: 10px;
+    flex-direction: column;
+}
+
+.wmodal > div:first-child > div {
+    gap: 7px;
+    flex-direction: column;
+}
+
+.wmodal > div:last-child {
+    flex-direction: row;
+    justify-content: end;
+}
+
+.wmodal > div:last-child button {
+    width: 122px;
+}
+
+.wmodal label{
+    font-weight: 200;
+    font-size: 10px;
+    color: #ffffff;
+    text-indent: 5px;
+}
+
+.wmodal > div:first-child > div:last-child > div:nth-child(5) > div {
+    flex-direction: column;
+}
+
+.wmodal .full-name {
+    width: 668px;
+    height: 50px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.wmodal > div:first-child > div:last-child > div {
+    gap: 16px;
+}
+
+.wmodal > div:first-child > div:last-child > div div {
+    flex-direction: column;
+    gap: 3px;
+    justify-content: end;                        
+}
+
+#photo-modal {
+    border-radius: 20px;
+    width: 397px;
     z-index: 1002;
 }
 
@@ -436,8 +524,6 @@ button{
 }
 
 #photo-modal > div{
-    background-repeat: no-repeat;
-    background: linear-gradient(127.09deg, rgba(6, 11, 40, 0.94) 19.41%, rgba(10, 14, 35, 0.49) 76.65%);
     flex-direction: column;
     padding: 40px;
     border-radius: 20px;

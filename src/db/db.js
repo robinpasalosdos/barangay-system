@@ -45,6 +45,42 @@ db.run(
   }
 );
 
+console.log("Creating warrant_booking table...");
+db.run(
+  `CREATE TABLE IF NOT EXISTS warrant_booking (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    lastName TEXT,
+    firstName TEXT,
+    middleName TEXT,
+    dateOfBirth TEXT,
+    placeOfBirth TEXT,
+    age INTEGER,
+    address TEXT,
+    civilStatus TEXT,
+    gender TEXT,
+    citizenship TEXT,
+    height TEXT,
+    colorOfHair TEXT,
+    complexion TEXT,
+    weight TEXT,
+    colorOfEyes TEXT,
+    fpSyllabus TEXT,
+    ccisNumber TEXT,
+    crimeCommitted TEXT,
+    committedDate TEXT,
+    placeOfCrime TEXT,
+    placeOfInquisition TEXT,
+    remarks TEXT
+  )`,
+  (err) => {
+    if (err) {
+      console.error("Error creating warrant_booking table:", err.message);
+    } else {
+      console.log("Warrant Booking table created or already exists.");
+    }
+  }
+);
+
 // Create the users table if it doesn't exist
 console.log("Creating users table...");
 db.run(

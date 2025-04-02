@@ -1,10 +1,12 @@
 import React, { useContext } from "react";
 import Table from "../Shared/Table/Table";
-import { UserStatusContext } from "../../context/UserStatusContext";
-import useUserStatusTable from "../../hooks/useUserStatusTable";
+import { UserStatusContext } from "../../context";
+import useUserStatusTable from "../../hooks/useTable";
 import UserForm from "./Form";
 
 const UserStatus = () => {
+
+  const context = useContext(UserStatusContext);
 
   const {
     data,
@@ -12,7 +14,12 @@ const UserStatus = () => {
     setIsEditing,
     setSelectedData,
     deleteRecord,
-  } = useContext(UserStatusContext);
+  } = context;
+
+  if (!context) {
+    console.error("UserStatusContext is undefined. Ensure the provider is wrapping the component.");
+    return <p>Error: Context is not available.</p>;
+  }
 
   const columns = [
     { key: "username", label: "Username" },
@@ -45,7 +52,7 @@ const UserStatus = () => {
     setSearchQuery,
     filteredData,
     handleManage,
-  } = useUserStatusTable(data, setSelectedData, setIsEditing, setIsModalOpen);
+  } = useUserStatusTable(data, setSelectedData, setIsEditing, setIsModalOpen, ["username"]);
 
   return (
     <Table 

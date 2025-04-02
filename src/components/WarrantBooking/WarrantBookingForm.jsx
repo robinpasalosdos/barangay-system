@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
 import '../../App.css';
-import { PoliceClearanceContext } from "../../context";
-import usePoliceClearanceForm from "../../hooks/usePoliceClearanceForm";
+import { WarrantBookingContext } from "../../context";
+import useForm from "../../hooks/usePoliceClearanceForm";
 import Form from "./Form";
 
-const PoliceClearanceForm = () => {
+const WarrantBookingForm = () => {
   const {
     isModalOpen,
     setIsModalOpen,
@@ -18,32 +18,33 @@ const PoliceClearanceForm = () => {
     setIsFaceChanged,
     image,
     setImage
-  } = useContext(PoliceClearanceContext);
+  } = useContext(WarrantBookingContext);
 
   const initialFormState = {
-    barangayClearanceNumber: "",
-    documentDate: "",
-    orDate: "",
-    documentNumber: "",
     lastName: "",
     firstName: "",
     middleName: "",
-    birthdate: "",
-    birthplace: "",
+    dateOfBirth: "",
+    placeOfBirth: "",
     age: "",
     address: "",
     civilStatus: "",
     gender: "",
-    purpose: "",
-    cedulaNumber: "",
-    placeIssued: "",
-    dateIssued: "",
-    tinNumber: "",
-    orNumber: "",
-    contactNumber: "",
-    findings: "",
-    faceFileName: "placeholder.jpg"
+    citizenship: "",
+    height: "",
+    colorOfHair: "",
+    complexion: "",
+    weight: "",
+    colorOfEyes: "",
+    fpSyllabus: "",
+    ccisNumber: "",
+    crimeCommitted: "",
+    committedDate: "",
+    placeOfCrime: "",
+    placeOfInquisition: "",
+    remarks: ""
   };
+  
 
   const {
     formState,
@@ -52,7 +53,7 @@ const PoliceClearanceForm = () => {
     handleCancel,
     handleBirthdateBlur,
     handleOpenFaceCapture,
-  } = usePoliceClearanceForm(
+  } = useForm(
     initialFormState,
     selectedData,
     isEditing,
@@ -78,9 +79,10 @@ const PoliceClearanceForm = () => {
       handleOpenFaceCapture={handleOpenFaceCapture}
       isFaceCaptureVisible={isFaceCaptureVisible}
       image={image}
+      clearanceNumberLabel="Barangay Clearance No."
       isEditing={isEditing}
     />
   );
 };
 
-export default PoliceClearanceForm;
+export default WarrantBookingForm;

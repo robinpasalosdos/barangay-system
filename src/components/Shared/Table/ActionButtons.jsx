@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { MainContext } from '../../../context/Context';
+import { MainContext } from '../../../context/MainContext';
 
 const ActionButtons = ({ record, handleManage, deleteRecord }) => {
   const { user } = useContext(MainContext);

@@ -1,6 +1,5 @@
 import React, { createContext, useState } from "react";
-import { UserStatusProvider } from "./UserStatusContext";
-import { PoliceClearanceProvider } from "./PoliceClearanceContext"; // Example for another feature-specific provider
+import { UserStatusProvider, PoliceClearanceProvider, WarrantBookingProvider } from "./";
 
 // Create a MainContext for shared global state
 export const MainContext = createContext();
@@ -28,7 +27,9 @@ export const MainProvider = ({ children }) => {
       {/* Wrap feature-specific providers */}
       <UserStatusProvider>
         <PoliceClearanceProvider>
-          {children}
+          <WarrantBookingProvider>
+            {children}
+          </WarrantBookingProvider>
         </PoliceClearanceProvider>
       </UserStatusProvider>
     </MainContext.Provider>

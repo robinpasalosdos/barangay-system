@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-const useForm = (
+const usePoliceClearanceForm = (
   initialFormState,
   selectedData,
   isEditing,
@@ -9,16 +9,15 @@ const useForm = (
   setSelectedData,
   image,
   setImage,
-  setFaceCaptureVisible,
+  setIsFaceCaptureVisible,
   isFaceChanged,
   setIsFaceChanged
 ) => {
   const [formState, setFormState] = useState(initialFormState);
 
-  // Open face capture modal
   const handleOpenFaceCapture = () => {
-    setFaceCaptureVisible(true);
-    setIsFaceChanged(true); // Set the flag to true when the modal is opened
+    setIsFaceCaptureVisible(true);
+    setIsFaceChanged(true);
     setImage(null);
   };
 
@@ -79,11 +78,10 @@ const useForm = (
     }
   };
 
-  // Reset form fields
   const resetForm = () => {
     setFormState(initialFormState);
-    setSelectedData(null); // Clear selected data
-    setIsFaceChanged(false); // Reset the photo modal flag
+    setSelectedData(null);
+    setIsFaceChanged(false);
   };
 
   // Handle form submission
@@ -155,4 +153,4 @@ const useForm = (
   };
 };
 
-export default useForm;
+export default usePoliceClearanceForm;

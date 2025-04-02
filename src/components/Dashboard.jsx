@@ -1,18 +1,11 @@
 import React, { useContext } from "react";
-import { MainContext } from "../context/Context";
+import { MainContext } from "../context/MainContext";
 
 const Dashboard = () => {
-
-    const { setIsAuthenticated, user, setUser } = useContext(MainContext);
-    const handleLogout = () => {
-        setUser(null);
-        setIsAuthenticated(false);
-    };
-
+    const { user } = useContext(MainContext);
     return (
         <div className="content">
             <h1>Welcome, {user.username}!</h1>
-            <button onClick={handleLogout}>Logout</button>
         </div>
     );
 };

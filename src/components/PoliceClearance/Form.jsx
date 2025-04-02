@@ -11,7 +11,6 @@ const Form = ({
   handleSubmit,
   handleCancel,
   handleBirthdateBlur,
-  clearanceNumberLabel,
   isFaceCaptureVisible,
   handleOpenFaceCapture,
   image,
@@ -25,10 +24,10 @@ const Form = ({
           <div>
             <div>
               <InputField
-                label={clearanceNumberLabel}
+                label="Police Clearance No."
                 id="clearance-number"
                 name="clearanceNumber"
-                placeholder={`Enter ${clearanceNumberLabel}`}
+                placeholder={"Enter Police Clearance No."}
                 value={formState.clearanceNumber || ""}
                 onChange={handleChange}
               />
@@ -236,9 +235,9 @@ const Form = ({
                 onChange={handleChange}
                 width="668px"
               />
-{/*}<button style={{ width: 210 }} className="blue">
-              PRINT OTHER CASE
-            </button>{*/}
+{/* <button style={{ width: 210 }} className="blue">
+  PRINT OTHER CASE
+</button> */}
             </div>
           </div>
         </div>

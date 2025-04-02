@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { MainContext } from '../../context/Context'
+import { MainContext } from '../../context/MainContext'
 
 const Login = () => {
     const [username, setUsername] = useState('');
@@ -33,22 +33,28 @@ const Login = () => {
 
     return (
         <div className="content">
-            <h2>Login</h2>
-            <input
-                type="text"
-                placeholder="admin"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                
-            />
-            <input
-                type="password"
-                placeholder="123"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-            />
-            <button onClick={handleLogin}>Login</button>
-            {message && <p>{message}</p>}
+            <div className='login-container'>
+                <h2>Login</h2>
+                <div>
+                <input
+                    type="text"
+                    placeholder="admin"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    
+                />
+                <input
+                    type="password"
+                    placeholder="123"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                />
+                </div>
+                <button onClick={handleLogin}>Login</button>
+                {message && <p>{message}</p>}
+            </div>
+            
+            
         </div>
     );
 };

@@ -1,13 +1,12 @@
 import React, { useRef, useContext } from "react";
 import Webcam from "react-webcam";
-import { PoliceClearanceContext } from "../../context/PoliceClearanceContext";
+import { PoliceClearanceContext } from "../../context";
 
-const PoliceClearanceFaceCapture = () => {
+const PoliceClearanceFaceCapture = ({}) => {
   const 
   { 
     isFaceCaptureVisible,
-    setFaceCaptureVisible, 
-    isFaceChanged,
+    setIsFaceCaptureVisible, 
     setIsFaceChanged,
     image, 
     setImage,
@@ -29,13 +28,13 @@ const PoliceClearanceFaceCapture = () => {
   };
 
   const handleCancel = () => {
-    setFaceCaptureVisible(false);
+    setIsFaceCaptureVisible(false);
     setIsFaceChanged(false);
     setImage((isEditing && selectedData) ? `/assets/faces/${selectedData.faceFileName}` : "/assets/faces/placeholder.jpg");
   };
 
   const handleSave = () => {
-    setFaceCaptureVisible(false);
+    setIsFaceCaptureVisible(false);
     setIsFaceChanged(true);
   };
 

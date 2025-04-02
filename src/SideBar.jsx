@@ -1,10 +1,14 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-import { MainContext } from './context/Context';
+import { MainContext } from './context/MainContext';
 
 const SideBar = () => {
 
-    const { user } = useContext(MainContext);
+    const { setIsAuthenticated, user, setUser } = useContext(MainContext);
+    const handleLogout = () => {
+        setUser(null);
+        setIsAuthenticated(false);
+    };
     return (
         <div id="sidebar-container">
             <div id="sidebar">
@@ -41,30 +45,36 @@ const SideBar = () => {
                     {user && user.userStatus && (
                         <li>
                             <div />
-                            <Link to="/user-status">User Status</Link>
+                            <Link to="/user-status">User Management</Link>
                         </li>
                     )}
                 </ul>
                 <h3>TOOLS</h3>
                 <ul>
                     <li>
-                    <div />
-                    <a>Biometric Search</a>
+                        <div />
+                        <a>Biometric Search</a>
                     </li>
                     <li>
-                    <div />
-                    <a>Upload File</a>
+                        <div />
+                        <a>Upload File</a>
                     </li>
                     <li>
-                    <div />
-                    <a>Download File</a>
+                        <div />
+                        <a>Download File</a>
                     </li>
                 </ul>
                 <h3>ACCOUNT PAGES</h3>
                 <ul>
                     <li>
-                    <div />
-                    <a>Profile</a>
+                        <div />
+                        <a>Profile</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li onClick={handleLogout}>
+                        <div />
+                        <a>Log Out</a>
                     </li>
                 </ul>
             </div>

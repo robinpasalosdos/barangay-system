@@ -1,8 +1,9 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import CheckBox from "../Shared/Form/CheckBox";
 import InputField from "../Shared/Form/InputField";
-import { UserStatusContext } from "../../context/UserStatusContext";
-import { MainContext } from "../../context/Context";
+import { UserStatusContext } from "../../context";
+import { MainContext } from "../../context/MainContext";
+import useForm from "../../hooks/useUserStatusForm";
 
 const UserForm = () => {
   const 
@@ -34,181 +35,129 @@ const UserForm = () => {
     editUSerAction: false,
     searchUSerAction: false,
   }
-  const [formState, setFormState] = useState(initialFormState);
-
-  // Handle input changes
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormState((prev) => ({ ...prev, [name]: value }));
-  };
-
-  useEffect(() => {
-      if (isEditing && selectedData) {
-        setFormState({
-          ...selectedData,
-          policeClearance: selectedData.policeClearance === 1,
-          citizenInformation: selectedData.citizenInformation === 1,
-          warrantBooking: selectedData.warrantBooking === 1,
-          rogueDirectory: selectedData.rogueDirectory === 1,
-          userStatus: selectedData.userStatus === 1,
-          addUSerAction: selectedData.addUSerAction === 1,
-          deleteUSerAction: selectedData.deleteUSerAction === 1,
-          printUSerAction: selectedData.printUSerAction === 1,
-          editUSerAction: selectedData.editUSerAction === 1,
-          searchUSerAction: selectedData.searchUSerAction === 1
-        });
-      } else {
-        setFormState(initialFormState);
-      }
-    }, [isEditing, selectedData]);
-
-  const resetForm = () => {
-    setFormState(initialFormState);
-    setSelectedData(null);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const record = {
-        ...formState,
-        id: selectedData?.id,
-      };
-
-      if (isEditing) {
-        console.log("Updating user:", record);
-      } else {
-        console.log("Adding new user:", record);
-      }
-
-      await addOrUpdateRecord(record);
-      user.username === record.username && setUser(record);
-      resetForm();
-      setIsModalOpen(false);
-
-    } catch (error) {
-      console.error("Error submitting the form:", error);
-    }
-  };
+  
+  const { setFormState, formState, handleChange, handleSubmit, handleCancel } = useForm(
+    initialFormState, selectedData, isEditing, addOrUpdateRecord, setIsModalOpen, setSelectedData, setUser, user
+  );
+  
 
   if (!isModalOpen) return null;
 
   return (
     <div className="user-status-form">
       <h2>{isEditing ? "Edit User" : "Add User"}</h2>
+      <div>
+        <InputField
+          id="username"
+          name="username"
+          label="User Name"
+          value={formState.username || ""}
+          onChange={handleChange}
+          placeholder="Enter user name"
+        />
 
-      {/* User Name Input */}
-      <InputField
-        id="username"
-        name="username"
-        label="User Name"
-        value={formState.username || ""}
-        onChange={handleChange}
-        placeholder="Enter user name"
-      />
-
-      {/* Password Input */}
-      <InputField
-        id="password"
-        name="password"
-        label="Password"
-        type="password"
-        value={formState.password || ""}
-        onChange={handleChange}
-        placeholder="Enter password"
-      />
-
-      {/* Checkboxes */}
-      <CheckBox
-        id="policeClearance"
-        name="policeClearance"
-        label="Police Clearance"
-        checked={formState.policeClearance}
-        onChange={(id, checked) =>
-          setFormState((prev) => ({ ...prev, [id]: checked }))
-        }
-      />
-      <CheckBox
-        id="citizenInformation"
-        name="citizenInformation"
-        label="Citizen Information"
-        checked={formState.citizenInformation}
-        onChange={(id, checked) =>
-          setFormState((prev) => ({ ...prev, [id]: checked }))
-        }
-      />
-      <CheckBox
-        id="warrantBooking"
-        name="warrantBooking"
-        label="Warrant Booking"
-        checked={formState.warrantBooking}
-        onChange={(id, checked) =>
-          setFormState((prev) => ({ ...prev, [id]: checked }))
-        }
-      />
-      <CheckBox
-        id="rogueDirectory"
-        name="rogueDirectory"
-        label="Rogue Directory"
-        checked={formState.rogueDirectory}
-        onChange={(id, checked) =>
-          setFormState((prev) => ({ ...prev, [id]: checked }))
-        }
-      />
-      <CheckBox
-        id="userStatus"
-        name="userStatus"
-        label="User Status"
-        checked={formState.userStatus}
-        onChange={(id, checked) =>
-          setFormState((prev) => ({ ...prev, [id]: checked }))
-        }
-      />
-      <CheckBox
-        id="addUSerAction"
-        name="addUSerAction"
-        label="Add"
-        checked={formState.addUSerAction}
-        onChange={(id, checked) =>
-          setFormState((prev) => ({ ...prev, [id]: checked }))
-        }
-      />
-      <CheckBox
-        id="deleteUSerAction"
-        name="deleteUSerAction"
-        label="Delete"
-        checked={formState.deleteUSerAction}
-        onChange={(id, checked) =>
-          setFormState((prev) => ({ ...prev, [id]: checked }))
-        }
-      />
-      <CheckBox
-        id="printUSerAction"
-        name="printUSerAction"
-        label="Print"
-        checked={formState.printUSerAction}
-        onChange={(id, checked) =>
-          setFormState((prev) => ({ ...prev, [id]: checked }))
-        }
-      />
-      <CheckBox
-        id="editUSerAction"
-        name="editUSerAction"
-        label="Edit"
-        checked={formState.editUSerAction}
-        onChange={(id, checked) =>
-          setFormState((prev) => ({ ...prev, [id]: checked }))
-        }
-      />
-      <CheckBox
-        id="searchUSerAction"
-        name="searchUSerAction"
-        label="Search"
-        checked={formState.searchUSerAction}
-        onChange={(id, checked) =>
-          setFormState((prev) => ({ ...prev, [id]: checked }))
-        }
-      />
+        <InputField
+          id="password"
+          name="password"
+          label="Password"
+          type="password"
+          value={formState.password || ""}
+          onChange={handleChange}
+          placeholder="Enter password"
+        />
+      </div>
+      <div>
+        <CheckBox
+          id="policeClearance"
+          name="policeClearance"
+          label="Police Clearance"
+          checked={formState.policeClearance}
+          onChange={(id, checked) =>
+            setFormState((prev) => ({ ...prev, [id]: checked }))
+          }
+        />
+        <CheckBox
+          id="citizenInformation"
+          name="citizenInformation"
+          label="Citizen Information"
+          checked={formState.citizenInformation}
+          onChange={(id, checked) =>
+            setFormState((prev) => ({ ...prev, [id]: checked }))
+          }
+        />
+        <CheckBox
+          id="warrantBooking"
+          name="warrantBooking"
+          label="Warrant Booking"
+          checked={formState.warrantBooking}
+          onChange={(id, checked) =>
+            setFormState((prev) => ({ ...prev, [id]: checked }))
+          }
+        />
+        <CheckBox
+          id="rogueDirectory"
+          name="rogueDirectory"
+          label="Rogue Directory"
+          checked={formState.rogueDirectory}
+          onChange={(id, checked) =>
+            setFormState((prev) => ({ ...prev, [id]: checked }))
+          }
+        />
+        <CheckBox
+          id="userStatus"
+          name="userStatus"
+          label="User Status"
+          checked={formState.userStatus}
+          onChange={(id, checked) =>
+            setFormState((prev) => ({ ...prev, [id]: checked }))
+          }
+        />
+        <CheckBox
+          id="addUSerAction"
+          name="addUSerAction"
+          label="Add"
+          checked={formState.addUSerAction}
+          onChange={(id, checked) =>
+            setFormState((prev) => ({ ...prev, [id]: checked }))
+          }
+        />
+        <CheckBox
+          id="deleteUSerAction"
+          name="deleteUSerAction"
+          label="Delete"
+          checked={formState.deleteUSerAction}
+          onChange={(id, checked) =>
+            setFormState((prev) => ({ ...prev, [id]: checked }))
+          }
+        />
+        <CheckBox
+          id="printUSerAction"
+          name="printUSerAction"
+          label="Print"
+          checked={formState.printUSerAction}
+          onChange={(id, checked) =>
+            setFormState((prev) => ({ ...prev, [id]: checked }))
+          }
+        />
+        <CheckBox
+          id="editUSerAction"
+          name="editUSerAction"
+          label="Edit"
+          checked={formState.editUSerAction}
+          onChange={(id, checked) =>
+            setFormState((prev) => ({ ...prev, [id]: checked }))
+          }
+        />
+        <CheckBox
+          id="searchUSerAction"
+          name="searchUSerAction"
+          label="Search"
+          checked={formState.searchUSerAction}
+          onChange={(id, checked) =>
+            setFormState((prev) => ({ ...prev, [id]: checked }))
+          }
+        />
+      </div>
 
       {/* Submit and Cancel Buttons */}
       <button type="submit" className="submit-button blue" onClick={handleSubmit}>
@@ -217,7 +166,7 @@ const UserForm = () => {
       <button
         type="button"
         className="cancel-button red"
-        onClick={() => setIsModalOpen(false)}
+        onClick={handleCancel}
       >
         Cancel
       </button>

@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { MainProvider, MainContext } from "./context/Context";
+import { MainProvider, MainContext } from "./context/MainContext";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import PoliceClearance from "./components/PoliceClearance/PoliceClearance";
 import UserStatus from "./components/UserStatus/UserStatus";

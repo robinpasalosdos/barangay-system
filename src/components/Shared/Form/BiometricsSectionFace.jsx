@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { PoliceClearanceContext } from "../../../context/PoliceClearanceContext";
+import { PoliceClearanceContext } from "../../../context";
 
 const BiometricsSectionFace = ({ label, buttonText, onButtonClick }) => {
   const { image, isFaceCaptureVisible } = useContext(PoliceClearanceContext); // Access image from context
@@ -8,7 +8,7 @@ const BiometricsSectionFace = ({ label, buttonText, onButtonClick }) => {
     <div>
       <label>{label}</label>
       <div>
-        <div class="image-box face">
+        <div className="image-box face">
         {!isFaceCaptureVisible ? ( // Check if image exists
           <img
             src={image} // Use the Base64 image string as the src

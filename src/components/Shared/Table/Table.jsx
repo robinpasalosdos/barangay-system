@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import SearchBar from "./SearchBar";
 import TableHeader from "./TableHeader";
 import TableRow from "./TableRow";
-import { MainContext } from '../../../context/Context'
+import { MainContext } from '../../../context/MainContext'
 
 
 const Table = ({ 
@@ -28,7 +28,7 @@ const Table = ({
               <SearchBar
               searchQuery={searchQuery}
               setSearchQuery={setSearchQuery}
-              placeholder="Search by name, purpose, or gender"
+              placeholder="Search..."
               />
             )}
         </div>
