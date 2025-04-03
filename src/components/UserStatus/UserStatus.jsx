@@ -23,28 +23,28 @@ const UserStatus = () => {
 
   const columns = [
     { key: "username", label: "Username" },
-    { key: "pages", label: "Pages", render: (record) =>
-      [
+    { key: "pages", label: "Pages", render: (record) => {
+      const items = [
         record.policeClearance && "PC",
         record.citizenInformation && "CI",
         record.warrantBooking && "WB",
         record.rogueDirectory && "RD",
-        record.userStatus && "US"
-      ]
-        .filter(Boolean)
-        .join(", ")
-    },
-    { key: "userActions", label: "User Actions", render: (record) =>
-      [
+        record.userStatus && "UM"
+      ].filter(Boolean);
+    
+      return items.length === 5 ? "ALL" : items.join(", ");
+    }},
+    { key: "userActions", label: "User Actions", render: (record) => {
+      const actions = [
         record.addUSerAction && "add",
         record.searchUSerAction && "search",
         record.editUSerAction && "edit",
         record.printUSerAction && "print",
         record.deleteUSerAction && "delete"
-      ]
-        .filter(Boolean)
-        .join(", ")
-    },
+      ].filter(Boolean);
+    
+      return actions.length === 5 ? "ALL" : actions.join(", ");
+    }},
   ];
  
   const {
