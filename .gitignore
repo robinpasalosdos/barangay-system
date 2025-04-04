@@ -10,6 +10,7 @@ node_modules
 dist
 dist-ssr
 *.local
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -20,6 +21,18 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+*.code-workspace
 
+# Databases
 barangay.db
+
+# Folders
 public/assets/faces/
+node_modules/
+
+# Configs
+package-lock.json  
+*.config.mjs
+
+# Artifacts
+*.css.map
