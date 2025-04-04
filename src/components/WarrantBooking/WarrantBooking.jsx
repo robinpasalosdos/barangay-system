@@ -15,6 +15,7 @@ const WarrantBooking = () => {
     { key: "firstName", label: "MName" },
     { key: "dateOfBirth", label: "DOB" }
   ];
+  const featureName = "Warrant Booking";
   const context = useContext(WarrantBookingContext);
  
   const {
@@ -28,9 +29,16 @@ const WarrantBooking = () => {
   const {
     searchQuery,
     setSearchQuery,
+    startDate,
+    setStartDate,
+    endDate,
+    setEndDate,
+    sortOption,
+    setSortOption,
     filteredData,
     handleManage,
-  } = useTable(data, setSelectedData, setIsEditing, setIsModalOpen, ["lastName"]);
+    generatePDF
+  } = useTable(data, setSelectedData, setIsEditing, setIsModalOpen, featureName, columns, ["lastName"]);
 
   return (
     <Table 
@@ -43,7 +51,14 @@ const WarrantBooking = () => {
     setIsModalOpen = {setIsModalOpen}
     setIsEditing = {setIsEditing}
     setSelectedData = {setSelectedData}
-    featureName = "Warrant Booking"
+    featureName = {featureName.toUpperCase()}
+    generatePDF = {generatePDF}
+    startDate = {startDate}
+    setStartDate = {setStartDate}
+    endDate = {endDate}
+    setEndDate = {setEndDate}
+    sortOption = {sortOption}
+    setSortOption = {setSortOption}
     additionalComponents={() => (
       <>
         <WarrantBookingForm />

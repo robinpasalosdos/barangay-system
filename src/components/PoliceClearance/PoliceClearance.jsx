@@ -7,6 +7,7 @@ import PoliceClearanceForm from "./PoliceClearanceForm";
 
 
 const PoliceClearance = () => {
+  const featureName = "Police Clearance";
   const columns = [
     { key: "documentNumber", label: "Doc #" },
     { key: "documentDate", label: "Document Date" },
@@ -29,9 +30,18 @@ const PoliceClearance = () => {
   const {
     searchQuery,
     setSearchQuery,
+    sortOption,
+    setSortOption,
+    startDate,
+    setStartDate,
+    endDate,
+    setEndDate,
     filteredData,
     handleManage,
-  } = useTable(data, setSelectedData, setIsEditing, setIsModalOpen, ["documentNumber"]);
+    generatePDF,
+    
+    
+  } = useTable(data, setSelectedData, setIsEditing, setIsModalOpen, featureName, columns, ["documentNumber", "documentDate"]);
 
   return (
     <Table 
@@ -44,7 +54,14 @@ const PoliceClearance = () => {
     setIsModalOpen = {setIsModalOpen}
     setIsEditing = {setIsEditing}
     setSelectedData = {setSelectedData}
-    featureName = "Police Clearance"
+    featureName = {featureName.toUpperCase()}
+    generatePDF = {generatePDF}
+    startDate = {startDate}
+    setStartDate = {setStartDate}
+    endDate = {endDate}
+    setEndDate = {setEndDate}
+    sortOption = {sortOption}
+    setSortOption = {setSortOption}
     additionalComponents={() => (
       <>
         <PoliceClearanceForm />

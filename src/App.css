@@ -270,7 +270,7 @@ body{
     width: 750px;
 }
 
-#modal select,  #modal input, .table-container input, .user-status-form input[type="text"], .user-status-form input[type="password"], .login-container input {
+select,  #modal input, .table-container input, .user-status-form input[type="text"], .user-status-form input[type="password"], .login-container input {
     all: unset;
     font-size: 10px;
     text-indent: 12px;
@@ -279,14 +279,19 @@ body{
     border-radius: 12px;
     height: 30px;
     width: 210px;
-    border: 2px solid rgba(255, 255, 255, 0.2); /* Creates space for the border */
+    border: 2px solid rgba(255, 255, 255, 0.2);
 }
 
-#modal input:focus, #modal select:focus {
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    opacity: 1;
+  }
+
+#modal input:focus, select:focus {
     border: 2px solid rgba(255, 255, 255, 0.8);
 }
 
-#modal select {
+select {
     display: flex;
     align-items: center;
 }

@@ -34,7 +34,8 @@ db.run(
     orNumber TEXT,
     contactNumber TEXT,
     findings TEXT,
-    faceFileName TEXT
+    faceFileName TEXT,
+    createdTimestamp DATETIME DEFAULT CURRENT_TIMESTAMP
   )`,
   (err) => {
     if (err) {
@@ -70,7 +71,8 @@ db.run(
     committedDate TEXT,
     placeOfCrime TEXT,
     placeOfInquisition TEXT,
-    remarks TEXT
+    remarks TEXT,
+    createdTimestamp DATETIME DEFAULT CURRENT_TIMESTAMP
   )`,
   (err) => {
     if (err) {
@@ -97,7 +99,8 @@ db.run(
     deleteUSerAction INTEGER DEFAULT 0, 
     printUSerAction INTEGER DEFAULT 0,
     editUSerAction INTEGER DEFAULT 0,
-    searchUSerAction INTEGER DEFAULT 0
+    searchUSerAction INTEGER DEFAULT 0,
+    createdTimestamp DATETIME DEFAULT CURRENT_TIMESTAMP
   )`,
   (err) => {
     if (err) {

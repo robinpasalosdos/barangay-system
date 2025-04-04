@@ -1,11 +1,11 @@
 import React, { useContext } from "react";
 import Table from "../Shared/Table/Table";
 import { UserStatusContext } from "../../context";
-import useUserStatusTable from "../../hooks/useTable";
+import useTable from "../../hooks/useTable";
 import UserForm from "./Form";
 
 const UserStatus = () => {
-
+  const featureName = "User Management";
   const context = useContext(UserStatusContext);
 
   const {
@@ -32,7 +32,7 @@ const UserStatus = () => {
         record.userStatus && "UM"
       ].filter(Boolean);
     
-      return items.length === 5 ? "ALL" : items.join(", ");
+      return items.length === 0 ? "NONE" : items.length === 5 ? "ALL" : items.join(", ");
     }},
     { key: "userActions", label: "User Actions", render: (record) => {
       const actions = [
@@ -43,16 +43,23 @@ const UserStatus = () => {
         record.deleteUSerAction && "delete"
       ].filter(Boolean);
     
-      return actions.length === 5 ? "ALL" : actions.join(", ");
+      return actions.length === 0 ? "NONE" : actions.length === 5 ? "ALL" : actions.join(", ");
     }},
   ];
  
   const {
     searchQuery,
     setSearchQuery,
+    sortOption,
+    setSortOption,
+    startDate,
+    setStartDate,
+    endDate,
+    setEndDate,
     filteredData,
     handleManage,
-  } = useUserStatusTable(data, setSelectedData, setIsEditing, setIsModalOpen, ["username"]);
+    generatePDF
+  } = useTable(data, setSelectedData, setIsEditing, setIsModalOpen, featureName, columns, ["username"]);
 
   return (
     <Table 
@@ -65,7 +72,14 @@ const UserStatus = () => {
     setIsModalOpen = {setIsModalOpen}
     setIsEditing = {setIsEditing}
     setSelectedData = {setSelectedData}
-    featureName = {"User Status"}
+    featureName = {featureName.toUpperCase()}
+    generatePDF = {generatePDF}
+    startDate = {startDate}
+    setStartDate = {setStartDate}
+    endDate = {endDate}
+    setEndDate = {setEndDate}
+    sortOption = {sortOption}
+    setSortOption = {setSortOption}
     additionalComponents={() => (
       <>
         <UserForm />
