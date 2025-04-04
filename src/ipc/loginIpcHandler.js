@@ -1,5 +1,5 @@
-const { ipcMain } = require("electron");
-const db = require("../db/db");
+import { ipcMain } from "electron";
+import db from "../db/db.js";
 
 ipcMain.handle("login", async (_, { username, password }) => {
     return new Promise((resolve) => {

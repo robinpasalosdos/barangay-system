@@ -2,14 +2,14 @@
   "name": "my-electron-app",
   "private": true,
   "version": "0.0.0",
-  "type": "commonjs",
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "start": "concurrently \"npm run dev\" \"npm run electron\"",
-    "electron": "electron main.js"
+    "electron": "electron main.cjs"
   },
   "dependencies": {
     "jspdf": "^3.0.1",
@@ -22,6 +22,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
+    "@stylistic/eslint-plugin-js": "^4.2.0",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",

@@ -1,8 +1,8 @@
-const { ipcMain } = require("electron");
-const db = require("../db/userStatusDb");
-const fs = require("fs");
-const path = require("path");
-const { promisify } = require("util");
+import { ipcMain } from "electron";
+import db from "../db/userStatusDb.js";
+// import fs from "fs"; never read but maybe in the future
+// import path from "path"; ^^
+import { promisify } from "util";
 
 const allQuery = promisify(db.all.bind(db));
 const runQuery = promisify(db.run.bind(db));
