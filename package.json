@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "start": "concurrently \"npm run dev\" \"npm run electron\"",
-    "electron": "electron main.js"
+    "electron": "electron main.cjs"
   },
   "dependencies": {
     "jspdf": "^3.0.1",
