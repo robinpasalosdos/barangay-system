@@ -77,15 +77,6 @@ const UserForm = () => {
           }
         />
         <CheckBox
-          id="citizenInformation"
-          name="citizenInformation"
-          label="Citizen Information"
-          checked={formState.citizenInformation}
-          onChange={(id, checked) =>
-            setFormState((prev) => ({ ...prev, [id]: checked }))
-          }
-        />
-        <CheckBox
           id="warrantBooking"
           name="warrantBooking"
           label="Warrant Booking"

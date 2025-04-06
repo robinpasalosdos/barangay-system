@@ -128,3 +128,19 @@ export const {
     isFaceChanged: false,
   }
 );
+
+export const {
+  Context: RogueDirectoryContext,
+  Provider: RogueDirectoryProvider,
+} = createDataContext(
+  window.api.fetchRogueDirectoryRecords,
+  window.api.addRogueDirectoryRecord,
+  window.api.updateRogueDirectoryRecord,
+  window.api.deleteRogueDirectoryRecord,
+  {
+    isFaceCaptureVisible: false,
+    savedImagePath: null,
+    image: null,
+    isFaceChanged: false,
+  }
+);

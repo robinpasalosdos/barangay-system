@@ -24,12 +24,6 @@ const SideBar = () => {
                             <Link to="/police-clearance">Police Clearance</Link>
                         </li>
                     )}
-                    {user && user.citizenInformation && (
-                        <li>
-                            <div />
-                            <Link to="/citizen-information">Citizen Information</Link>
-                        </li>
-                    )}
                     {user && user.warrantBooking && (
                         <li>
                             <div />

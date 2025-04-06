@@ -84,6 +84,49 @@ db.run(
   }
 );
 
+console.log("Creating rogue_directory table...");
+db.run(
+  `CREATE TABLE IF NOT EXISTS rogue_directory (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    lastName TEXT,
+    firstName TEXT,
+    middleName TEXT,
+    dateOfBirth TEXT,
+    age INTEGER,
+    nickname TEXT,
+    placeOfBirth TEXT,
+    address TEXT,
+    civilStatus TEXT,
+    gender TEXT,
+    citizenship TEXT,
+    height TEXT,
+    colorOfHair TEXT,
+    complexion TEXT,
+    weight TEXT,
+    colorOfEyes TEXT,
+    identifyingMarks TEXT,
+    ccisNumber TEXT,
+    crimeCommited TEXT,
+    commitedDate TEXT,
+    dateArrested TEXT,
+    timeArrested TEXT,
+    placeArrested TEXT,
+    issuingCourtAndJudge TEXT,
+    placeDetained TEXT,
+    arrestingUnit TEXT,
+    statusOfCase TEXT,
+    sypnosisOfCriminalOffense TEXT,
+    createdTimestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+  )`,
+  (err) => {
+    if (err) {
+      console.error("Error creating rogue_directory table:", err.message);
+    } else {
+      console.log("Rogue Directory table created or already exists.");
+    }
+  }
+);
+
 // Create the users table if it doesn't exist
 console.log("Creating users table...");
 db.run(

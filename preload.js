@@ -16,5 +16,12 @@ contextBridge.exposeInMainWorld("api", {
   addUser: (record) => ipcRenderer.invoke("add-user", record),
   updateUser: (record) => ipcRenderer.invoke("update-user", record),
   deleteUser: (id) => ipcRenderer.invoke("delete-user", id),
-  login: (credentials) => ipcRenderer.invoke("login", credentials)
+  login: (credentials) => ipcRenderer.invoke("login", credentials),
+
+  fetchRogueDirectoryRecords: () => ipcRenderer.invoke("fetch-rogue-directory-records"),
+  addRogueDirectoryRecord: (record) => ipcRenderer.invoke("add-rogue-directory-record", record),
+  updateRogueDirectoryRecord: (record) => ipcRenderer.invoke("update-rogue-directory-record", record),
+  deleteRogueDirectoryRecord: (id) => ipcRenderer.invoke("delete-rogue-directory-record", id),
+
+  printRecord: (record) => ipcRenderer.send('print-record', record)
 });

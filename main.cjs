@@ -6,6 +6,8 @@ require("./src/ipc/ipcHandler.js");
 require("./src/ipc/userStatusIpcHandler.js");
 require("./src/ipc/loginIpcHandler.js");
 require("./src/ipc/warrantBookingIpcHandlers.js");
+require("./src/ipc/rogueDirectoryIpcHandlers.js");
+require("./src/ipc/printIpcHandlers.js");
 
 
 
@@ -18,6 +20,7 @@ app.on("ready", () => {
   mainWindow = new BrowserWindow({
     width: width,
     height: height,
+    autoHideMenuBar: true,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       contextIsolation: true,

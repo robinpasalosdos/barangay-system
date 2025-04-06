@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Print Preview</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    .doc { border: 1px solid #ccc; padding: 10px; margin-bottom: 20px; }
+    label { display: flex; align-items: center; gap: 8px; }
+    button { padding: 10px 20px; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Print Preview</h1>
+
+  <div>
+    <label><input type="checkbox" id="police"> Police Clearance</label>
+    <div id="police-preview" class="doc"></div>
+
+    <label><input type="checkbox" id="barangay-clearance"> Barangay Clearance</label>
+    <div id="barangay-clearance-preview" class="doc"></div>
+
+    <label><input type="checkbox" id="barangay-certificate"> Barangay Certificate</label>
+    <div id="barangay-certificate-preview" class="doc"></div>
+
+    <button onclick="submitPrint()">Print Selected</button>
+  </div>
+
+  <script>
+    let recordData = {};
+
+    window.electronPrintAPI.onRecordData((record) => {
+      recordData = record;
+      document.getElementById("police-preview").innerText = JSON.stringify(record, null, 2);
+      document.getElementById("barangay-clearance-preview").innerText = JSON.stringify(record, null, 2);
+      document.getElementById("barangay-certificate-preview").innerText = JSON.stringify(record, null, 2);
+    });
+
+    function submitPrint() {
+      const selections = {
+        police: document.getElementById("police").checked,
+        barangayClearance: document.getElementById("barangay-clearance").checked,
+        barangayCertificate: document.getElementById("barangay-certificate").checked
+      };
+      window.electronPrintAPI.sendSelections(recordData, selections);
+    }
+  </script>
+</body>
+</html>

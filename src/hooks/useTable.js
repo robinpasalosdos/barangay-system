@@ -2,9 +2,10 @@ import { useState, useMemo } from "react";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 
-const useTable = (data, setSelectedData, setIsEditing, setIsModalOpen, featureName, columns, filterKeys = []) => {
+const useTable = (data, setSelectedData, setIsEditing, setIsModalOpen, featureName, columns) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortOption, setSortOption] = useState("newest");
+  const [searchBy, setSearchBy] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
@@ -12,11 +13,20 @@ const useTable = (data, setSelectedData, setIsEditing, setIsModalOpen, featureNa
   const filteredData = useMemo(() => {
     let sortedData = [...data];
 
-    // Filtering by search and date range
     sortedData = sortedData.filter((record) => {
-      const matchesSearch = filterKeys.some((key) =>
-        record[key]?.toLowerCase().includes(searchQuery.toLowerCase())
-      );
+      let value = "";
+
+    if (searchBy === "fullName") {
+      const names = [record.lastName, record.firstName, record.middleName]
+        .filter(Boolean) // remove undefined/null
+        .join(" ")
+        .toLowerCase();
+      value = names;
+    } else {
+      value = record[searchBy]?.toLowerCase() || "";
+    }
+
+    const matchesSearch = value.includes(searchQuery.toLowerCase());
 
       const recordDate = new Date(record.createdTimestamp);
       const isWithinDateRange =
@@ -26,7 +36,6 @@ const useTable = (data, setSelectedData, setIsEditing, setIsModalOpen, featureNa
       return matchesSearch && isWithinDateRange;
     });
 
-    // Sorting logic
     sortedData.sort((a, b) => {
       if (sortOption === "newest") return new Date(b.createdTimestamp) - new Date(a.createdTimestamp);
       if (sortOption === "oldest") return new Date(a.createdTimestamp) - new Date(b.createdTimestamp);
@@ -35,7 +44,7 @@ const useTable = (data, setSelectedData, setIsEditing, setIsModalOpen, featureNa
     });
 
     return sortedData;
-  }, [searchQuery, startDate, endDate, data, filterKeys, sortOption]);
+  }, [searchQuery, startDate, endDate, data, searchBy, sortOption]);
 
   // Handle managing a record (e.g., editing)
   const handleManage = (record) => {
@@ -89,6 +98,8 @@ const useTable = (data, setSelectedData, setIsEditing, setIsModalOpen, featureNa
   return {
     searchQuery,
     setSearchQuery,
+    searchBy,
+    setSearchBy,
     sortOption,
     setSortOption,
     startDate,

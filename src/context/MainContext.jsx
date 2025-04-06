@@ -1,5 +1,5 @@
 import React, { createContext, useState } from "react";
-import { UserStatusProvider, PoliceClearanceProvider, WarrantBookingProvider } from "./";
+import { UserStatusProvider, PoliceClearanceProvider, WarrantBookingProvider, RogueDirectoryProvider } from "./";
 
 // Create a MainContext for shared global state
 export const MainContext = createContext();
@@ -28,7 +28,9 @@ export const MainProvider = ({ children }) => {
       <UserStatusProvider>
         <PoliceClearanceProvider>
           <WarrantBookingProvider>
+            <RogueDirectoryProvider>
             {children}
+            </RogueDirectoryProvider>
           </WarrantBookingProvider>
         </PoliceClearanceProvider>
       </UserStatusProvider>

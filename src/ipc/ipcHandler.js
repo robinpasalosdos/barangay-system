@@ -3,6 +3,10 @@ import db from "../db/db.js";
 import fs from "fs";
 import path from "path";
 import { promisify } from "util";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const allQuery = promisify(db.all.bind(db));
 const runQuery = promisify(db.run.bind(db));
@@ -85,32 +89,26 @@ ipcMain.handle("delete-police-clearance-record", async (event, id) => {
 
 ipcMain.handle("save-police-clearance-image", async (event, imageData) => {
     try {
-        // Validate the Base64 image data
         if (!imageData.startsWith("data:image/")) {
             throw new Error("Invalid image data");
         }
 
-        // Decode the Base64 image data
         const base64Data = imageData.replace(/^data:image\/\w+;base64,/, "");
         const buffer = Buffer.from(base64Data, "base64");
 
-        // Define the folder and file path
-        const folderPath = path.resolve(path.dirname(import.meta.url), "../../public/assets/faces"); // Securely resolve the path
+        const folderPath = path.resolve(__dirname, "../../public/assets/faces");
         const filePath = path.join(folderPath, `image-${Date.now()}.jpg`);
 
-        // Ensure the folder exists
         if (!fs.existsSync(folderPath)) {
-            fs.mkdirSync(folderPath, { recursive: true }); // Create the folder if it doesn't exist
+            fs.mkdirSync(folderPath, { recursive: true });
         }
 
-        // Save the image to the file
         fs.writeFileSync(filePath, buffer);
         console.log("Image saved successfully:", filePath);
 
-        // Return success response
         return { success: true, filePath };
     } catch (error) {
         console.error("Error saving image:", error);
-        throw error; // Throw the error so the renderer process can handle it
+        throw error;
     }
 });

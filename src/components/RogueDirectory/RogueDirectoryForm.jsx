@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
 import '../../App.css';
-import { WarrantBookingContext } from "../../context";
+import { RogueDirectoryContext } from "../../context";
 import useForm from "../../hooks/usePoliceClearanceForm";
 import Form from "./Form";
 
-const WarrantBookingForm = () => {
+const RogueDirectoryForm = () => {
   const {
     isModalOpen,
     setIsModalOpen,
@@ -18,15 +18,16 @@ const WarrantBookingForm = () => {
     setIsFaceChanged,
     image,
     setImage
-  } = useContext(WarrantBookingContext);
+  } = useContext(RogueDirectoryContext);
 
   const initialFormState = {
     lastName: "",
     firstName: "",
     middleName: "",
     dateOfBirth: "",
-    placeOfBirth: "",
     age: "",
+    nickname: "",
+    placeOfBirth: "",
     address: "",
     civilStatus: "",
     gender: "",
@@ -36,13 +37,18 @@ const WarrantBookingForm = () => {
     complexion: "",
     weight: "",
     colorOfEyes: "",
-    fpSyllabus: "",
+    identifyingMarks: "",
     ccisNumber: "",
-    crimeCommitted: "",
-    committedDate: "",
-    placeOfCrime: "",
-    placeOfInquisition: "",
-    remarks: ""
+    crimeCommited: "",
+    commitedDate: "",
+    dateArrested: "",
+    timeArrested: "",
+    placeArrested: "",
+    issuingCourtAndJudge: "",
+    placeDetained: "",
+    arrestingUnit: "",
+    statusOfCase: "",
+    sypnosisOfCriminalOffense: ""
   };
   
 
@@ -84,4 +90,4 @@ const WarrantBookingForm = () => {
   );
 };
 
-export default WarrantBookingForm;
+export default RogueDirectoryForm;

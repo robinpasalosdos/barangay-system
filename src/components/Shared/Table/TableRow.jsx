@@ -1,7 +1,7 @@
 import React from "react";
 import ActionButtons from "./ActionButtons";
 
-const TableRow = ({ record, columns, handleManage, deleteRecord }) => {
+const TableRow = ({ record, columns, featureName, handleManage, deleteRecord }) => {
   return (
     <tr>
       {columns.map(({ key, render }) => (
@@ -10,7 +10,7 @@ const TableRow = ({ record, columns, handleManage, deleteRecord }) => {
         </td>
       ))}
       <td>
-        <ActionButtons record={record} handleManage={handleManage} deleteRecord={deleteRecord} />
+        <ActionButtons record={record} featureName={featureName} handleManage={handleManage} deleteRecord={deleteRecord} />
       </td>
     </tr>
   );

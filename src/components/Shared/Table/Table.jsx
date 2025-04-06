@@ -4,33 +4,40 @@ import TableHeader from "./TableHeader";
 import TableRow from "./TableRow";
 import { MainContext } from '../../../context/MainContext';
 import SelectField from "../Form/SelectField";
+import useTable from "../../../hooks/useTable";
 
 const Table = ({ 
-  columns, 
-  searchQuery,
-  setSearchQuery,
-  filteredData,
-  handleManage,
+  columns,
+  data, 
   deleteRecord,
   setIsModalOpen,
   setIsEditing,
   setSelectedData,
   featureName,
-  additionalComponents,
-  generatePDF,
-  startDate,
-  setStartDate,
-  endDate,
-  setEndDate,
-  sortOption,
-  setSortOption,
+  searchOptions,
+  additionalComponents
 }) => {
   const { user } = useContext(MainContext);
+  const {
+      searchQuery,
+      setSearchQuery,
+      searchBy,
+      setSearchBy,
+      startDate,
+      setStartDate,
+      endDate,
+      setEndDate,
+      sortOption,
+      setSortOption,
+      filteredData,
+      handleManage,
+      generatePDF
+    } = useTable(data, setSelectedData, setIsEditing, setIsModalOpen, featureName, columns);
   return (
     <div className="content">
       <div className="table-container">
         <div>
-            <h2>{featureName}</h2>
+            <h2>{featureName.toUpperCase()}</h2>
             <div>
               <button className="blue" onClick={generatePDF}>Report</button>
               <SelectField
@@ -69,6 +76,17 @@ const Table = ({
                   textIndent: "5px"
                 }}
               />
+              <SelectField
+                id="searchBy"
+                name="searchBy"
+                options={searchOptions.map((opt) => ({
+                  value: opt.value,
+                  display: opt.label,
+                }))}
+                value={searchBy}
+                onChange={(e) => setSearchBy(e.target.value)}
+                width="150px"
+              />
               {user && user.searchUSerAction && (
                 <SearchBar
                 searchQuery={searchQuery}
@@ -88,6 +106,7 @@ const Table = ({
                   key={record.id}
                   record={record}
                   columns={columns}
+                  featureName={featureName}
                   handleManage={handleManage}
                   deleteRecord={deleteRecord}
                 />
