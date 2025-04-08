@@ -124,8 +124,10 @@ export const {
   {
     isFaceCaptureVisible: false,
     savedImagePath: null,
-    image: null,
+    image: {},
     isFaceChanged: false,
+    activeStep: 0,
+    isCaptured: false,
   }
 );
 

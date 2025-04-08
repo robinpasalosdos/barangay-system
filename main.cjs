@@ -1,5 +1,6 @@
-const { app, BrowserWindow, screen } = require("electron");
+const { app, BrowserWindow, screen, ipcMain } = require("electron");
 const path = require("path");
+const fs = require('fs');
 
 require("./src/db/db.js");
 require("./src/ipc/ipcHandler.js");
@@ -44,4 +45,23 @@ app.on("activate", () => {
     app.emit("ready");
   }
 });
+
+ipcMain.handle('save-mugshot-captured', async (event, images, lastname) => {
+  const folderPath = path.join(__dirname, 'public', 'assets', 'mugshots', lastname);
+  // Ensure folder exists
+  if (!fs.existsSync(folderPath)) {
+    fs.mkdirSync(folderPath, { recursive: true });
+  }
+
+  for (const [label, base64] of Object.entries(images)) {
+    const base64Data = base64.replace(/^data:image\/\w+;base64,/, '');
+    const fileName = `${label.replace(/\s+/g, '_').toLowerCase()}.jpg`;
+    const filePath = path.join(folderPath, fileName);
+
+    fs.writeFileSync(filePath, base64Data, 'base64');
+  }
+
+  return { status: 'done', path: folderPath };
+});
+
 

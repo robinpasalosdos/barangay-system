@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import Table from "../Shared/Table/Table";
 import { WarrantBookingContext } from "../../context";
 import WarrantBookingForm from "./WarrantBookingForm";
+import MugshotCapture from "./MugshotCapture";
 
 
 const WarrantBooking = () => {
@@ -41,6 +42,7 @@ const WarrantBooking = () => {
     additionalComponents={() => (
       <>
         <WarrantBookingForm />
+        <MugshotCapture />
       </>
     )}
     />

@@ -20,8 +20,8 @@ const BiometricsSectionFace = ({ label, buttonText, onButtonClick }) => {
         )}
         </div>
         <button onClick={onButtonClick} className="biometrics-face-btn yellow">
-            {buttonText}
-          </button>
+          {buttonText}
+        </button>
       </div>
     </div>
   );

@@ -2,8 +2,8 @@ import React, { useState, useContext } from 'react';
 import { MainContext } from '../../context/MainContext'
 
 const Login = () => {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+    const [username, setUsername] = useState('admin');
+    const [password, setPassword] = useState('123');
     const [message, setMessage] = useState('');
 
     const { setIsAuthenticated, setUser } = useContext(MainContext);

@@ -9,6 +9,9 @@ const Form = ({
   handleSubmit,
   handleCancel,
   handleBirthdateBlur,
+  isFaceCaptureVisible,
+  handleOpenFaceCapture,
+  image,
   isEditing,
 }) => {
   return (
@@ -224,6 +227,11 @@ const Form = ({
                 value={formState.remarks || ""}
                 onChange={handleChange}
               />
+            </div>
+            <div>
+              <button onClick={handleOpenFaceCapture}>
+                Mugshots
+              </button>
             </div>
           </div>
         </div>

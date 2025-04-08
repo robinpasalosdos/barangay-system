@@ -22,6 +22,7 @@ contextBridge.exposeInMainWorld("api", {
   addRogueDirectoryRecord: (record) => ipcRenderer.invoke("add-rogue-directory-record", record),
   updateRogueDirectoryRecord: (record) => ipcRenderer.invoke("update-rogue-directory-record", record),
   deleteRogueDirectoryRecord: (id) => ipcRenderer.invoke("delete-rogue-directory-record", id),
+  saveMugshotCaptured: (images, lastname) => ipcRenderer.invoke('save-mugshot-captured', images, lastname),
 
-  printRecord: (record) => ipcRenderer.send('print-record', record)
+  printRecord: (record) => ipcRenderer.send('print-record', record),
 });

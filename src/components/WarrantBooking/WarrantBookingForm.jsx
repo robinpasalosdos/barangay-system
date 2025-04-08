@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import '../../App.css';
 import { WarrantBookingContext } from "../../context";
-import useForm from "../../hooks/usePoliceClearanceForm";
+import useWarrantBookingForm from "../../hooks/useWarrantBookingForm";
 import Form from "./Form";
 
 const WarrantBookingForm = () => {
@@ -17,7 +17,9 @@ const WarrantBookingForm = () => {
     isFaceChanged,
     setIsFaceChanged,
     image,
-    setImage
+    setImage,
+    setActiveStep,
+    setIsCaptured,
   } = useContext(WarrantBookingContext);
 
   const initialFormState = {
@@ -53,7 +55,7 @@ const WarrantBookingForm = () => {
     handleCancel,
     handleBirthdateBlur,
     handleOpenFaceCapture,
-  } = useForm(
+  } = useWarrantBookingForm(
     initialFormState,
     selectedData,
     isEditing,
@@ -64,7 +66,9 @@ const WarrantBookingForm = () => {
     setImage,
     setIsFaceCaptureVisible,
     isFaceChanged,
-    setIsFaceChanged
+    setIsFaceChanged,
+    setActiveStep,
+    setIsCaptured
   );
 
   if (!isModalOpen) return null;
