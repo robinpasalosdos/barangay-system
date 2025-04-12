@@ -52,29 +52,48 @@
 #sidebar ul {
     list-style: none;
     padding: 0;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
 }
 
 #sidebar ul li {
-    margin: 15px 0;
     display: flex;
     gap: 13px;
     align-items: center;
-    padding-left: 30px;
+    font-size: 11px;
+    color: #022539;
+    height: 45px;
+    width: 180px;
+    border-radius: 15px;
+    padding: 0 20px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
 }
 
-#sidebar ul li a {
-    color: #022539;
-    text-decoration: none;
-    font-size: 11px;
+#sidebar ul li.active {
+    background-color: #022539;
+    color: #FB991C;
+}
+
+#sidebar ul li span {
+    color: inherit;
 }
 
 #sidebar ul li div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background: #022539;
     text-decoration: none;
     font-size: 11px;
-    height: 26px;
-    width: 26px;
-    border-radius: 9px;
+    height: 30px;
+    width: 30px;
+    border-radius: 12px;
+}
+
+#sidebar ul li div img{
+    color: white
 }
 
 .content {
@@ -96,29 +115,6 @@
 
 .purple {
     background: #716FE7;
-}
-
-.login-container {
-    border-radius: 20px;
-    padding: 30px;
-}
-
-.login-container button {
-    background: #0075FF;
-    margin-top: 20px;
-    width: 100%;
-}
-
-
-.login-container h2{
-    color: #ffffff;
-    margin-bottom: 20px;
-}
-
-.login-container > div{
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
 }
 
 .table-container {
@@ -232,6 +228,7 @@ tr {
     width: 95px;
     height: 111px;
     border-radius: 12px;
+    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -241,7 +238,7 @@ tr {
 }
 
 body{
-    background: #D9D9D9;
+    background: #FBF3F2;
 }
 
 #photoModalOverlay, #modalOverlay {
@@ -256,7 +253,7 @@ body{
     justify-content: center;
 }
 
-#modal, #photo-modal, .user-status-form, .login-container, .mugshotModal {
+#modal, #photo-modal, .user-status-form, .mugshotModal, .fingerprintModal, .login-page {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -270,7 +267,7 @@ body{
     width: 750px;
 }
 
-select,  #modal input, .table-container input, .user-status-form input[type="text"], .user-status-form input[type="password"], .login-container input {
+select,  #modal input, .table-container input, .user-status-form input[type="text"], .user-status-form input[type="password"]{
     all: unset;
     font-size: 10px;
     text-indent: 12px;
@@ -329,7 +326,7 @@ select option {
     padding: 10px;
 }
 
-button{
+.content button{
     font-size: 8px;
     font-weight: 500;
     color: #ffffff;
@@ -626,5 +623,307 @@ button{
     gap: 10px;
 }
 
+.dashboard-container {
+    padding: 24px;
+    max-width: 1400px;
+    background-color: #FBF3F2;
+    min-height: 100vh;
+}
 
+.welcome-section {
+    margin-bottom: 32px;
+}
 
+.welcome-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.welcome-header h1 {
+    font-size: 28px;
+    color: #022539;
+    margin: 0;
+}
+
+.current-time {
+    color: #1C768F;
+    font-size: 16px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 24px;
+    margin-bottom: 32px;
+}
+
+.stat-card {
+    background: #022539;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    box-shadow: 0 2px 8px rgba(2, 37, 57, 0.2);
+    transition: transform 0.2s ease;
+    border: 1px solid rgba(28, 118, 143, 0.1);
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    border-color: #FB991C;
+}
+
+.stat-icon {
+    padding: 12px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(251, 153, 28, 0.1);
+    color: #FB991C;
+}
+
+.stat-details h3 {
+    margin: 0;
+    font-size: 14px;
+    color: #FBF3F2;
+}
+
+.stat-number {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 8px 0;
+    color: #FFFFFF;
+}
+
+.stat-change {
+    font-size: 12px;
+    color: #1C768F;
+}
+
+.stat-change.positive {
+    color: #FB991C;
+}
+
+.stat-change.negative {
+    color: #FBF3F2;
+}
+
+.charts-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
+    margin-top: 32px;
+}
+
+.chart-card {
+    background: #022539;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(2, 37, 57, 0.2);
+    border: 1px solid rgba(28, 118, 143, 0.1);
+}
+
+.chart-card h3 {
+    margin: 0 0 20px 0;
+    color: #FBF3F2;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+/* Update chart container background */
+.charts-container {
+    background: transparent;
+}
+
+@media (max-width: 1024px) {
+    .charts-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+}
+
+.login-bg-circle {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+}
+
+.circle-1 {
+    width: 400px;
+    height: 400px;
+    background: rgba(251, 153, 28, 0.15);
+    top: -200px;
+    left: -200px;
+    animation: float 8s ease-in-out infinite;
+}
+
+.circle-2 {
+    width: 300px;
+    height: 300px;
+    background: rgba(28, 118, 143, 0.15);
+    bottom: -150px;
+    right: -150px;
+    animation: float 8s ease-in-out infinite reverse;
+}
+
+.login-container {
+    background: #022539;
+    border-radius: 24px;
+    padding: 40px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 8px 32px rgba(2, 37, 57, 0.3);
+    position: relative;
+    z-index: 1;
+    margin: 20px;
+    animation: fadeIn 0.6s ease-out;
+}
+
+.logo-container {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 8px;
+}
+
+.logo-container h1 {
+    color: #FB991C;
+    font-size: 32px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.logo-underline {
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #FB991C, transparent);
+    margin-top: 4px;
+    animation: expandWidth 0.6s ease-out forwards;
+}
+
+.login-header > p {
+    color: #FBF3F2;
+    opacity: 0.9;
+    margin: 16px 0 10px;
+
+}
+
+.input-group {
+    position: relative;
+    margin-bottom: 24px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 16px 16px 16px 50px;
+    background: rgba(251, 243, 242, 0.05);
+    border: 2px solid rgba(28, 118, 143, 0.2);
+    border-radius: 12px;
+    color: #FBF3F2;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.input-group input:focus {
+    border-color: #FB991C;
+    outline: none;
+}
+
+.input-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #FB991C;
+    font-size: 18px;
+    transition: transform 0.3s ease;
+}
+
+.input-group input:focus + .input-icon {
+    transform: translateY(-50%) scale(1.1);
+}
+
+.login-button {
+    width: 100%;
+    padding: 16px;
+    background: #FB991C;
+    border: none;
+    border-radius: 12px;
+    color: #022539;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.login-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(251, 153, 28, 0.2);
+}
+
+.button-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.spinner {
+    animation: spin 1s linear infinite;
+}
+
+.message {
+    text-align: center;
+    margin: 16px 0;
+    padding: 12px;
+    border-radius: 8px;
+    background: rgba(251, 153, 28, 0.1);
+    color: #FBF3F2;
+    border: 1px solid rgba(251, 153, 28, 0.2);
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-20px) scale(1.05); }
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes expandWidth {
+    from { width: 0; }
+    to { width: 100%; }
+}
+
+.shake {
+    animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes shake {
+    10%, 90% { transform: translate3d(-1px, 0, 0); }
+    20%, 80% { transform: translate3d(2px, 0, 0); }
+    30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+    40%, 60% { transform: translate3d(4px, 0, 0); }
+}
+
+@media (max-width: 480px) {
+    .login-container {
+        padding: 30px 20px;
+        margin: 16px;
+    }
+}

@@ -11,6 +11,7 @@ const Form = ({
   handleBirthdateBlur,
   isFaceCaptureVisible,
   handleOpenFaceCapture,
+  handleOpenFingerprintCapture,
   image,
   isEditing,
 }) => {
@@ -231,6 +232,9 @@ const Form = ({
             <div>
               <button onClick={handleOpenFaceCapture}>
                 Mugshots
+              </button>
+              <button onClick={handleOpenFingerprintCapture}>
+                Fingerprints
               </button>
             </div>
           </div>

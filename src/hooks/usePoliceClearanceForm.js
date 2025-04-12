@@ -11,7 +11,10 @@ const usePoliceClearanceForm = (
   setImage,
   setIsFaceCaptureVisible,
   isFaceChanged,
-  setIsFaceChanged
+  setIsFaceChanged,
+  setIsLeftFingerprintVisible,
+  setIsRightFingerprintVisible,
+  setFingerprints
 ) => {
   const [formState, setFormState] = useState(initialFormState);
 
@@ -21,14 +24,35 @@ const usePoliceClearanceForm = (
     setImage(null);
   };
 
+  const handleOpenRightFingerprintCapture = () => {
+    setIsRightFingerprintVisible(true);
+  };
+  const handleOpenLeftFingerprintCapture = () => { 
+    setIsLeftFingerprintVisible(true);
+  };
+
   // Populate form fields when `selectedData` changes
   useEffect(() => {
     if (isEditing && selectedData) {
-      setFormState(selectedData); // Load the selected record into the form state
+      setFormState(selectedData);
 
       // Set the image to the saved image path
       const savedImagePath = `/assets/faces/${selectedData.faceFileName}`;
       setImage(savedImagePath);
+
+      const savedFingerprintPath = {
+        'left-thumb': '/assets/fingerprint/thumb.jpg',
+        'left-index': '/assets/fingerprint/index.jpg',
+        'left-middle': '/assets/fingerprint/middle.jpg',
+        'left-ring': '/assets/fingerprint/ring.jpg',
+        'left-pinky': '/assets/fingerprint/pinky.jpg',
+        'right-thumb': '/assets/fingerprint/thumb.jpg',
+        'right-index': '/assets/fingerprint/index.jpg',
+        'right-middle': '/assets/fingerprint/middle.jpg',
+        'right-ring': '/assets/fingerprint/ring.jpg',
+        'right-pinky': '/assets/fingerprint/pinky.jpg',
+      };
+      setFingerprints(savedFingerprintPath);
     } else {
       // Reset to placeholder image for new records
       setFormState(initialFormState);
@@ -109,6 +133,7 @@ const usePoliceClearanceForm = (
       // Reset the form and close the modal
       resetForm();
       setIsModalOpen(false);
+      setFingerprints({});
     } catch (error) {
       console.error("Error submitting the form:", error);
     }
@@ -117,7 +142,8 @@ const usePoliceClearanceForm = (
   // Handle cancel button click
   const handleCancel = () => {
     resetForm(); // Reset the form fields
-    setIsModalOpen(false); // Close the modal
+    setIsModalOpen(false);
+    setFingerprints({}); // Reset fingerprints
   };
 
   // Calculate age based on birthdate
@@ -150,6 +176,8 @@ const usePoliceClearanceForm = (
     handleOpenFaceCapture,
     image,
     setImage,
+    handleOpenRightFingerprintCapture,
+    handleOpenLeftFingerprintCapture
   };
 };
 

@@ -99,6 +99,9 @@ export const {
     savedImagePath: null,
     image: null,
     isFaceChanged: false,
+    fingerprints: {},
+    isLeftFingerprintVisible: false,
+    isRightFingerprintVisible: false
   }
 );
 
@@ -128,6 +131,8 @@ export const {
     isFaceChanged: false,
     activeStep: 0,
     isCaptured: false,
+    isFingerprintCaptureVisible: false,
+    fingerprints: {}
   }
 );
 

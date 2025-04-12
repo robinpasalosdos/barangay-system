@@ -14,12 +14,15 @@ const WarrantBookingForm = () => {
     addOrUpdateRecord,
     isFaceCaptureVisible,
     setIsFaceCaptureVisible,
+    setIsFingerprintCaptureVisible,
     isFaceChanged,
     setIsFaceChanged,
     image,
     setImage,
     setActiveStep,
     setIsCaptured,
+    fingerprints,
+    setFingerprints,
   } = useContext(WarrantBookingContext);
 
   const initialFormState = {
@@ -55,6 +58,7 @@ const WarrantBookingForm = () => {
     handleCancel,
     handleBirthdateBlur,
     handleOpenFaceCapture,
+    handleOpenFingerprintCapture,
   } = useWarrantBookingForm(
     initialFormState,
     selectedData,
@@ -65,10 +69,13 @@ const WarrantBookingForm = () => {
     image,
     setImage,
     setIsFaceCaptureVisible,
+    setIsFingerprintCaptureVisible,
     isFaceChanged,
     setIsFaceChanged,
     setActiveStep,
-    setIsCaptured
+    setIsCaptured,
+    fingerprints,
+    setFingerprints,
   );
 
   if (!isModalOpen) return null;
@@ -82,7 +89,9 @@ const WarrantBookingForm = () => {
       handleBirthdateBlur={handleBirthdateBlur}
       handleOpenFaceCapture={handleOpenFaceCapture}
       isFaceCaptureVisible={isFaceCaptureVisible}
+      handleOpenFingerprintCapture={handleOpenFingerprintCapture}
       image={image}
+      fingerprints={fingerprints}
       isEditing={isEditing}
     />
   );

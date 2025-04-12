@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import '../../App.css';
 import { PoliceClearanceContext } from "../../context";
 import usePoliceClearanceForm from "../../hooks/usePoliceClearanceForm";
+import { MainContext } from "../../context/MainContext";
 import Form from "./Form";
 
 const PoliceClearanceForm = () => {
@@ -17,11 +18,17 @@ const PoliceClearanceForm = () => {
     isFaceChanged,
     setIsFaceChanged,
     image,
-    setImage
+    setImage,
+    setIsRightFingerprintVisible,
+    setIsLeftFingerprintVisible,
+    fingerprints,
+    setFingerprints
   } = useContext(PoliceClearanceContext);
 
+  const { user } = useContext(MainContext);
+
   const initialFormState = {
-    barangayClearanceNumber: "",
+    policeClearanceNumber: "",
     documentDate: "",
     orDate: "",
     documentNumber: "",
@@ -42,7 +49,9 @@ const PoliceClearanceForm = () => {
     orNumber: "",
     contactNumber: "",
     findings: "",
-    faceFileName: "placeholder.jpg"
+    faceFileName: "placeholder.jpg",
+    onHold: "0",
+    user: user.username  
   };
 
   const {
@@ -52,6 +61,8 @@ const PoliceClearanceForm = () => {
     handleCancel,
     handleBirthdateBlur,
     handleOpenFaceCapture,
+    handleOpenRightFingerprintCapture,
+    handleOpenLeftFingerprintCapture,
   } = usePoliceClearanceForm(
     initialFormState,
     selectedData,
@@ -63,7 +74,10 @@ const PoliceClearanceForm = () => {
     setImage,
     setIsFaceCaptureVisible,
     isFaceChanged,
-    setIsFaceChanged
+    setIsFaceChanged,
+    setIsLeftFingerprintVisible,
+    setIsRightFingerprintVisible,
+    setFingerprints
   );
 
   if (!isModalOpen) return null;
@@ -79,6 +93,9 @@ const PoliceClearanceForm = () => {
       isFaceCaptureVisible={isFaceCaptureVisible}
       image={image}
       isEditing={isEditing}
+      handleOpenRightFingerprintCapture={handleOpenRightFingerprintCapture}
+      handleOpenLeftFingerprintCapture={handleOpenLeftFingerprintCapture}
+      fingerprints={fingerprints}
     />
   );
 };

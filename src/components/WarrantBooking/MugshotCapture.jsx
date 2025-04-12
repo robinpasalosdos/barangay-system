@@ -58,7 +58,7 @@ const MugshotCapture = () => {
   };
   const wrapperStyle = {
     backgroundColor: '#022539',
-    border: '2px solid #022539',
+    border: '2px solid #1b1f30',
     padding: '24px',
     borderRadius: '12px',
     color: '#fff',

@@ -3,7 +3,7 @@ import Table from "../Shared/Table/Table";
 import { PoliceClearanceContext } from "../../context";
 import PoliceClearanceFaceCapture from "./PoliceClearanceFaceCapture";
 import PoliceClearanceForm from "./PoliceClearanceForm";
-
+import SingleHandFingerprintCapture from "./SingleHandFingerprintCapture";
 
 const PoliceClearance = () => {
   const featureName = "Police Clearance";
@@ -14,7 +14,7 @@ const PoliceClearance = () => {
     { key: "orNumber", label: "OR #" },
     { key: "orDate", label: "OR Date" },
     { key: "lastName", label: "Name" },
-    { key: "user", label: "User", render: () => "Robin" },
+    { key: "user", label: "User" },
   ];
   const context = useContext(PoliceClearanceContext);
   const searchOptions = [
@@ -43,6 +43,7 @@ const PoliceClearance = () => {
       <>
         <PoliceClearanceForm />
         <PoliceClearanceFaceCapture />
+        <SingleHandFingerprintCapture />
       </>
     )}
     />

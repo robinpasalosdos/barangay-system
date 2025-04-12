@@ -12,7 +12,7 @@ const allQuery = promisify(db.all.bind(db));
 const runQuery = promisify(db.run.bind(db));
 
 const columns = [
-    "barangayClearanceNumber",
+    "policeClearanceNumber",
     "documentDate",
     "orDate",
     "documentNumber",
@@ -33,14 +33,16 @@ const columns = [
     "orNumber",
     "contactNumber",
     "findings",
-    "faceFileName"
+    "faceFileName",
+    "onHold",
+    "user",
 ];
 
 // Add Record Handler
 ipcMain.handle("add-police-clearance-record", async (event, record) => {
     try {
         const placeholders = columns.map(() => "?").join(", ");
-        const sql = `INSERT INTO barangay_clearance (${columns.join(", ")}) VALUES (${placeholders})`;
+        const sql = `INSERT INTO police_clearance (${columns.join(", ")}) VALUES (${placeholders})`;
         const values = columns.map((col) => record[col]);
 
         await runQuery(sql, values);
@@ -55,7 +57,7 @@ ipcMain.handle("add-police-clearance-record", async (event, record) => {
 ipcMain.handle("update-police-clearance-record", async (event, record) => {
     try {
         const setClause = columns.map((col) => `${col} = ?`).join(", ");
-        const sql = `UPDATE barangay_clearance SET ${setClause} WHERE id = ?`;
+        const sql = `UPDATE police_clearance SET ${setClause} WHERE id = ?`;
         const values = [...columns.map((col) => record[col]), record.id];
 
         await runQuery(sql, values);
@@ -68,7 +70,7 @@ ipcMain.handle("update-police-clearance-record", async (event, record) => {
 
 ipcMain.handle("fetch-police-clearance-records", async () => {
     try {
-        const rows = await allQuery("SELECT * FROM barangay_clearance");
+        const rows = await allQuery("SELECT * FROM police_clearance");
         return rows;
     } catch (err) {
         console.error("Error fetching records:", err.message);
@@ -79,7 +81,7 @@ ipcMain.handle("fetch-police-clearance-records", async () => {
 // Delete Record
 ipcMain.handle("delete-police-clearance-record", async (event, id) => {
     try {
-        await runQuery("DELETE FROM barangay_clearance WHERE id = ?", [id]);
+        await runQuery("DELETE FROM police_clearance WHERE id = ?", [id]);
         return { message: "Record deleted successfully." };
     } catch (err) {
         console.error("Error deleting record:", err.message);

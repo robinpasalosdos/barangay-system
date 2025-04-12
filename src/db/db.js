@@ -9,12 +9,12 @@ const db = new sqlite3.Database("barangay.db", (err) => {
   }
 });
 
-// Create the barangay_clearance table if it doesn't exist
-console.log("Creating barangay_clearance table...");
+// Create the police_clearance table if it doesn't exist
+console.log("Creating police_clearance table...");
 db.run(
-  `CREATE TABLE IF NOT EXISTS barangay_clearance (
+  `CREATE TABLE IF NOT EXISTS police_clearance (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    barangayClearanceNumber TEXT,
+    policeClearanceNumber TEXT,
     documentDate TEXT,
     orDate TEXT,
     documentNumber TEXT,
@@ -36,11 +36,13 @@ db.run(
     contactNumber TEXT,
     findings TEXT,
     faceFileName TEXT,
+    onHold TEXT,
+    user TEXT,
     createdTimestamp DATETIME DEFAULT CURRENT_TIMESTAMP
   )`,
   (err) => {
     if (err) {
-      console.error("Error creating barangay_clearance table:", err.message);
+      console.error("Error creating police_clearance table:", err.message);
     } else {
       console.log("Barangay Clearance table created or already exists.");
     }

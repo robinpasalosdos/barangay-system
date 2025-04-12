@@ -10,15 +10,22 @@ const useWarrantBookingForm = (
   image,
   setImage,
   setIsFaceCaptureVisible,
+  setIsFingerprintCaptureVisible,
   isFaceChanged,
   setIsFaceChanged,
   setActiveStep,
   setIsCaptured,
+  fingerprints,
+  setFingerprints,
 ) => {
   const [formState, setFormState] = useState(initialFormState);
 
   const handleOpenFaceCapture = () => {
     setIsFaceCaptureVisible(true);
+  };
+
+  const handleOpenFingerprintCapture = () => {
+    setIsFingerprintCaptureVisible(true);
   };
 
   useEffect(() => {
@@ -31,9 +38,22 @@ const useWarrantBookingForm = (
         "Right Face": `/assets/mugshots/${selectedData.lastName}/right_face.jpg`,
         "Whole Body": `/assets/mugshots/${selectedData.lastName}/whole_body.jpg`,
       };
+      const savedFingerprintPath = {
+        'left-thumb': '/assets/fingerprint/thumb.jpg',
+        'left-index': '/assets/fingerprint/index.jpg',
+        'left-middle': '/assets/fingerprint/middle.jpg',
+        'left-ring': '/assets/fingerprint/ring.jpg',
+        'left-pinky': '/assets/fingerprint/pinky.jpg',
+        'right-thumb': '/assets/fingerprint/thumb.jpg',
+        'right-index': '/assets/fingerprint/index.jpg',
+        'right-middle': '/assets/fingerprint/middle.jpg',
+        'right-ring': '/assets/fingerprint/ring.jpg',
+        'right-pinky': '/assets/fingerprint/pinky.jpg',
+      };
       setImage(savedImagePath);
       setActiveStep(3);
       setIsCaptured(true);
+      setFingerprints(savedFingerprintPath);
     } else {
       setFormState(initialFormState);
     }
@@ -90,6 +110,7 @@ const useWarrantBookingForm = (
     setImage({});
     setActiveStep(0);
     setIsCaptured(false);
+    setFingerprints({});
   };
 
   // Handle form submission
@@ -122,6 +143,7 @@ const useWarrantBookingForm = (
       resetForm();
       handleResetImages();
       setIsModalOpen(false);
+      
     } catch (error) {
       console.error("Error submitting the form:", error);
     }
@@ -162,6 +184,7 @@ const useWarrantBookingForm = (
     handleCancel,
     handleBirthdateBlur,
     handleOpenFaceCapture,
+    handleOpenFingerprintCapture,
     image,
     setImage,
   };

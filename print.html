@@ -7,6 +7,40 @@
     .doc { border: 1px solid #ccc; padding: 10px; margin-bottom: 20px; }
     label { display: flex; align-items: center; gap: 8px; }
     button { padding: 10px 20px; margin-top: 20px; }
+    .preview-content {
+      padding: 20px;
+      font-size: 14px;
+    }
+    .letterhead {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .document-title {
+      font-size: 18px;
+      font-weight: bold;
+      text-align: center;
+      margin: 20px 0;
+    }
+    .document-body {
+      line-height: 1.6;
+      text-align: justify;
+    }
+    .signature-line {
+      margin-top: 50px;
+      text-align: right;
+    }
+    .photo-container {
+      position: absolute;
+      left: 40px;
+      width: 1in;
+      height: 1in;
+      border: 1px solid #000;
+    }
+    .photo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
   </style>
 </head>
 <body>
@@ -28,11 +62,86 @@
   <script>
     let recordData = {};
 
+    function generatePolicePreview(data) {
+      return `
+        <div class="preview-content">
+          <div class="photo-container">
+            <img class="photo" src="public/assets/faces/${data.faceFileName}" alt="ID Photo" onerror="this.src='public/assets/placeholder.png'" />
+          </div>
+          <div class="letterhead">
+            <h3>POLICE CLEARANCE</h3>
+            <p>Republic of the Philippines</p>
+            <p>Province of [Province]</p>
+            <p>City of [City]</p>
+          </div>
+          <div class="document-body">
+            <p>This is to certify that ${data.firstName} ${data.lastName}, ${data.age} years old,
+            residing at ${data.address} has no derogatory record on file with this office.</p>
+            <p>This certification is issued upon the request of the above-named person for whatever legal purpose it may serve.</p>
+          </div>
+          <div class="signature-line">
+            <p>Chief of Police</p>
+            <p>[Name of Police Chief]</p>
+          </div>
+        </div>
+      `;
+    }
+
+    function generateBarangayClearancePreview(data) {
+      return `
+        <div class="preview-content">
+          <div class="photo-container">
+            <img class="photo" src="public/assets/faces/${data.faceFileName}" alt="ID Photo" onerror="this.src='public/assets/placeholder.png'" />
+          </div>
+          <div class="letterhead">
+            <h3>BARANGAY CLEARANCE</h3>
+            <p>Republic of the Philippines</p>
+            <p>Barangay [Barangay Name]</p>
+          </div>
+          <div class="document-body">
+            <p>TO WHOM IT MAY CONCERN:</p>
+            <p>This is to certify that ${data.firstName} ${data.lastName}, ${data.age} years old,
+            is a bonafide resident of ${data.address}, Barangay [Barangay Name].</p>
+            <p>This certification is being issued upon request of the above-named person for whatever legal purpose it may serve.</p>
+          </div>
+          <div class="signature-line">
+            <p>Barangay Captain</p>
+            <p>[Name of Barangay Captain]</p>
+          </div>
+        </div>
+      `;
+    }
+
+    function generateBarangayCertificatePreview(data) {
+      return `
+        <div class="preview-content">
+          <div class="photo-container">
+            <img class="photo" src="public/assets/faces/${data.faceFileName}" alt="ID Photo" onerror="this.src='public/assets/placeholder.png'" />
+          </div>
+          <div class="letterhead">
+            <h3>BARANGAY CERTIFICATE</h3>
+            <p>Republic of the Philippines</p>
+            <p>Barangay [Barangay Name]</p>
+          </div>
+          <div class="document-body">
+            <p>TO WHOM IT MAY CONCERN:</p>
+            <p>This is to certify that ${data.firstName} ${data.lastName}, ${data.age} years old,
+            Filipino, is a resident of ${data.address}, Barangay [Barangay Name].</p>
+            <p>Based on records of this office, he/she is of good moral character and a law-abiding citizen.</p>
+          </div>
+          <div class="signature-line">
+            <p>Barangay Captain</p>
+            <p>[Name of Barangay Captain]</p>
+          </div>
+        </div>
+      `;
+    }
+
     window.electronPrintAPI.onRecordData((record) => {
       recordData = record;
-      document.getElementById("police-preview").innerText = JSON.stringify(record, null, 2);
-      document.getElementById("barangay-clearance-preview").innerText = JSON.stringify(record, null, 2);
-      document.getElementById("barangay-certificate-preview").innerText = JSON.stringify(record, null, 2);
+      document.getElementById("police-preview").innerHTML = generatePolicePreview(record);
+      document.getElementById("barangay-clearance-preview").innerHTML = generateBarangayClearancePreview(record);
+      document.getElementById("barangay-certificate-preview").innerHTML = generateBarangayCertificatePreview(record);
     });
 
     function submitPrint() {

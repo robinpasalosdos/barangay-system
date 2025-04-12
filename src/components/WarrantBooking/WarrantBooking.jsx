@@ -3,6 +3,7 @@ import Table from "../Shared/Table/Table";
 import { WarrantBookingContext } from "../../context";
 import WarrantBookingForm from "./WarrantBookingForm";
 import MugshotCapture from "./MugshotCapture";
+import FingerprintCapture from "./FingerprintCapture";
 
 
 const WarrantBooking = () => {
@@ -43,6 +44,7 @@ const WarrantBooking = () => {
       <>
         <WarrantBookingForm />
         <MugshotCapture />
+        <FingerprintCapture />
       </>
     )}
     />

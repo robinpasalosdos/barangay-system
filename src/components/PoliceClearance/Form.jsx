@@ -15,6 +15,9 @@ const Form = ({
   handleOpenFaceCapture,
   image,
   isEditing,
+  handleOpenRightFingerprintCapture,
+  handleOpenLeftFingerprintCapture,
+  fingerprints
 }) => {
   return (
     <div id="modal">
@@ -61,10 +64,14 @@ const Form = ({
                 <BiometricsSectionFinger
                   label="Right Finger 1:"
                   buttonText="SCAN"
+                  onClick={handleOpenRightFingerprintCapture}
+                  fingerprints={fingerprints["right-thumb"]}
                 />
                 <BiometricsSectionFinger
                   label="Left Finger 2:"
                   buttonText="SCAN"
+                  onClick={handleOpenLeftFingerprintCapture}
+                  fingerprints={fingerprints["left-thumb"]}
                 />
                 <BiometricsSectionFace
                   label="Face 3:"
