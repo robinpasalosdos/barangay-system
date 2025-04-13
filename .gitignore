@@ -29,6 +29,7 @@ barangay.db
 # Folders
 public/assets/faces/
 node_modules/
+public/assets/mugshots/
 
 # Configs
 package-lock.json  
@@ -36,3 +37,4 @@ package-lock.json
 
 # Artifacts
 *.css.map
+out/

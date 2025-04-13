@@ -30,7 +30,13 @@ app.on("ready", () => {
     },
   });
 
-  mainWindow.loadURL("http://localhost:5173");
+  const isDev = !app.isPackaged;
+
+  if (isDev) {
+    mainWindow.loadURL("http://localhost:5173");
+  } else {
+    mainWindow.loadFile(path.join(__dirname, "dist", "index.html"));
+  }
   
 });
 
