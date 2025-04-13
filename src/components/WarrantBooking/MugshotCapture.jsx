@@ -58,7 +58,7 @@ const MugshotCapture = () => {
   };
   const wrapperStyle = {
     backgroundColor: '#022539',
-    border: '2px solid #1b1f30',
+    border: '2px solid #1C768F',
     padding: '24px',
     borderRadius: '12px',
     color: '#fff',
@@ -95,28 +95,33 @@ const MugshotCapture = () => {
   };
   
   const buttonStyle = {
-    padding: '10px 24px',
-    borderRadius: '8px',
-    fontWeight: 'bold',
+    marginTop: '8px',
+    padding: '8px 12px',
+    backgroundColor: '#1C768F',
+    color: '#fff',
     border: 'none',
+    borderRadius: '8px',
     cursor: 'pointer',
+    width: '100px',
+    height: '35px',
+    fontSize: '11px',
   };
   
   const captureBtn = {
     ...buttonStyle,
-    backgroundColor: '#7b61ff',
+    backgroundColor: '#1C768F',
     color: 'white',
   };
   
   const retryBtn = {
     ...buttonStyle,
-    backgroundColor: '#7b61ff',
+    backgroundColor: '#1C768F',
     color: 'white',
   };
   
   const saveBtn = {
     ...buttonStyle,
-    backgroundColor: '#007bff',
+    backgroundColor: '#1C768F',
     color: 'white',
   };
 

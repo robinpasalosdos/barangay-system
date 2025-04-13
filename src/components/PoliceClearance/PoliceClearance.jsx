@@ -13,12 +13,12 @@ const PoliceClearance = () => {
     // { key: "pcNumber", label: "PC #", render: () => "12345" },
     { key: "orNumber", label: "OR #" },
     { key: "orDate", label: "OR Date" },
-    { key: "lastName", label: "Name" },
+    { key: "lastName", label: "Name", render: (row) => `${row.lastName}, ${row.firstName} ${row.middleName}` },
     { key: "user", label: "User" },
   ];
   const context = useContext(PoliceClearanceContext);
   const searchOptions = [
-    { value: "fullName", label: "Full Name |LN FN MN|" },
+    { value: "fullName", label: "Full Name (LN, FN MN)" },
     { value: "documentNumber", label: "Document Number" }
   ];
   const {

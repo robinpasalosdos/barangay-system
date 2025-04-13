@@ -70,8 +70,8 @@ const templates = {
       <div class="letterhead">
         <h3>POLICE CLEARANCE</h3>
         <p>Republic of the Philippines</p>
-        <p>Province of [Province]</p>
-        <p>City of [City]</p>
+        <p>Province of Bataan</p>
+        <p>Municipality of Hermosa</p>
       </div>
       <div class="document-body">
         <p>This is to certify that ${data.firstName} ${data.lastName}, ${data.age} years old,
@@ -86,7 +86,7 @@ const templates = {
     </body>
     </html>
   `,
-  
+
   barangayClearance: (data) => `
     <html>
     <head>
@@ -117,12 +117,14 @@ const templates = {
       <div class="letterhead">
         <h3>BARANGAY CLEARANCE</h3>
         <p>Republic of the Philippines</p>
-        <p>Barangay [Barangay Name]</p>
+        <p>Province of Bataan</p>
+        <p>Municipality of Hermosa</p>
+        <p>Barangay Mabiga</p>
       </div>
       <div class="document-body">
         <p>TO WHOM IT MAY CONCERN:</p>
         <p>This is to certify that ${data.firstName} ${data.lastName}, ${data.age} years old,
-        is a bonafide resident of ${data.address}, Barangay [Barangay Name].</p>
+        is a bonafide resident of ${data.address}, Barangay Mabiga.</p>
         <p>This certification is being issued upon request of the above-named person for ${data.purpose}.</p>
         <p>Issued on: ${data.dateIssued}</p>
       </div>
@@ -133,7 +135,7 @@ const templates = {
     </body>
     </html>
   `,
-  
+
   barangayCertificate: (data) => `
     <html>
     <head>
@@ -164,12 +166,14 @@ const templates = {
       <div class="letterhead">
         <h3>BARANGAY CERTIFICATE</h3>
         <p>Republic of the Philippines</p>
-        <p>Barangay [Barangay Name]</p>
+        <p>Province of Bataan</p>
+        <p>Municipality of Hermosa</p>
+        <p>Barangay Mabiga</p>
       </div>
       <div class="document-body">
         <p>TO WHOM IT MAY CONCERN:</p>
         <p>This is to certify that ${data.firstName} ${data.lastName}, ${data.age} years old,
-        Filipino, is a resident of ${data.address}, Barangay [Barangay Name].</p>
+        Filipino, is a resident of ${data.address}, Barangay Mabiga.</p>
         <p>Based on records of this office, he/she is of good moral character and a law-abiding citizen.</p>
         <p>This certification is being issued upon request of the above-named person for ${data.purpose}.</p>
         <p>Issued on: ${data.dateIssued}</p>

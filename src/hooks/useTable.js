@@ -9,22 +9,20 @@ const useTable = (data, setSelectedData, setIsEditing, setIsModalOpen, featureNa
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
-  // Memoize filtered data to optimize performance
   const filteredData = useMemo(() => {
     let sortedData = [...data];
 
     sortedData = sortedData.filter((record) => {
       let value = "";
 
-    if (searchBy === "fullName") {
-      const names = [record.lastName, record.firstName, record.middleName]
-        .filter(Boolean) // remove undefined/null
-        .join(" ")
-        .toLowerCase();
-      value = names;
-    } else {
-      value = record[searchBy]?.toLowerCase() || "";
-    }
+      if (searchBy === "fullName") {
+        const formattedName = `${record.lastName}, ${record.firstName} ${record.middleName || ""}`
+          .trim()
+          .toLowerCase();
+        value = formattedName;
+      } else {
+        value = record[searchBy]?.toLowerCase() || "";
+      }
 
     const matchesSearch = value.includes(searchQuery.toLowerCase());
 

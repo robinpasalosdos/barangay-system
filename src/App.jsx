@@ -6,6 +6,7 @@ import UserStatus from "./components/UserStatus/UserStatus";
 import CitizenInformation from "./components/CitizenInformation/CitizenInformation";
 import WarrantBooking from "./components/WarrantBooking/WarrantBooking";
 import RogueDirectory from "./components/RogueDirectory/RogueDirectory";
+import TestComponent from "./components/TestComponent/TestComponent";
 import Login from "./components/Login/Login";
 import SideBar from "./SideBar";
 import "./App.css";
@@ -34,6 +35,7 @@ const AppContent = () => {
                         <Route path="/warrant-booking" element={<WarrantBooking />} />
                         <Route path="/rogue-directory" element={<RogueDirectory />} />
                         <Route path="/user-status" element={<UserStatus />} />
+                        {/* <Route path="/test-component" element={<TestComponent />} /> */}
                     </Routes>
                 </div>
             )}

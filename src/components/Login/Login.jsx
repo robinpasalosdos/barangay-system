@@ -3,10 +3,7 @@ import { MainContext } from '../../context/MainContext';
 import { FaUser, FaLock, FaSpinner } from 'react-icons/fa';
 
 const Login = () => {
-    const [formData, setFormData] = useState({
-        username: 'admin',
-        password: '123'
-    });
+    const [formData, setFormData] = useState({});
     const [message, setMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [shake, setShake] = useState(false);

@@ -19,7 +19,7 @@ const WarrantBooking = () => {
   const featureName = "Warrant Booking";
   const context = useContext(WarrantBookingContext);
   const searchOptions = [
-    { value: "fullName", label: "Full Name |LN FN MN|" },
+    { value: "fullName", label: "Full Name (LN FN MN)" },
     { value: "crimeCommitted", label: "Crime Committed" }
   ];
   const {

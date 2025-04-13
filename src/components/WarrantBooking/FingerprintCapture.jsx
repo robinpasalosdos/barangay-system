@@ -21,8 +21,8 @@ const FingerprintCapture = () => {
   };
 
   const wrapperStyle = {
-    backgroundColor: '#0d1125',
-    border: '2px solid #1981ff',
+    backgroundColor: '#022539',
+    border: '1px solid #1C768F',
     padding: '24px',
     borderRadius: '16px',
     color: '#fff',
@@ -51,25 +51,35 @@ const FingerprintCapture = () => {
   const buttonStyle = {
     marginTop: '8px',
     padding: '8px 12px',
-    backgroundColor: '#7b61ff',
+    backgroundColor: '#1C768F',
     color: '#fff',
     border: 'none',
     borderRadius: '8px',
-    fontWeight: 'bold',
     cursor: 'pointer',
+    width: '100px',
+    height: '35px',
+    fontSize: '11px',
   };
 
   const saveButtonStyle = {
     padding: '12px 32px',
-    backgroundColor: '#007bff',
+    backgroundColor: '#FB991C',
     color: '#fff',
     border: 'none',
     borderRadius: '10px',
-    fontWeight: 'bold',
     cursor: 'pointer',
     display: 'block',
-    margin: '32px auto 0',
+    width: '150px',
+    height: '35px',
+    fontSize: '11px',
   };
+
+  const btnContainerStyle = {
+    display: 'flex',
+    width: "250px",
+    margin: '0 auto 5px',
+    gap: '10px',
+  }
 
   const renderFingerBox = (finger, hand) => {
     const key = `${hand}-${finger}`;
@@ -108,15 +118,16 @@ const FingerprintCapture = () => {
       <div style={rowStyle}>
         {fingers.map(finger => renderFingerBox(finger, 'right'))}
       </div>
+      <div style={btnContainerStyle}>
 
-      {allCaptured && (
         <button style={saveButtonStyle} onClick={() => setIsFingerprintCaptureVisible(false)}>
           SAVE
         </button>
-      )}
-      <button style={saveButtonStyle} onClick={() => setIsFingerprintCaptureVisible(false)}>
-        CANCEL
-      </button>
+   
+        <button style={saveButtonStyle} onClick={() => setIsFingerprintCaptureVisible(false)}>
+          CANCEL
+        </button>
+      </div>
     </div>
   );
 };

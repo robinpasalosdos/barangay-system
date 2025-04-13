@@ -8,7 +8,7 @@ const SearchBar = ({ searchQuery, setSearchQuery, placeholder }) => {
       value={searchQuery}
       onChange={(e) => setSearchQuery(e.target.value)}
       className="search-input"
-      style={{width: "120px"}}
+      style={{width: "300px"}}
     />
   );
 };

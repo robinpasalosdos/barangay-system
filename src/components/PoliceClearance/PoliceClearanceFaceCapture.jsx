@@ -67,22 +67,22 @@ const PoliceClearanceFaceCapture = ({}) => {
             <div>
               <div>
                 {!image ? (
-                  <button onClick={handleCapture}>
+                  <button className="teal" onClick={handleCapture}>
                     Capture
                   </button>
                 ) : (
-                  <button onClick={handleRetry}>
+                  <button className="teal" onClick={handleRetry}>
                     Retry
                   </button>
                 )}
               </div>
               <div>
                 {image ? (
-                  <button onClick={handleSave}>
+                  <button className="teal" onClick={handleSave}>
                     Save Image
                   </button>
                 ) : (
-                  <button onClick={handleCancel}>
+                  <button className="teal" onClick={handleCancel}>
                     Cancel
                   </button>
                 )}    

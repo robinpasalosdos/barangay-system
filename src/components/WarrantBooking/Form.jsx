@@ -163,23 +163,35 @@ const Form = ({
                 value={formState.colorOfEyes || ""}
                 onChange={handleChange}
               />
-
+              
+            </div>
+            <div>
               <InputField
                 label="FP Syllabus"
                 id="fpSyllabus"
                 name="fpSyllabus"
-                placeholder="Enter FP Syllabus"
                 value={formState.fpSyllabus || ""}
                 onChange={handleChange}
+                width={"439px"}
+                height={"100px"}
+                type="textarea"
               />
+              <div className="biometrics-btns">
+                <button className="teal" onClick={handleOpenFaceCapture}>
+                  Mugshots
+                </button>
+                <button className="teal" onClick={handleOpenFingerprintCapture}>
+                  Fingerprints
+                </button>
+              </div>
             </div>
             <div>
               <InputField
                 label="CCIS Number"
                 id="ccisNumber"
-                name="ccIsNumber"
+                name="ccisNumber"
                 placeholder="Enter CCIS Number"
-                value={formState.ccIsNumber || ""}
+                value={formState.ccisNumber || ""}
                 onChange={handleChange}
               />
 
@@ -228,14 +240,6 @@ const Form = ({
                 value={formState.remarks || ""}
                 onChange={handleChange}
               />
-            </div>
-            <div>
-              <button onClick={handleOpenFaceCapture}>
-                Mugshots
-              </button>
-              <button onClick={handleOpenFingerprintCapture}>
-                Fingerprints
-              </button>
             </div>
           </div>
         </div>

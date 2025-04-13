@@ -74,7 +74,6 @@ const useWarrantBookingForm = (
 
     if (!image || typeof image !== "string" || !image.startsWith("data:image/")) {
       console.error("Invalid image data:", image);
-      alert("Invalid image data. Please capture or upload a valid image.");
       return null;
     }
 

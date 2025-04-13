@@ -8,10 +8,10 @@ const BiometricsSectionFinger = ({ label, buttonText, onClick, fingerprints }) =
       {fingerprints ? (
         <img src={fingerprints} alt="fingerprint" />
       ) : (
-        <p>No fingerprint captured</p>
+        <p>O</p>
       )}
     </div>
-      <button className="biometrics-finger-btn yellow" onClick={onClick}>
+      <button className="biometrics-finger-btn teal" onClick={onClick}>
         {buttonText}
       </button>
     </div>

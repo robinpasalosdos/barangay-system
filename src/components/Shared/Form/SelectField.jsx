@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const SelectField = ({ label, id, name, options, value, onChange, width }) => {
+const SelectField = ({ label, id, name, options, value, onChange }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleFocus = () => setIsOpen(false);
@@ -13,13 +13,13 @@ const SelectField = ({ label, id, name, options, value, onChange, width }) => {
       onBlur={handleBlur}
     >
       <label htmlFor={id}>{label}</label>
-      <select id={id} name={name} value={value} onChange={onChange} onClick={() => setIsOpen((prev) => !prev)} style={{ width: width }}>
+      <select id={id} name={name} value={value} onChange={onChange} onClick={() => setIsOpen((prev) => !prev)}>
         <option value="" disabled>
           Select {label}
         </option>
         {options.map((option, index) => (
-          <option key={index} value={typeof option === "object" ? option.value : option}>
-            {typeof option === "object" ? option.display : option}
+          <option key={index} value={option}>
+            {option}
           </option>
         ))}
       </select>

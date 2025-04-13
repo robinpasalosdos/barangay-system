@@ -117,6 +117,10 @@
     background: #716FE7;
 }
 
+.teal {
+    background: #1C768F;
+}
+
 .table-container {
     background: #022539;
     padding: 50px 50px 40px;
@@ -135,10 +139,10 @@
 }
 
 .table-container > div:first-child {
-    align-items: center;
-    height: 30px;
     justify-content: space-between;
     padding-bottom: 50px;
+    flex-direction: column;
+    gap: 20px;
 }
 
 .table-container > div:last-child {
@@ -148,11 +152,12 @@
 
 .table-container h2 {
     color: #ffffff;
-    font-size: 22px;
+    font-size: 26px;
 }
 
 .table-container > div:first-child > div:first-child {
     flex: 1;
+    height: 100px;
 }
 
 .table-container > div:first-child > div:last-child > button{
@@ -160,15 +165,36 @@
 }
 
 .table-container > div:first-child > div:last-child {
-    justify-content: end;
     flex: 1;
     gap: 10px;
     height: 30px;
 }
 
-.table-container > div:first-child > div:last-child {
+
+.table-container > div:first-child > div div{
+    flex-direction: column;
+    gap: 5px;
+}
+
+.table-container > div:first-child > div > div:last-child{
     justify-content: end;
-    flex: 1;
+}
+
+.table-container button{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #022539;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 12px;
+}
+
+.table-container > div:first-child > div div span{
+    font-size: 13px;
+    color: #FFFFFF;
+    text-indent: 5px;
+    font-weight: 500;
 }
 
 th, td {
@@ -202,13 +228,15 @@ th:last-child, td:last-child {
 th {
     color: #FFFFFF;
     font-size: 12px;
-    font-weight: 400;
-    padding-bottom: 20px;
+    font-weight: 500;
+    padding: 5px 0 10px;
+    color: #FFFFFF;
+
 }
 
 tbody {
     display: block;
-    height: 250px;
+    height: 330px;
     overflow-y: auto; 
 }
 
@@ -265,9 +293,10 @@ body{
 
 #modal {
     width: 750px;
+    border: 1px solid #1C768F;
 }
 
-select,  #modal input, .table-container input, .user-status-form input[type="text"], .user-status-form input[type="password"]{
+#modal select,  #modal input, .table-container input, .table-container select, .user-status-form input[type="text"], .user-status-form input[type="password"]{
     all: unset;
     font-size: 10px;
     text-indent: 12px;
@@ -279,16 +308,20 @@ select,  #modal input, .table-container input, .user-status-form input[type="tex
     border: 2px solid rgba(255, 255, 255, 0.2);
 }
 
+/* .table-container input, .table-container select{
+    background: rgba(251, 243, 242, 0.1);
+} */
+
 input[type="date"]::-webkit-calendar-picker-indicator {
     filter: invert(1);
     opacity: 1;
-  }
-
-#modal input:focus, select:focus {
-    border: 2px solid rgba(255, 255, 255, 0.8);
 }
 
-select {
+#modal select:focus, #modal input:focus, .table-container input:focus, .table-container select:focus {
+    border: 2px solid #FB991C;
+}
+
+#modal select, .table-container select {
     display: flex;
     align-items: center;
 }
@@ -313,20 +346,15 @@ select {
     content: "▴"; /* Up arrow when open */
 }
 
-select {
-    display: flex;
-    align-items: center;
-}
-
-select option {
+#modal select option, .table-container select option {
     border: 2px solid rgba(255, 255, 255, 0.2);
     border-radius: 12px;
-    background-color: #34495e; /* Background color for options */
-    color: #ffffff; /* Text color for options */
+    background-color: #34495e;
+    color: #ffffff;
     padding: 10px;
 }
 
-.content button{
+#modal button{
     font-size: 8px;
     font-weight: 500;
     color: #ffffff;
@@ -448,6 +476,13 @@ select option {
     flex-direction: column;
     gap: 3px;
     justify-content: end;                        
+}
+
+#modal .biometrics-btns {
+    display: flex;
+    gap: 10px;
+    width: 210px;
+    justify-content: center;
 }
 
 .wmodal > div:first-child > div:last-child > div div {
@@ -609,6 +644,7 @@ select option {
     border-radius: 20px;
     width: 300px;
     background: #022539;
+    border: 1px solid #1C768F;
 }
 
 
@@ -926,4 +962,53 @@ select option {
         padding: 30px 20px;
         margin: 16px;
     }
+}
+
+.action-buttons {
+    display: flex;
+    gap: 4px;
+    padding: 2px;
+}
+
+.action-button {
+    padding: 3px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 25px;
+    width: 25px;
+    border: none;
+}
+
+.action-button:hover {
+    transform: scale(1.1);
+}
+
+.action-button.delete {
+    background: #dc262650;
+    color: #dc2626;
+}
+
+.action-button.edit, .action-button.print{
+    background: #1C768F;
+    color: #FFFFFF;
+  }
+  
+.action-button.edit:hover, .action-button.print:hover {
+    background: #1C768F;
+    color: #FFFFFF;
+}
+
+.action-button.delete:hover {
+    background: #dc262650;
+    color: #b91c1c;
+}
+
+.action-button.disabled {
+    color: #a0aec0;
+    cursor: not-allowed;
+    pointer-events: none;
 }

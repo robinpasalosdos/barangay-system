@@ -54,7 +54,6 @@ const usePoliceClearanceForm = (
       };
       setFingerprints(savedFingerprintPath);
     } else {
-      // Reset to placeholder image for new records
       setFormState(initialFormState);
       setImage(`/assets/faces/placeholder.jpg`);
     }
@@ -63,6 +62,7 @@ const usePoliceClearanceForm = (
   // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
+    console.log(`Field: ${name}, Value: ${value}`);
     setFormState((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -106,6 +106,9 @@ const usePoliceClearanceForm = (
     setFormState(initialFormState);
     setSelectedData(null);
     setIsFaceChanged(false);
+    if (!isEditing) {
+      setImage(`/assets/faces/placeholder.jpg`);
+    }
   };
 
   // Handle form submission

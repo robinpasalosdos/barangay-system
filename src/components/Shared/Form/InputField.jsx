@@ -12,6 +12,7 @@ const InputField = ({
   onChange,
   onBlur,
   width,
+  height,
 }) => (
   <div>
     <label htmlFor={id}>{label}</label>
@@ -21,7 +22,7 @@ const InputField = ({
       name={name}
       placeholder={placeholder}
       readOnly={readOnly}
-      style={{ ...style, width }} // Apply width dynamically
+      style={{ ...style, width, height }}
       value={value}
       onChange={onChange}
       onBlur={onBlur}

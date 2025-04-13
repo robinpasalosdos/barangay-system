@@ -102,6 +102,19 @@ const SideBar = () => {
                             )}
                         </NavLink>
                     )}
+                    {/* <NavLink to="/test-component">
+                        {({ isActive }) => (
+                            <li className={isActive ? 'active' : ''}>
+                                <div>
+                                    <svg width="11" height="13" viewBox="0 0 11 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M6.75 0.25H1.75C1.41848 0.25 1.10054 0.381696 0.866116 0.616116C0.631696 0.850537 0.5 1.16848 0.5 1.5V11.5C0.5 11.8315 0.631696 12.1495 0.866116 12.3839C1.10054 12.6183 1.41848 12.75 1.75 12.75H9.25C9.58152 12.75 9.89946 12.6183 10.1339 12.3839C10.3683 12.1495 10.5 11.8315 10.5 11.5V4L6.75 0.25ZM9.25 11.5H1.75V1.5H6.125V4.625H9.25V11.5Z" 
+                                        fill={isActive ? "#FB991C" : "#FFFFFF"}/>
+                                    </svg>
+                                </div>
+                                <span>Test</span>
+                            </li>
+                        )}
+                    </NavLink> */}
                 </ul>
 
                 <h3>TOOLS</h3>

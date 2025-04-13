@@ -16,7 +16,7 @@ const RogueDirectory = () => {
   const featureName = "Rogue Directory";
   const context = useContext(RogueDirectoryContext);
   const searchOptions = [
-    { value: "fullName", label: "Full Name |LN FN MN|" },
+    { value: "fullName", label: "Full Name (LN FN MN)" },
     { value: "crimeCommitted", label: "Crime Committed" }
   ];
  

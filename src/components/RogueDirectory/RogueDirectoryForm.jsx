@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import '../../App.css';
 import { RogueDirectoryContext } from "../../context";
-import useForm from "../../hooks/usePoliceClearanceForm";
+import useWarrantBookingForm from "../../hooks/useWarrantBookingForm";
 import Form from "./Form";
 
 const RogueDirectoryForm = () => {
@@ -59,7 +59,7 @@ const RogueDirectoryForm = () => {
     handleCancel,
     handleBirthdateBlur,
     handleOpenFaceCapture,
-  } = useForm(
+  } = useWarrantBookingForm(
     initialFormState,
     selectedData,
     isEditing,

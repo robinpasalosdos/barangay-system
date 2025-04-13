@@ -172,9 +172,9 @@ const Form = ({
               <InputField
                 label="CCIS Number"
                 id="ccisNumber"
-                name="ccIsNumber"
+                name="ccisNumber"
                 placeholder="Enter CCIS Number"
-                value={formState.ccIsNumber || ""}
+                value={formState.ccisNumber || ""}
                 onChange={handleChange}
               />
 

@@ -183,7 +183,7 @@ db.run(
               ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
               [
                 'admin',            // username
-                '123',              // password
+                '12345678',              // password
                 1,                  // policeClearance (default 0)
                 1,                  // citizenInformation (default 0)
                 1,                  // warrantBooking (default 0)

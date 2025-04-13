@@ -13,17 +13,20 @@ const RightFingerprintCapture = ({ fingerprints, onCapture }) => {
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
+    margin: '15px'
   };
 
   const buttonStyle = {
     marginTop: '8px',
     padding: '8px 12px',
-    backgroundColor: '#7b61ff',
+    backgroundColor: '#1C768F',
     color: '#fff',
     border: 'none',
     borderRadius: '8px',
-    fontWeight: 'bold',
     cursor: 'pointer',
+    width: '100px',
+    height: '35px',
+    fontSize: '11px',
   };
 
   const renderFingerBox = (finger) => {

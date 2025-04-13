@@ -19,7 +19,7 @@ const BiometricsSectionFace = ({ label, buttonText, onButtonClick }) => {
           <p>No image available</p>
         )}
         </div>
-        <button onClick={onButtonClick} className="biometrics-face-btn yellow">
+        <button onClick={onButtonClick} className="biometrics-face-btn teal">
           {buttonText}
         </button>
       </div>
