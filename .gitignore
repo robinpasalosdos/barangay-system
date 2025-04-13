@@ -28,7 +28,9 @@ barangay.db
 
 # Folders
 public/assets/faces/
+public/assets/mugshots/*
 node_modules/
+
 
 # Configs
 package-lock.json  
