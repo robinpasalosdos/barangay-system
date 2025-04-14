@@ -7,7 +7,7 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 node_modules
-dist
+dist/
 dist-ssr
 *.local
 
@@ -30,6 +30,7 @@ barangay.db
 public/assets/faces/
 public/assets/mugshots/*
 node_modules/
+public/assets/mugshots/
 
 
 # Configs
@@ -38,3 +39,4 @@ package-lock.json
 
 # Artifacts
 *.css.map
+out/

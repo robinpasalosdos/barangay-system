@@ -9,8 +9,8 @@ import RogueDirectory from "./components/RogueDirectory/RogueDirectory";
 import TestComponent from "./components/TestComponent/TestComponent";
 import Login from "./components/Login/Login";
 import SideBar from "./SideBar";
-import "./App.css";
 import Dashboard from "./components/Dashboard";
+import "./App.css";
 
 const App = () => {
     return (
@@ -24,22 +24,20 @@ const AppContent = () => {
     const { isAuthenticated } = useContext(MainContext);
 
     return (
-        <Router>
-            {!isAuthenticated ? <Login /> : (
-                <div className="main-container">
-                    <SideBar />
-                    <Routes>
-                        <Route path="/" element={<Dashboard />} />
-                        <Route path="/police-clearance" element={<PoliceClearance />} />
-                        <Route path="/citizen-information" element={<CitizenInformation />} />
-                        <Route path="/warrant-booking" element={<WarrantBooking />} />
-                        <Route path="/rogue-directory" element={<RogueDirectory />} />
-                        <Route path="/user-status" element={<UserStatus />} />
-                        {/* <Route path="/test-component" element={<TestComponent />} /> */}
-                    </Routes>
-                </div>
-            )}
-        </Router>
+        !isAuthenticated ? <Login /> : (
+            <div className="main-container">
+                <SideBar />
+                <Routes>
+                    <Route path="/" element={<Dashboard />} />
+                    <Route path="/police-clearance" element={<PoliceClearance />} />
+                    <Route path="/citizen-information" element={<CitizenInformation />} />
+                    <Route path="/warrant-booking" element={<WarrantBooking />} />
+                    <Route path="/rogue-directory" element={<RogueDirectory />} />
+                    <Route path="/user-status" element={<UserStatus />} />
+                    {/* <Route path="/test-component" element={<TestComponent />} /> */}
+                </Routes>
+            </div>
+        )
     );
 };
 
