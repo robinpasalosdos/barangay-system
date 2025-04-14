@@ -1,8 +1,10 @@
 {
   "name": "baranguide-app",
+  "description": "A system for a Barangay",
+  "author": "WonderPetz",
   "private": true,
-  "version": "0.0.0",
-  "main": "main.cjs",
+  "version": "0.1.0",
+  "main": "main.js",
   "type": "module",
   "scripts": {
     "dev": "concurrently \"vite\" \"wait-on http://localhost:5173 && electron .\"",
@@ -10,7 +12,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "start": "electron-forge start",
-    "electron": "electron main.cjs",
+    "electron": "electron main.js",
     "package": "electron-forge package",
     "make": "electron-forge make"
   },
