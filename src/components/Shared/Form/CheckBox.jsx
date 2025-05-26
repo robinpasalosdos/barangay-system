@@ -3,7 +3,7 @@ import React from "react";
 const CheckBox = ({ id, label, checked, onChange }) => {
   return (
     <div className="checkbox-container">
-      <label htmlFor={id}>
+      <p htmlFor={id}>
         <input
           type="checkbox"
           id={id}
@@ -11,7 +11,7 @@ const CheckBox = ({ id, label, checked, onChange }) => {
           onChange={(e) => onChange(e.target.id, e.target.checked)}
         />
         {label}
-      </label>
+      </p>
     </div>
   );
 };

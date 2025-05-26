@@ -126,6 +126,7 @@ const useWarrantBookingForm = (
       if (isEditing) {
         console.log("Updating record:", record);
       } else {
+        delete record.id;
         console.log("Adding new record:", record);
       }
 

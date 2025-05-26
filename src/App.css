@@ -202,9 +202,14 @@ th, td {
     color: #A0AEC0;
     font-size: 11px;
     padding-right: 30px;
+    width: 120px;
+    max-width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    /* text-overflow: ellipsis; */
 }
 
-th:first-child, td:first-child {
+/* th:first-child, td:first-child {
     max-width: none;
     white-space: normal;
     overflow: visible;
@@ -217,8 +222,7 @@ th:not(:first-child), td:not(:first-child) {
     max-width: 150px;
     white-space: nowrap;
     overflow: hidden;
-    /* text-overflow: ellipsis; */
-}
+} */
 
 th:last-child, td:last-child {
     padding-right: 0;
@@ -354,7 +358,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     padding: 10px;
 }
 
-#modal button{
+#modal button {
     font-size: 8px;
     font-weight: 500;
     color: #ffffff;
@@ -642,7 +646,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     transform: translate(-50%, -50%);
     z-index: 1000;
     border-radius: 20px;
-    width: 300px;
+    width: 600px;
     background: #022539;
     border: 1px solid #1C768F;
 }
@@ -653,10 +657,45 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     height: 15px;
 }
 
-.user-status-form label{
+.user-status-form p{
     display: flex;
     align-items: center;
     gap: 10px;
+    font-size: 12px;
+}
+
+.user-status-form label {
+    font-size: 12px;
+}
+
+.user-status-form > div:nth-child(2) > div:last-child {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.user-status-form > div:nth-child(2) > div:first-child {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.user-status-form > div:nth-child(2) > div:first-child div {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.user-status-form > div:nth-child(2) > div:last-child div {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding-left: 5px;
+}
+
+.user-status-form > div:nth-child(2) {
+    display: flex;
+    gap: 50px;
 }
 
 .dashboard-container {
@@ -1011,4 +1050,77 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     color: #a0aec0;
     cursor: not-allowed;
     pointer-events: none;
+}
+
+.spinner {
+
+    width: 30px;
+    height: 30px;
+}
+
+/* Overlay styling */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.2); /* Semi-transparent black */
+  z-index: 10; /* Ensure it appears above the Table but below the form */
+}
+
+/* Notification container */
+.notification {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: #fff;
+  padding: 15px 20px;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Notification types */
+.notification.info {
+  background-color: #007bff;
+}
+
+.notification.warning {
+  background-color: #ffc107;
+}
+
+.notification.error {
+  background-color: #dc3545;
+}
+
+.notification.success {
+  background-color: #28a745;
+}
+
+/* Close button */
+.notification .close-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+/* Slide-in animation */
+@keyframes slide-in {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }

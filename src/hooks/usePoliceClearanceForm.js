@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { supabase } from "../lib/supabase";
 
 const usePoliceClearanceForm = (
   initialFormState,
@@ -18,41 +19,41 @@ const usePoliceClearanceForm = (
 ) => {
   const [formState, setFormState] = useState(initialFormState);
 
+  // Open face capture modal
   const handleOpenFaceCapture = () => {
     setIsFaceCaptureVisible(true);
     setIsFaceChanged(true);
     setImage(null);
   };
 
-  const handleOpenRightFingerprintCapture = () => {
-    setIsRightFingerprintVisible(true);
-  };
-  const handleOpenLeftFingerprintCapture = () => { 
-    setIsLeftFingerprintVisible(true);
-  };
+  // Open fingerprint capture modals
+  const handleOpenRightFingerprintCapture = () => setIsRightFingerprintVisible(true);
+  const handleOpenLeftFingerprintCapture = () => setIsLeftFingerprintVisible(true);
 
   // Populate form fields when `selectedData` changes
   useEffect(() => {
     if (isEditing && selectedData) {
       setFormState(selectedData);
+      const { data } = supabase.storage
+        .from("barangay-clearance-images") // Replace with your bucket name
+        .getPublicUrl('public/' +  selectedData.faceFileName);
 
-      // Set the image to the saved image path
-      const savedImagePath = `/assets/faces/${selectedData.faceFileName}`;
-      setImage(savedImagePath);
+      const publicUrl = data?.publicUrl || `/assets/faces/placeholder.jpg`; // Fallback to placeholder if no URL
+      console.log("Public URL:", publicUrl);
 
-      const savedFingerprintPath = {
-        'left-thumb': '/assets/fingerprint/thumb.jpg',
-        'left-index': '/assets/fingerprint/index.jpg',
-        'left-middle': '/assets/fingerprint/middle.jpg',
-        'left-ring': '/assets/fingerprint/ring.jpg',
-        'left-pinky': '/assets/fingerprint/pinky.jpg',
-        'right-thumb': '/assets/fingerprint/thumb.jpg',
-        'right-index': '/assets/fingerprint/index.jpg',
-        'right-middle': '/assets/fingerprint/middle.jpg',
-        'right-ring': '/assets/fingerprint/ring.jpg',
-        'right-pinky': '/assets/fingerprint/pinky.jpg',
-      };
-      setFingerprints(savedFingerprintPath);
+      setImage(publicUrl);
+      setFingerprints({
+        "left-thumb": "/assets/fingerprint/thumb.jpg",
+        "left-index": "/assets/fingerprint/index.jpg",
+        "left-middle": "/assets/fingerprint/middle.jpg",
+        "left-ring": "/assets/fingerprint/ring.jpg",
+        "left-pinky": "/assets/fingerprint/pinky.jpg",
+        "right-thumb": "/assets/fingerprint/thumb.jpg",
+        "right-index": "/assets/fingerprint/index.jpg",
+        "right-middle": "/assets/fingerprint/middle.jpg",
+        "right-ring": "/assets/fingerprint/ring.jpg",
+        "right-pinky": "/assets/fingerprint/pinky.jpg",
+      });
     } else {
       setFormState(initialFormState);
       setImage(`/assets/faces/placeholder.jpg`);
@@ -62,78 +63,50 @@ const usePoliceClearanceForm = (
   // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log(`Field: ${name}, Value: ${value}`);
     setFormState((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Save image to Supabase
   const handleSaveImage = async () => {
-    // Skip saving the image if the photo modal was not opened
-    if (!isFaceChanged) {
-      console.log("Photo modal was not opened. Skipping image save.");
-      return formState.faceFileName || "placeholder.jpg"; // Return the existing or placeholder file name
-    }
+    if (!isFaceChanged) return formState.faceFileName || "placeholder.jpg";
 
-    if (!image || typeof image !== "string" || !image.startsWith("data:image/")) {
-      console.error("Invalid image data:", image);
-      alert("Invalid image data. Please capture or upload a valid image.");
+    if (!image || !image.startsWith("data:image/")) {
+      alert("Invalid image data.");
       return null;
     }
 
     try {
-      // Delete the old image if it exists and is not the placeholder
-      // Save the new image
       const response = await window.api.savePoliceClearanceImage(image);
+      if (!response || !response.publicUrl) throw new Error("Upload failed or bad response.");
 
-      if (!response || !response.filePath) {
-        throw new Error("Invalid response from saveImage");
-      }
-
-      const fileName = response.filePath.split("\\").pop(); // Extract the file name
-
-      setFormState((prev) => ({
-        ...prev,
-        faceFileName: fileName,
-      }));
-
+      const fileName = response.publicUrl.split("/").pop();
+      setFormState((prev) => ({ ...prev, faceFileName: fileName }));
       return fileName;
     } catch (error) {
-      console.error("Error saving image:", error);
+      console.error("Upload failed:", error);
+      alert("Failed to upload. Please try again.");
       return null;
     }
   };
 
+  // Reset form fields
   const resetForm = () => {
     setFormState(initialFormState);
     setSelectedData(null);
     setIsFaceChanged(false);
-    if (!isEditing) {
-      setImage(`/assets/faces/placeholder.jpg`);
-    }
+    if (!isEditing) setImage(`/assets/faces/placeholder.jpg`);
   };
 
   // Handle form submission
   const handleSubmit = async () => {
     try {
-      // Save the image and get the file name
       const fileName = await handleSaveImage();
+      const record = { ...formState, faceFileName: fileName };
 
-      // Prepare the record for submission
-      const record = {
-        ...formState,
-        faceFileName: fileName, // Include the updated faceFileName
-        id: selectedData?.id, // Include the id for updating
-      };
+      if (isEditing) record.id = selectedData?.id;
+      else delete record.id;
 
-      if (isEditing) {
-        console.log("Updating record:", record);
-      } else {
-        console.log("Adding new record:", record);
-      }
-
-      // Save the record to the database
       await addOrUpdateRecord(record);
-
-      // Reset the form and close the modal
       resetForm();
       setIsModalOpen(false);
       setFingerprints({});
@@ -144,9 +117,9 @@ const usePoliceClearanceForm = (
 
   // Handle cancel button click
   const handleCancel = () => {
-    resetForm(); // Reset the form fields
+    resetForm();
     setIsModalOpen(false);
-    setFingerprints({}); // Reset fingerprints
+    setFingerprints({});
   };
 
   // Calculate age based on birthdate
@@ -180,7 +153,7 @@ const usePoliceClearanceForm = (
     image,
     setImage,
     handleOpenRightFingerprintCapture,
-    handleOpenLeftFingerprintCapture
+    handleOpenLeftFingerprintCapture,
   };
 };
 

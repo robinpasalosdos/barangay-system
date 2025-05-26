@@ -1,7 +1,7 @@
 const { contextBridge, ipcRenderer } = require("electron");
 
 contextBridge.exposeInMainWorld("api", {
-  fetchPoliceClearanceRecords: () => ipcRenderer.invoke("fetch-police-clearance-records"),
+  fetchPoliceClearanceRecords: (filters) => ipcRenderer.invoke("fetch-police-clearance-records", filters),
   addPoliceClearanceRecord: (record) => ipcRenderer.invoke("add-police-clearance-record", record),
   updatePoliceClearanceRecord: (record) => ipcRenderer.invoke("update-police-clearance-record", record),
   deletePoliceClearanceRecord: (id) => ipcRenderer.invoke("delete-police-clearance-record", id),
@@ -12,11 +12,12 @@ contextBridge.exposeInMainWorld("api", {
   updateWarrantBookingRecord: (record) => ipcRenderer.invoke("update-warrant-booking-record", record),
   deleteWarrantBookingRecord: (id) => ipcRenderer.invoke("delete-warrant-booking-record", id),
   
-  fetchUsers: () => ipcRenderer.invoke("fetch-users"),
+  fetchUsers: (filters) => ipcRenderer.invoke("fetch-users", filters),
   addUser: (record) => ipcRenderer.invoke("add-user", record),
   updateUser: (record) => ipcRenderer.invoke("update-user", record),
   deleteUser: (id) => ipcRenderer.invoke("delete-user", id),
   login: (credentials) => ipcRenderer.invoke("login", credentials),
+  logout: () => ipcRenderer.invoke("logout"),
 
   fetchRogueDirectoryRecords: () => ipcRenderer.invoke("fetch-rogue-directory-records"),
   addRogueDirectoryRecord: (record) => ipcRenderer.invoke("add-rogue-directory-record", record),

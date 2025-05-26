@@ -3,6 +3,7 @@ import { join } from "path";
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import path from 'path';
+import 'dotenv/config';
 
 import "./src/db/db.js";
 import "./src/ipc/ipcHandler.js";

@@ -21,17 +21,16 @@ const Form = ({
 }) => {
   return (
     <div id="modal">
-      <div id="id" hidden="" />
       <div className="modal">
         <div>
           <div>
             <div>
               <InputField
-                label="Police Clearance No."
-                id="clearance-number"
-                name="clearanceNumber"
+                label="Barangay Clearance No."
+                id="barangay-clearance-number"
+                name="barangayClearanceNumber"
                 placeholder={"Enter Police Clearance No."}
-                value={formState.clearanceNumber || ""}
+                value={formState.barangayClearanceNumber || ""}
                 onChange={handleChange}
               />
               <InputField

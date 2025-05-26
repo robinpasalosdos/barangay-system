@@ -7,23 +7,23 @@ const FormButtons = ({ isEditing, onClose, onSubmit}) => {
     <div>
       {isEditing ? (
         <>
-          {user && user.editUSerAction && (
+          {user && user.editUserAction && (
             <button id="updateDataBtn" className="yellow" onClick={onSubmit}>UPDATE</button>
           )}
-          {user && user.prinUSerAction && (
+          {user && user.prinUserAction && (
             <button className="yellow">PRINT</button>
           )}
-          {user && user.deleteUSerAction && (
+          {user && user.deleteUserAction && (
             <button className="red">DELETE</button>
           )}
           <button className="teal" onClick={onClose}>CANCEL</button>
         </>
       ) : (
         <>
-        {user && user.addUSerAction && (
+        {user && user.addUserAction && (
           <button id="createDataBtn" className="yellow" onClick={onSubmit}>SAVE</button>
         )}
-        {user && user.printUSerAction && (
+        {user && user.printUserAction && (
           <button id="saveAndPrint" className="yellow">SAVE AND PRINT</button>
         )}
           <button type="button" className="teal" onClick={onClose}>CANCEL</button>

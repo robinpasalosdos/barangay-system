@@ -1,4 +1,5 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useCallback } from "react";
+import { toast } from "react-hot-toast";
 
 const createDataContext = (fetchRecordsFn, addRecordFn, updateRecordFn, deleteRecordFn, additionalState = {}) => {
   const Context = createContext();
@@ -10,36 +11,64 @@ const createDataContext = (fetchRecordsFn, addRecordFn, updateRecordFn, deleteRe
     const [selectedData, setSelectedData] = useState(null);
     const [error, setError] = useState(null);
 
+    // States for filtering and sorting
+    const [searchQuery, setSearchQuery] = useState("");
+    const [sortOption, setSortOption] = useState("newest");
+    const [searchBy, setSearchBy] = useState("last_name");
+    const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState("");
+
+    const [loading, setLoading] = useState(false)
+
     // Additional states
     const stateValues = Object.keys(additionalState).reduce((acc, key) => {
       acc[key] = useState(additionalState[key]);
       return acc;
     }, {});
 
-    const fetchRecords = async () => {
+    const fetchRecords = useCallback(async () => {
+      setLoading(true);
       try {
-        const records = await fetchRecordsFn();
+        const records = await fetchRecordsFn({
+          searchQuery,
+          searchBy,
+          startDate,
+          endDate,
+          sortOption,
+        });
         setData(records);
       } catch (error) {
         console.error("Error fetching records:", error);
-        setError(error);
+        setData([]);
+      } finally {
+        setLoading(false);
       }
-    };
+    }, [searchQuery, searchBy, startDate, endDate, sortOption]);
+
     const addOrUpdateRecord = async (record) => {
       try {
+        let result;
         if (isEditing) {
-          // Update logic
-          await updateRecordFn(record); // Call the IPC method for updating
+          // Update logic with proper error handling
+          result = await updateRecordFn(record);
+          if (result.error) {
+            throw new Error(result.error);
+          }
         } else {
           // Add new record
-          await await addRecordFn(record); // Call the IPC method for adding
+          result = await addRecordFn(record); // Remove double await
+          if (result.error) {
+            throw new Error(result.error);
+          }
         }
-        fetchRecords(); // Refresh data after adding or updating
+        await fetchRecords(); // Refresh data after adding or updating
+        setIsModalOpen(false); // Close modal after success
         setIsEditing(false); // Reset editing state
         setSelectedData(null); // Clear selected data
       } catch (error) {
         console.error("Error adding/updating record:", error);
-        setError(error);
+        toast.error(error.message);
+        setError(error.message);
       }
     };
 
@@ -53,14 +82,11 @@ const createDataContext = (fetchRecordsFn, addRecordFn, updateRecordFn, deleteRe
       }
     };
 
-    useEffect(() => {
-      fetchRecords();
-    }, []);
-
     return (
       <Context.Provider
         value={{
           data,
+          loading,
           setData,
           isModalOpen,
           setIsModalOpen,
@@ -68,14 +94,30 @@ const createDataContext = (fetchRecordsFn, addRecordFn, updateRecordFn, deleteRe
           setIsEditing,
           selectedData,
           setSelectedData,
+          searchQuery,
+          setSearchQuery,
+          sortOption,
+          setSortOption,
+          searchBy,
+          setSearchBy,
+          startDate,
+          setStartDate,
+          endDate,
+          setEndDate,
+          fetchRecords,
           addOrUpdateRecord,
           deleteRecord,
           error,
-          ...Object.fromEntries(Object.entries(stateValues).map(([key, [value, setter]]) => [key, value])), // ✅ Fixes the getter issue
-        ...Object.fromEntries(
-          Object.entries(stateValues).map(([key, [value, setter]]) => [`set${key.charAt(0).toUpperCase() + key.slice(1)}`, setter])
-        )
-      }}
+          ...Object.fromEntries(
+            Object.entries(stateValues).map(([key, [value, setter]]) => [key, value])
+          ),
+          ...Object.fromEntries(
+            Object.entries(stateValues).map(([key, [value, setter]]) => [
+              `set${key.charAt(0).toUpperCase() + key.slice(1)}`,
+              setter,
+            ])
+          ),
+        }}
       >
         {children}
       </Context.Provider>

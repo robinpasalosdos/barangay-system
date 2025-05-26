@@ -6,7 +6,7 @@ import PoliceClearanceForm from "./PoliceClearanceForm";
 import SingleHandFingerprintCapture from "./SingleHandFingerprintCapture";
 
 const PoliceClearance = () => {
-  const featureName = "Police Clearance";
+  const featureName = "Barangay Clearance";
   const columns = [
     { key: "documentNumber", label: "Doc #" },
     { key: "documentDate", label: "Document Date" },
@@ -18,27 +18,56 @@ const PoliceClearance = () => {
   ];
   const context = useContext(PoliceClearanceContext);
   const searchOptions = [
-    { value: "fullName", label: "Full Name (LN, FN MN)" },
-    { value: "documentNumber", label: "Document Number" }
+    { value: "last_name", label: "Full Name (LN, FN MN)" },
+    { value: "document_number", label: "Document Number" }
+  ];
+    const sortOptions = [
+    { value: "newest", display: "Newest to Oldest" },
+    { value: "oldest", display: "Oldest to Newest" },
   ];
   const {
     data,
+    loading,
+    fetchRecords,
     setIsModalOpen,
     setIsEditing,
     setSelectedData,
     deleteRecord,
+    searchQuery,
+    setSearchQuery,
+    searchBy,
+    setSearchBy,
+    startDate,
+    setStartDate,
+    endDate,
+    setEndDate,
+    sortOption,
+    setSortOption,
   } = context;
 
   return (
     <Table 
     columns = {columns}
     data = {data}
+    loading={loading}
     deleteRecord = {deleteRecord}
     setIsModalOpen = {setIsModalOpen}
     setIsEditing = {setIsEditing}
     setSelectedData = {setSelectedData}
     featureName = {featureName}
     searchOptions = {searchOptions}
+    sortOptions={sortOptions}
+    searchQuery={searchQuery}
+    setSearchQuery={setSearchQuery}
+    searchBy={searchBy}
+    setSearchBy={setSearchBy}
+    startDate={startDate}
+    setStartDate={setStartDate}
+    endDate={endDate}
+    setEndDate={setEndDate}
+    sortOption={sortOption}
+    setSortOption={setSortOption}
+    fetchRecords={fetchRecords}
     additionalComponents={() => (
       <>
         <PoliceClearanceForm />

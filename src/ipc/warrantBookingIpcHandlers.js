@@ -1,48 +1,39 @@
 import { ipcMain } from "electron";
-import db from "../db/db.js";
-// import fs from "fs"; never read but maybe in the future
-// import path from "path"; ^^
-import { promisify } from "util";
+import { supabase } from "../lib/supabase.js";
 
-const allQuery = promisify(db.all.bind(db));
-const runQuery = promisify(db.run.bind(db));
+// Utility functions for case conversion
+const toSnakeCase = (obj) => {
+  if (!obj || typeof obj !== "object") return obj;
+  if (Array.isArray(obj)) return obj.map(toSnakeCase);
 
-const columns = [
-  "lastName",
-  "firstName",
-  "middleName",
-  "dateOfBirth",
-  "placeOfBirth",
-  "age",
-  "address",
-  "civilStatus",
-  "gender",
-  "citizenship",
-  "height",
-  "colorOfHair",
-  "complexion",
-  "weight",
-  "colorOfEyes",
-  "fpSyllabus",
-  "ccisNumber",
-  "crimeCommitted",
-  "committedDate",
-  "placeOfCrime",
-  "placeOfInquisition",
-  "remarks"
-];
+  return Object.keys(obj).reduce((acc, key) => {
+    const snakeKey = key.replace(/([A-Z])/g, "_$1").toLowerCase();
+    acc[snakeKey] = toSnakeCase(obj[key]);
+    return acc;
+  }, {});
+};
+
+const toCamelCase = (obj) => {
+  if (!obj || typeof obj !== "object") return obj;
+  if (Array.isArray(obj)) return obj.map(toCamelCase);
+
+  return Object.keys(obj).reduce((acc, key) => {
+    const camelKey = key.replace(/_([a-z])/g, (_, char) => char.toUpperCase());
+    acc[camelKey] = toCamelCase(obj[key]);
+    return acc;
+  }, {});
+};
 
 // Add Record Handler
 ipcMain.handle("add-warrant-booking-record", async (event, record) => {
   try {
-    const placeholders = columns.map(() => "?").join(", ");
-    const sql = `INSERT INTO warrant_booking (${columns.join(", ")}) VALUES (${placeholders})`;
-    const values = columns.map((col) => record[col]);
+    const snakeCaseRecord = toSnakeCase(record); // Convert record keys to snake_case
+    const { data, error } = await supabase.from("warrant_booking").insert([snakeCaseRecord]);
 
-    await runQuery(sql, values);
-    return { message: "Record added successfully." };
+    if (error) throw new Error(`Supabase insert error: ${error.message}`);
+    return { message: "Record added successfully.", data };
   } catch (err) {
-    console.error("Error adding record:", err);
+    console.error("Error adding record:", err.message);
     return { error: "Failed to add record. " + err.message };
   }
 });
@@ -50,33 +41,58 @@ ipcMain.handle("add-warrant-booking-record", async (event, record) => {
 // Update Record Handler
 ipcMain.handle("update-warrant-booking-record", async (event, record) => {
   try {
-    const setClause = columns.map((col) => `${col} = ?`).join(", ");
-    const sql = `UPDATE warrant_booking SET ${setClause} WHERE id = ?`;
-    const values = [...columns.map((col) => record[col]), record.id];
+    const snakeCaseRecord = toSnakeCase(record); // Convert record keys to snake_case
+    const { error } = await supabase
+      .from("warrant_booking")
+      .update(snakeCaseRecord)
+      .eq("id", record.id); // Match the record by ID
 
-    await runQuery(sql, values);
+    if (error) throw new Error(`Supabase update error: ${error.message}`);
     return { message: "Record updated successfully." };
   } catch (err) {
-    console.error("Error updating record:", err);
+    console.error("Error updating record:", err.message);
     return { error: "Failed to update record. " + err.message };
   }
 });
 
-// Fetch Records
-ipcMain.handle("fetch-warrant-booking-records", async () => {
+// Fetch Records Handler
+ipcMain.handle("fetch-warrant-booking-records", async (event, filters = {}) => {
+  const {
+    searchQuery = "",
+    searchBy = "last_name",
+    startDate = "",
+    endDate = "",
+    sortOption = "newest",
+  } = filters;
+
   try {
-    const rows = await allQuery("SELECT * FROM warrant_booking");
-    return rows;
+    let query = supabase.from("warrant_booking").select("*");
+
+    if (searchQuery && searchBy) query = query.ilike(searchBy, `%${searchQuery}%`);
+    if (startDate) query = query.gte("committed_date", startDate);
+    if (endDate) query = query.lte("committed_date", endDate);
+
+    query = query.order("committed_date", { ascending: sortOption === "oldest" }).limit(50);
+
+    const { data: rows, error } = await query;
+    if (error) throw error;
+
+    return toCamelCase(rows); // Convert keys to camelCase before returning
   } catch (err) {
     console.error("Error fetching records:", err.message);
     return { error: "Failed to fetch records. " + err.message };
   }
 });
 
-// Delete Record
+// Delete Record Handler
 ipcMain.handle("delete-warrant-booking-record", async (event, id) => {
   try {
-    await runQuery("DELETE FROM warrant_booking WHERE id = ?", [id]);
+    const { error } = await supabase
+      .from("warrant_booking")
+      .delete()
+      .eq("id", id); // Match the record by ID
+
+    if (error) throw new Error(`Supabase delete error: ${error.message}`);
     return { message: "Record deleted successfully." };
   } catch (err) {
     console.error("Error deleting record:", err.message);

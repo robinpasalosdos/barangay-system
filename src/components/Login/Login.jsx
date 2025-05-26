@@ -3,12 +3,15 @@ import { MainContext } from '../../context/MainContext';
 import { FaUser, FaLock, FaSpinner } from 'react-icons/fa';
 
 const Login = () => {
-    const [formData, setFormData] = useState({});
+    const [formData, setFormData] = useState({
+        email: 'robinpasalosdos@gmail.com', // Pre-filled email
+        password: 'admin', // Pre-filled password
+    });
     const [message, setMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [shake, setShake] = useState(false);
 
-    const { setIsAuthenticated, setUser } = useContext(MainContext);
+    const { setisLoggedIn, setUser } = useContext(MainContext);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -22,7 +25,7 @@ const Login = () => {
         try {
             setIsLoading(true);
             const response = await window.api.login({ 
-                username: formData.username, 
+                email: formData.email, 
                 password: formData.password 
             });
 
@@ -30,18 +33,18 @@ const Login = () => {
                 const userData = response.user;
                 setUser({
                     ...userData,
-                    policeClearance: userData.policeClearance === 1,
-                    citizenInformation: userData.citizenInformation === 1,
-                    warrantBooking: userData.warrantBooking === 1,
-                    rogueDirectory: userData.rogueDirectory === 1,
-                    userStatus: userData.userStatus === 1,
-                    addUSerAction: userData.addUSerAction === 1,
-                    deleteUSerAction: userData.deleteUSerAction === 1,
-                    printUSerAction: userData.printUSerAction === 1,
-                    editUSerAction: userData.editUSerAction === 1,
-                    searchUSerAction: userData.searchUSerAction === 1
+                    policeClearance: !!userData.police_clearance,
+                    citizenInformation: !!userData.citizen_information,
+                    warrantBooking: !!userData.warrant_booking,
+                    rogueDirectory: !!userData.rogue_directory,
+                    userStatus: !!userData.user_status,
+                    addUserAction: !!userData.add_user_action,
+                    deleteUserAction: !!userData.delete_user_action,
+                    printUserAction: !!userData.print_user_action,
+                    editUserAction: !!userData.edit_user_action,
+                    searchUserAction: !!userData.search_user_action
                 });
-                setIsAuthenticated(true);
+                setisLoggedIn(true);
             } else {
                 setShake(true);
                 setTimeout(() => setShake(false), 500);
@@ -84,9 +87,9 @@ const Login = () => {
                         <FaUser className="input-icon" />
                         <input
                             type="text"
-                            name="username"
-                            placeholder="Username"
-                            value={formData.username}
+                            name="email"
+                            placeholder="Email"
+                            value={formData.email}
                             onChange={handleInputChange}
                             autoComplete="off"
                         />

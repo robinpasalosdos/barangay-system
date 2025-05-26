@@ -28,7 +28,7 @@ const PoliceClearanceForm = () => {
   const { user } = useContext(MainContext);
 
   const initialFormState = {
-    policeClearanceNumber: "",
+    barangayClearanceNumber: "",
     documentDate: "",
     orDate: "",
     documentNumber: "",

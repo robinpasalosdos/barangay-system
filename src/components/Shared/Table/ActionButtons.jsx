@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { MainContext } from '../../../context/MainContext';
 import { FaEdit, FaTrash, FaPrint } from 'react-icons/fa';
+import { toast } from 'react-hot-toast';
 
 const ActionButtons = ({ record, featureName, handleManage, deleteRecord }) => {
   const handlePrint = () => {
@@ -32,12 +33,13 @@ const ActionButtons = ({ record, featureName, handleManage, deleteRecord }) => {
           <FaPrint/>
         </button>
       )}
-      {user && user.deleteUSerAction && (
+      {user && user.deleteUserAction && (
         <button 
           className={`action-button delete ${isUser ? "disabled" : ""}`}
           onClick={() => {
             if (!isUser) {
               deleteRecord(record.id);
+              toast.success(`Record "${record.username || record.id}" deleted successfully!`);
             }
           }}
           title={isUser ? "You cannot delete this record" : "Delete Record"}

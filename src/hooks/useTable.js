@@ -1,50 +1,29 @@
-import { useState, useMemo } from "react";
+import { useContext, useEffect } from "react";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 
-const useTable = (data, setSelectedData, setIsEditing, setIsModalOpen, featureName, columns) => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [sortOption, setSortOption] = useState("newest");
-  const [searchBy, setSearchBy] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+const useTable = ({
+  data,
+  fetchRecords,
+  setSelectedData,
+  setIsEditing,
+  setIsModalOpen,
+  featureName,
+  columns,
+  searchQuery,
+  searchBy,
+  startDate,
+  endDate,
+  sortOption,
+}) => {
+  
+  useEffect(() => {
+    if (fetchRecords) {
+      fetchRecords();
+    }
+  }, [fetchRecords, searchQuery, searchBy, startDate, endDate, sortOption]);
 
-  const filteredData = useMemo(() => {
-    let sortedData = [...data];
 
-    sortedData = sortedData.filter((record) => {
-      let value = "";
-
-      if (searchBy === "fullName") {
-        const formattedName = `${record.lastName}, ${record.firstName} ${record.middleName || ""}`
-          .trim()
-          .toLowerCase();
-        value = formattedName;
-      } else {
-        value = record[searchBy]?.toLowerCase() || "";
-      }
-
-    const matchesSearch = value.includes(searchQuery.toLowerCase());
-
-      const recordDate = new Date(record.createdTimestamp);
-      const isWithinDateRange =
-        (!startDate || recordDate >= new Date(startDate)) &&
-        (!endDate || recordDate <= new Date(endDate));
-
-      return matchesSearch && isWithinDateRange;
-    });
-
-    sortedData.sort((a, b) => {
-      if (sortOption === "newest") return new Date(b.createdTimestamp) - new Date(a.createdTimestamp);
-      if (sortOption === "oldest") return new Date(a.createdTimestamp) - new Date(b.createdTimestamp);
-      if (sortOption === "lastname") return a.lastName.localeCompare(b.lastName);
-      return 0;
-    });
-
-    return sortedData;
-  }, [searchQuery, startDate, endDate, data, searchBy, sortOption]);
-
-  // Handle managing a record (e.g., editing)
   const handleManage = (record) => {
     setSelectedData(record);
     setIsEditing(true);
@@ -67,7 +46,7 @@ const useTable = (data, setSelectedData, setIsEditing, setIsModalOpen, featureNa
     const tableColumn = columns.map(col => col.label);
   
     // Apply styling for table rows
-    const tableRows = filteredData.map((record, index) => 
+    const tableRows = data.map((record, index) => 
       columns.map(col => 
         col.render ? col.render(record) : record[col.key] || "" // Handle render functions
       )
@@ -94,17 +73,7 @@ const useTable = (data, setSelectedData, setIsEditing, setIsModalOpen, featureNa
   };
 
   return {
-    searchQuery,
-    setSearchQuery,
-    searchBy,
-    setSearchBy,
-    sortOption,
-    setSortOption,
-    startDate,
-    setStartDate,
-    endDate,
-    setEndDate,
-    filteredData,
+    data,
     handleManage,
     generatePDF
   };
