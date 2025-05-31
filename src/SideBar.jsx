@@ -175,7 +175,7 @@ const SideBar = () => {
                             </svg>
 
                         </div>
-                        <span>Biometric Search</span>
+                        <span>Settings</span>
                     </li>
                 </ul>
                 <h3>SETTINGS</h3>

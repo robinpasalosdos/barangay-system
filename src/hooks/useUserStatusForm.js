@@ -41,47 +41,48 @@ const useForm = (
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Validate required fields
-      const requiredFields = [
-        { name: "email", label: "Email" },
-        { name: "username", label: "Username" },
-        { name: "password", label: "Password" },
-        { name: "confirmPassword", label: "Confirm Password" },
-      ];
+      if (!isEditing && !selectedData) {
+        const requiredFields = [
+          { name: "email", label: "Email" },
+          { name: "username", label: "Username" },
+          { name: "password", label: "Password" },
+          { name: "confirmPassword", label: "Confirm Password" },
+        ];
 
-      for (const field of requiredFields) {
-        if (!formState[field.name] && (!isEditing || field.name !== "password")) {
-          toast.error(`${field.label} is required.`);
-          return; // Stop submission if a field is empty
+        for (const field of requiredFields) {
+          if (!formState[field.name] && (!isEditing)) {
+            toast.error(`${field.label} is required.`);
+            return; // Stop submission if a field is empty
+          }
         }
-      }
 
-      // Validate email format
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(formState.email)) {
-        toast.error("Please enter a valid email address.");
-        return;
-      }
+        // Validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(formState.email)) {
+          toast.error("Please enter a valid email address.");
+          return;
+        }
 
-      // Validate username length
-      if (formState.username.length < 3) {
-        toast.error("Username must be at least 3 characters long.");
-        return;
-      }
+        // Validate username length
+        if (formState.username.length < 3) {
+          toast.error("Username must be at least 3 characters long.");
+          return;
+        }
 
-      // Validate password strength
-      const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-      if (!passwordRegex.test(formState.password)) {
-        toast.error(
-          "Password must be at least 8 characters long, include an uppercase letter, a lowercase letter, a number, and a special character."
-        );
-        return;
-      }
+        // Validate password strength
+        const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        if (!passwordRegex.test(formState.password)) {
+          toast.error(
+            "Password must be at least 8 characters long, include an uppercase letter, a lowercase letter, a number, and a special character."
+          );
+          return;
+        }
 
-      // Validate passwords match
-      if (!isEditing && formState.password !== formState.confirmPassword) {
-        toast.error("Passwords do not match. Please try again.");
-        return;
+        // Validate passwords match
+        if (!isEditing && formState.password !== formState.confirmPassword) {
+          toast.error("Passwords do not match. Please try again.");
+          return;
+        }
       }
 
       // Exclude confirmPassword before sending the record

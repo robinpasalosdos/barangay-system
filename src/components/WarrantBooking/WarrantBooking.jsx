@@ -9,8 +9,8 @@ const WarrantBooking = () => {
   const featureName = "Warrant Booking";
   const columns = [
     { key: "ccisNumber", label: "CCIS No." },
-    { key: "crimeCommitted", label: "CCIS Description" },
-    { key: "committedDate", label: "CCIS Committed Date:" },
+    { key: "crimeCommitted", label: "Description" },
+    { key: "committedDate", label: "Committed Date:" },
     { key: "lastName", label: "LName" },
     { key: "firstName", label: "FName" },
     { key: "middleName", label: "MName" },

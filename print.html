@@ -1,29 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Print Preview</title>
+  <title>Barangay Clearance Preview</title>
   <style>
-    body { font-family: sans-serif; padding: 20px; }
-    .doc { border: 1px solid #ccc; padding: 10px; margin-bottom: 20px; }
-    label { display: flex; align-items: center; gap: 8px; }
-    button { padding: 10px 20px; margin-top: 20px; }
-    .preview-content {
-      padding: 20px;
-      font-size: 14px;
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      margin: 0;
     }
     .letterhead {
       text-align: center;
-      margin-bottom: 20px;
-    }
-    .document-title {
-      font-size: 18px;
-      font-weight: bold;
-      text-align: center;
-      margin: 20px 0;
+      margin-bottom: 30px;
     }
     .document-body {
       line-height: 1.6;
       text-align: justify;
+      margin-top: 20px;
     }
     .signature-line {
       margin-top: 50px;
@@ -31,9 +23,10 @@
     }
     .photo-container {
       position: absolute;
-      left: 40px;
-      width: 1in;
-      height: 1in;
+      top: 100px;
+      right: 40px;
+      width: 2in;
+      height: 2in;
       border: 1px solid #000;
     }
     .photo {
@@ -41,120 +34,69 @@
       height: 100%;
       object-fit: cover;
     }
+    .print-button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      text-align: right;
+    }
+    .print-button:hover {
+      background-color: #45a049;
+    }
+    @media print {
+      .print-button {
+        display: none; /* Hide the header and button during printing */
+      }
+    }
   </style>
 </head>
 <body>
-  <h1>Print Preview</h1>
-
-  <div>
-    <label><input type="checkbox" id="police"> Police Clearance</label>
-    <div id="police-preview" class="doc"></div>
-
-    <label><input type="checkbox" id="barangay-clearance"> Barangay Clearance</label>
-    <div id="barangay-clearance-preview" class="doc"></div>
-
-    <label><input type="checkbox" id="barangay-certificate"> Barangay Certificate</label>
-    <div id="barangay-certificate-preview" class="doc"></div>
-
-    <button onclick="submitPrint()">Print Selected</button>
-  </div>
-
+  <div id="preview"></div>
+  <button class="print-button" onclick="handlePrint()">Print Barangay Clearance</button>
   <script>
-    let recordData = {};
-
-    function generatePolicePreview(data) {
-      return `
-        <div class="preview-content">
-          <div class="photo-container">
-            <img class="photo" src="public/assets/faces/${data.faceFileName}" alt="ID Photo" onerror="this.src='public/assets/placeholder.png'" />
-          </div>
-          <div class="letterhead">
-            <h3>POLICE CLEARANCE</h3>
-            <p>Republic of the Philippines</p>
-            <p>Province of Bataan</p>
-            <p>Municipality of Hermosa</p>
-          </div>
-          <div class="document-body">
-            <p>This is to certify that ${data.firstName} ${data.lastName}, ${data.age} years old,
-            residing at ${data.address} has no derogatory record on file with this office.</p>
-            <p>This certification is issued upon the request of the above-named person for whatever legal purpose it may serve.</p>
-          </div>
-          <div class="signature-line">
-            <p>Chief of Police</p>
-            <p>[Name of Police Chief]</p>
-          </div>
+    // Use the exposed API from the preload script
+    window.electronAPI.onRecordData((event, record) => {
+      const previewDiv = document.getElementById("preview");
+      previewDiv.innerHTML = `
+        <div class="photo-container">
+          <img class="photo" src="${record.photoUrl}" alt="Photo" />
+        </div>
+        <div class="letterhead">
+          <h3>BARANGAY CLEARANCE</h3>
+          <p>Republic of the Philippines</p>
+          <p>Province of XXXX</p>
+          <p>Municipality of XXXX</p>
+          <p>Barangay XXXX</p>
+        </div>
+        <div class="document-body">
+          <p>TO WHOM IT MAY CONCERN:</p>
+          <p>This is to certify that ${record.firstName} ${record.lastName}, ${record.age} years old,
+          is a bonafide resident of ${record.address}, Barangay XXXX.</p>
+          <p>This certification is being issued upon request of the above-named person for ${record.purpose}.</p>
+          <p>Issued on: ${record.dateIssued}</p>
+        </div>
+        <div class="signature-line">
+          <p>Barangay Captain</p>
+          <p>[Name of Barangay Captain]</p>
         </div>
       `;
-    }
-
-    function generateBarangayClearancePreview(data) {
-      return `
-        <div class="preview-content">
-          <div class="photo-container">
-            <img class="photo" src="public/assets/faces/${data.faceFileName}" alt="ID Photo" onerror="this.src='public/assets/placeholder.png'" />
-          </div>
-          <div class="letterhead">
-            <h3>BARANGAY CLEARANCE</h3>
-            <p>Republic of the Philippines</p>
-            <p>Province of Bataan</p>
-            <p>Municipality of Hermosa</p>
-            <p>Barangay Mabiga</p>
-          </div>
-          <div class="document-body">
-            <p>TO WHOM IT MAY CONCERN:</p>
-            <p>This is to certify that ${data.firstName} ${data.lastName}, ${data.age} years old,
-            is a bonafide resident of ${data.address}, Barangay Mabiga.</p>
-            <p>This certification is being issued upon request of the above-named person for whatever legal purpose it may serve.</p>
-          </div>
-          <div class="signature-line">
-            <p>Barangay Captain</p>
-            <p>[Name of Barangay Captain]</p>
-          </div>
-        </div>
-      `;
-    }
-
-    function generateBarangayCertificatePreview(data) {
-      return `
-        <div class="preview-content">
-          <div class="photo-container">
-            <img class="photo" src="public/assets/faces/${data.faceFileName}" alt="ID Photo" onerror="this.src='public/assets/placeholder.png'" />
-          </div>
-          <div class="letterhead">
-            <h3>BARANGAY CERTIFICATE</h3>
-            <p>Republic of the Philippines</p>
-            <p>Province of Bataan</p>
-            <p>Municipality of Hermosa</p>
-            <p>Barangay Mabiga</p>
-          </div>
-          <div class="document-body">
-            <p>TO WHOM IT MAY CONCERN:</p>
-            <p>This is to certify that ${data.firstName} ${data.lastName}, ${data.age} years old,
-            Filipino, is a resident of ${data.address}, Barangay Mabiga.</p>
-            <p>Based on records of this office, he/she is of good moral character and a law-abiding citizen.</p>
-          </div>
-          <div class="signature-line">
-            <p>Barangay Captain</p>
-            <p>[Name of Barangay Captain]</p>
-          </div>
-        </div>
-      `;
-    }
-
-    window.electronPrintAPI.onRecordData((record) => {
-      recordData = record;
-      document.getElementById("police-preview").innerHTML = generatePolicePreview(record);
-      document.getElementById("barangay-clearance-preview").innerHTML = generateBarangayClearancePreview(record);
-      document.getElementById("barangay-certificate-preview").innerHTML = generateBarangayCertificatePreview(record);
     });
 
-    function submitPrint() {
-      const selections = {
-        police: document.getElementById("police").checked,
-        barangayClearance: document.getElementById("barangay-clearance").checked,
-        barangayCertificate: document.getElementById("barangay-certificate").checked
-      };
-      window.electronPrintAPI.sendSelections(recordData, selections);
+    function handlePrint() {
+      document.querySelector('.print-button').style.display = 'none';
+
+      // Trigger the print dialog
+      window.print();
+
+      // Restore the preview and button after printing
+      setTimeout(() => {
+        document.querySelector('.print-button').style.display = 'inline-block';
+      }, 1000);
     }
   </script>
 </body>

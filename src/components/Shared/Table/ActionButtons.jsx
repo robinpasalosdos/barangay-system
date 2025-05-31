@@ -24,7 +24,7 @@ const ActionButtons = ({ record, featureName, handleManage, deleteRecord }) => {
         <FaEdit/>
       </button>
       
-      {featureName === "Police Clearance" && (
+      {featureName === "Barangay Clearance" && (
         <button
           className="action-button print"
           onClick={handlePrint}

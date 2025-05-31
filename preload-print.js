@@ -1,6 +1,5 @@
-import { contextBridge, ipcRenderer } from 'electron';
+const { contextBridge, ipcRenderer } = require("electron");
 
-contextBridge.exposeInMainWorld('electronPrintAPI', {
-  onRecordData: (callback) => ipcRenderer.on('record-data', (event, data) => callback(data)),
-  sendSelections: (record, selections) => ipcRenderer.send('print-selected', { record, selections })
+contextBridge.exposeInMainWorld("electronAPI", {
+  onRecordData: (callback) => ipcRenderer.on("record-data", callback),
 });
