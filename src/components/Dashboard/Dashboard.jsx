@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
-import { MainContext } from "../context/MainContext";
+import { MainContext } from "../../context/MainContext";
 import { FaUsers, FaFileAlt, FaShieldAlt, FaExclamationTriangle } from 'react-icons/fa';
 import { Line, Doughnut } from 'react-chartjs-2';
 import {

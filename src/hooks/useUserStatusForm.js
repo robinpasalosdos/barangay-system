@@ -89,7 +89,6 @@ const useForm = (
       const { confirmPassword, ...record } = formState;
 
       // Add additional fields if necessary
-      record.id = selectedData?.id;
       record.user_id = selectedData?.user_id;
 
       if (isEditing) {

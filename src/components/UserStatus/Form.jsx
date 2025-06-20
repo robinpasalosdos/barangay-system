@@ -78,7 +78,6 @@ const UserForm = () => {
                   onChange={handleChange}
                   placeholder="Enter user name"
                 />
-            
                 <InputField
                   id="password"
                   name="password"

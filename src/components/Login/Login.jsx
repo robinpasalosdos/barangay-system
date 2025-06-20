@@ -5,7 +5,7 @@ import { FaUser, FaLock, FaSpinner } from 'react-icons/fa';
 const Login = () => {
     const [formData, setFormData] = useState({
         email: 'robinpasalosdos@gmail.com', // Pre-filled email
-        password: 'admin', // Pre-filled password
+        password: '123456', // Pre-filled password
     });
     const [message, setMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -76,7 +76,7 @@ const Login = () => {
             <div className={`login-container ${shake ? 'shake' : ''}`}>
                 <div className="login-header">
                     <div className="logo-container">
-                        <h1>BRGUIDE</h1>
+                        <h1>BRGY HUB</h1>
                         <div className="logo-underline"></div>
                     </div>
                     <p>Welcome back! Please login to your account.</p>

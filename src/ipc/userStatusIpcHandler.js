@@ -44,11 +44,10 @@ ipcMain.handle("add-user", async (event, record) => {
     }
 
     const user_id = authData.user.id;
-
-    const { id, password, confirmPassword, ...restOfRecord } = record;
+    const { password, confirmPassword, ...restOfRecord } = record;
     const snakeCaseRecord = toSnakeCase({
       ...restOfRecord,
-      userId: user_id,
+      user_id,
     });
 
     const { data, error } = await supabase.from("users").insert([snakeCaseRecord]);
@@ -81,7 +80,7 @@ ipcMain.handle("update-user", async (event, record) => {
         edit_user_action: record.editUserAction,
         search_user_action: record.searchUserAction
       })
-      .eq("id", record.id);
+      .eq("user_id", record.user_id);
 
     if (error) throw error;
 
@@ -104,7 +103,7 @@ ipcMain.handle("fetch-users", async (event, filters = {}) => {
   } = filters;
 
   try {
-    let query = supabase.from("user_with_email_confirmed").select("*");
+    let query = supabase.from("users").select("*");
 
     if (searchQuery && searchBy) {
       query = query.ilike(searchBy, `%${searchQuery}%`);
@@ -141,13 +140,13 @@ ipcMain.handle("fetch-users", async (event, filters = {}) => {
 });
 
 // Delete User Handler
-ipcMain.handle("delete-user", async (event, id) => {
+ipcMain.handle("delete-user", async (event, user_id) => {
   try {
     // 1. Get Auth user ID from your 'users' table
     const { data: userData, error: fetchError } = await supabase
       .from("users")
       .select("user_id")
-      .eq("id", id)
+      .eq("user_id", user_id)
       .single();
 
     if (fetchError || !userData) {
@@ -167,7 +166,7 @@ ipcMain.handle("delete-user", async (event, id) => {
     const { error: deleteError } = await supabase
       .from("users")
       .delete()
-      .eq("id", id);
+      .eq("user_id", user_id);
 
     if (deleteError) {
       throw new Error(`Auth user deleted, but failed to delete user from database: ${deleteError.message}`);

@@ -1,14 +1,18 @@
-import React, { useState, useRef } from 'react';
-
-// The SDK is loaded globally via <script> in index.html
-// We use window.Fingerprint and window.Fingerprint.WebApi
+import React, { useState, useRef, useContext } from 'react';
+import { ResidentContext } from '../../context';
 
 const fingers = ['thumb', 'index', 'middle', 'ring', 'pinky'];
 
-const TestComponent = () => {
-  // State for each finger's image
-  const [fingerprints, setFingerprints] = useState({});
+
+
+const FingerprintCapture = () => {
+  const {
+    fingerprints,
+    setFingerprints,
+  } = useContext(ResidentContext);
+
   const [status, setStatus] = useState('');
+  const [scanningKey, setScanningKey] = useState(null); // Track which finger is being scanned
   const sdkRef = useRef(null);
   const acquisitionStartedRef = useRef(false);
   const currentScanKey = useRef(null); // which finger is being scanned
@@ -28,7 +32,9 @@ const TestComponent = () => {
   // Start scan for a specific finger
   const handleScanFinger = (hand, finger) => {
     setStatus('');
-    currentScanKey.current = `${hand}-${finger}`;
+    const scanKey = `${hand}-${finger}`;
+    currentScanKey.current = scanKey;
+    setScanningKey(scanKey); // Set the currently scanning finger
     if (!sdkRef.current) {
       // Initialize SDK
       const sdk = new window.Fingerprint.WebApi();
@@ -45,8 +51,10 @@ const TestComponent = () => {
             [currentScanKey.current]: `data:image/png;base64,${b64}`,
           }));
           setStatus('Fingerprint captured!');
+          setScanningKey(null); // Clear scanning indicator when done
         } catch (e) {
           setStatus('Failed to parse fingerprint image');
+          setScanningKey(null); // Clear scanning indicator on error
         }
       };
       sdk.onQualityReported = (e) => {
@@ -73,30 +81,25 @@ const TestComponent = () => {
       sdkRef.current.stopAcquisition().then(() => {
         acquisitionStartedRef.current = false;
         setStatus('Acquisition stopped');
+        setScanningKey(null); // Clear scanning indicator when stopped
       });
     }
   };
 
   // Styles (from FingerprintCapture)
   const wrapperStyle = {
-    backgroundColor: '#022539',
-    border: '1px solid #1C768F',
-    padding: '24px',
-    borderRadius: '16px',
     color: '#fff',
-    width: '700px',
-    height: '550px',
   };
 
   const rowStyle = {
     display: 'flex',
     justifyContent: 'space-between',
-    marginBottom: '24px',
+    gap: '10px',  
   };
 
   const boxStyle = {
-    width: '100px',
-    height: '140px',
+    width: '90px',
+    height: '126px',
     borderRadius: '12px',
     border: '2px solid #444',
     backgroundColor: '#1b1f30',
@@ -107,15 +110,14 @@ const TestComponent = () => {
   };
 
   const buttonStyle = {
-    marginTop: '8px',
     padding: '8px 12px',
     backgroundColor: '#1C768F',
     color: '#fff',
     border: 'none',
     borderRadius: '8px',
     cursor: 'pointer',
-    width: '100px',
-    height: '35px',
+    width: '90px',
+    height: '28px',
     fontSize: '11px',
   };
 
@@ -143,8 +145,9 @@ const TestComponent = () => {
   const renderFingerBox = (finger, hand) => {
     const key = `${hand}-${finger}`;
     const image = fingerprints[key];
+    const isScanning = scanningKey === key;
     return (
-      <div key={key} style={{ textAlign: 'center' }}>
+      <div key={key} style={{ flexDirection: 'column', gap: '10px' }}>
         <div style={boxStyle}>
           {image ? (
             <img
@@ -152,6 +155,8 @@ const TestComponent = () => {
               alt={`${hand} ${finger}`}
               style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             />
+          ) : isScanning ? (
+            <span style={{ color: '#FB991C', fontWeight: 'bold', fontSize: '13px' }}>Ready to scan...</span>
           ) : null}
         </div>
         <button style={buttonStyle} onClick={() => handleScanFinger(hand, finger)}>
@@ -162,22 +167,19 @@ const TestComponent = () => {
   };
 
   return (
-    <div style={wrapperStyle} className='fingerprintModal'>
-      <h2 style={{ marginBottom: '16px' }}>Fingerprint</h2>
-      <div style={{ marginTop: 8, minHeight: 24 }}>{status}</div>
-      {/* Left Hand */}
+    <div style={wrapperStyle} className='resident-fingerprints'>
+      <h3>Left Fingerprint</h3>
+
       <div style={rowStyle}>
-        {fingers.map(finger => renderFingerBox(finger, 'left'))}
+        {[...fingers].reverse().map(finger => renderFingerBox(finger, 'left'))}
       </div>
-      {/* Right Hand */}
+      <h3>Right Fingerprint</h3>
+
       <div style={rowStyle}>
         {fingers.map(finger => renderFingerBox(finger, 'right'))}
-      </div>
-      <div style={btnContainerStyle}>
-        <button style={buttonStyle} onClick={handleStopCapture}>STOP</button>
       </div>
     </div>
   );
 };
 
-export default TestComponent;
+export default FingerprintCapture;

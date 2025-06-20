@@ -25,5 +25,18 @@ contextBridge.exposeInMainWorld("api", {
   deleteRogueDirectoryRecord: (id) => ipcRenderer.invoke("delete-rogue-directory-record", id),
   saveMugshotCaptured: (images, lastname) => ipcRenderer.invoke('save-mugshot-captured', images, lastname),
 
+  fetchResidentRecords: (filters) => ipcRenderer.invoke("fetch-resident-records", filters),
+  addResidentRecord: (record) => ipcRenderer.invoke("add-resident-record", record),
+  updateResidentRecord: (record) => ipcRenderer.invoke("update-resident-record", record),
+  deleteResidentRecord: (user_id) => ipcRenderer.invoke("delete-resident-record", id),
+  saveResidentImage: (base64Image, residentId) => ipcRenderer.invoke("save-resident-image", base64Image, residentId),
+
+  capture: () => ipcRenderer.invoke('capture-fingerprint'),
+
   printRecord: (record) => ipcRenderer.send('print-record', record),
+
+  saveFingerprintImage: (base64Image, fingerType, residentId) => ipcRenderer.invoke("save-fingerprint-image", base64Image, fingerType, residentId),
+  scanFingerprint: () => ipcRenderer.invoke('scan-fingerprint'),
+
+  fetchResidentBiometrics: (residentId) => ipcRenderer.invoke("fetch-resident-biometrics", residentId),
 });

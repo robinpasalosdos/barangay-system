@@ -72,9 +72,9 @@ const createDataContext = (fetchRecordsFn, addRecordFn, updateRecordFn, deleteRe
       }
     };
 
-    const deleteRecord = async (id) => {
+    const deleteRecord = async (user_id) => {
       try {
-        await deleteRecordFn(id);
+        await deleteRecordFn(user_id);
         fetchRecords(); // Refresh data
       } catch (error) {
         console.error("Error deleting record:", error);
@@ -156,6 +156,23 @@ export const {
   window.api.addUser,
   window.api.updateUser,
   window.api.deleteUser
+);
+
+export const {
+  Context: ResidentContext,
+  Provider: ResidentProvider,
+} = createDataContext(
+  window.api.fetchResidentRecords,
+  window.api.addResidentRecord,
+  window.api.updateResidentRecord,
+  window.api.deleteResidentRecord,
+  {
+    savedImagePath: null,
+    image: `src/assets/placeholder.jpg`,
+    isFaceChanged: false,
+    fingerprints: {},
+    currentFinger: 0,
+  }
 );
 
 export const {

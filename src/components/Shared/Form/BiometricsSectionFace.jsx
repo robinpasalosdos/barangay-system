@@ -13,7 +13,7 @@ const BiometricsSectionFace = ({ label, buttonText, onButtonClick }) => {
           <img
             src={image} // Use the Base64 image string as the src
             alt="Captured Face"
-            style={{ width: "149px", height: "153px", objectFit: "cover", borderRadius: "12px" }}
+            style={{ width: "95px", height: "111px", objectFit: "cover", borderRadius: "12px" }}
           />
         ) : (
           <p>No image available</p>

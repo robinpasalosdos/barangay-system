@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-import '../../App.css';
 import { RogueDirectoryContext } from "../../context";
 import useWarrantBookingForm from "../../hooks/useWarrantBookingForm";
 import Form from "./Form";

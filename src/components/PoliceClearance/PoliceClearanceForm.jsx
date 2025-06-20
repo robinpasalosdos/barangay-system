@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-import '../../App.css';
 import { PoliceClearanceContext } from "../../context";
 import usePoliceClearanceForm from "../../hooks/usePoliceClearanceForm";
 import { MainContext } from "../../context/MainContext";

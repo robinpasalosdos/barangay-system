@@ -12,6 +12,7 @@ import "./src/ipc/loginIpcHandler.js";
 import "./src/ipc/warrantBookingIpcHandlers.js";
 import "./src/ipc/rogueDirectoryIpcHandlers.js";
 import "./src/ipc/printIpcHandlers.js";
+import "./src/ipc/residentIpcHandler.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -76,4 +77,27 @@ ipcMain.handle('save-mugshot-captured', async (event, images, lastname) => {
   mainWindow.webContents.openDevTools();
 
   return { status: 'done', path: folderPath };
+});
+
+ipcMain.handle('scan-fingerprint', async () => {
+  return new Promise((resolve, reject) => {
+    try {
+      const sdk = new Fingerprint.WebApi();
+
+      sdk.startCapture();
+
+      sdk.on('sampleAcquired', (sample) => {
+        const base64 = sample?.samples?.[0];
+        if (base64) {
+          sdk.stopCapture();
+          resolve(base64);
+        } else {
+          reject(new Error('No fingerprint data'));
+        }
+      });
+
+    } catch (err) {
+      reject(err);
+    }
+  });
 });

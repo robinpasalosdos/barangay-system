@@ -446,8 +446,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .modal .face{
-    width: 149px;
-    height: 153px;
     object-fit: cover;
     border-radius: 10px;
 }
@@ -696,6 +694,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .user-status-form > div:nth-child(2) {
     display: flex;
     gap: 50px;
+}
+
+.user-status-form > div:nth-child(3) {
+    display: flex;
+    gap: 20px;
 }
 
 .dashboard-container {
@@ -1124,3 +1127,72 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     opacity: 1;
   }
 }
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+  }
+  
+  .delete-confirmation-modal {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #FBF3F2;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1001;
+    width: 400px;
+    max-width: 90%;
+  }
+  
+  .delete-confirmation-modal h3 {
+    margin-top: 0;
+    color: #022539;
+  }
+
+  .delete-confirmation-modal p {
+    color: #022539;
+  }
+  
+  .modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  
+  .modal-buttons .cancel-button {
+    padding: 8px 16px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+    color: #022539;
+  }
+  
+  .delete-button {
+    padding: 8px 16px;
+    background-color: #dc3545;
+    color: #022539;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .delete-button:hover {
+    background-color: #c82333;
+  }
+  
+  .cancel-button:hover {
+    background-color: #f8f9fa;
+  }
