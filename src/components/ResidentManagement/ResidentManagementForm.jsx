@@ -23,11 +23,33 @@ const ResidentManagementForm = () => {
   const fingerprintRef = useRef(null);
 
   const initialFormState = {
+    // profiles table
     lastName: "",
     firstName: "",
     middleName: "",
     dateOfBirth: "",
     email: "",
+    address: "",
+    phoneNumber: "",
+    sex: "",
+    isBarangayVerified: false,
+    // personal_identity table
+    country: "",
+    region: "",
+    province: "",
+    city: "",
+    barangay: "",
+    street: "",
+    blockNumber: "",
+    zipCode: "",
+    citizenship: "",
+    civilStatus: "",
+    eyeColor: "",
+    hairColor: "",
+    height: "",
+    weight: "",
+    complexion: "",
+    identifyingMarks: "",
   };
   
 
@@ -96,8 +118,8 @@ const ResidentManagementForm = () => {
 
   // Handle input changes
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormState((prev) => ({ ...prev, [name]: value }));
+    const { name, value, type, checked } = e.target;
+    setFormState((prev) => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
   };
 
   const handleSaveImage = async (residentId) => {
@@ -146,7 +168,7 @@ const ResidentManagementForm = () => {
           faceFileName: null, // will be set after upload
           fingerprints: {}, // will be set after upload
         };
-
+        await addOrUpdateRecord(record);
         if (isEditing) {
           record.userId = residentId;
           // Upload face image if changed (base64)
@@ -205,10 +227,7 @@ const ResidentManagementForm = () => {
           alert("Resident ID not found.");
           return;
         }
-
-        // Use context's addOrUpdateRecord to handle the update
-        await addOrUpdateRecord(record);
-
+        
         resetForm();
         handleResetImages();
         setIsModalOpen(false);
@@ -257,53 +276,49 @@ const ResidentManagementForm = () => {
         </div> 
         <div>
           <div>
-            <div>
-              <InputField
-                label="Last Name"
-                id="lastName"
-                name="lastName"
-                placeholder="Enter Last Name"
-                value={formState.lastName || ""}
-                onChange={handleChange}
-              />
-
-              <InputField
-                label="First Name"
-                id="firstName"
-                name="firstName"
-                placeholder="Enter First Name"
-                value={formState.firstName || ""}
-                onChange={handleChange}
-              />
-
-              <InputField
-                label="Middle Name"
-                id="middleName"
-                name="middleName"
-                placeholder="Enter Middle Name"
-                value={formState.middleName || ""}
-                onChange={handleChange}
-              />
-            </div>
-            <div>
-              <InputField
-                label="Date of Birth"
-                id="dateOfBirth"
-                name="dateOfBirth"
-                placeholder="Enter Date of Birth"
-                value={formState.dateOfBirth || ""}
-                onChange={handleChange}
-              />
-
-              <InputField
-                label="Email"
-                id="email"
-                name="email"
-                placeholder="Enter Email"
-                value={formState.email || ""}
-                onChange={handleChange}
-              />
-            </div>
+          <div>
+            <InputField label="Last Name" id="lastName" name="lastName" placeholder="Enter Last Name" value={formState.lastName || ""} onChange={handleChange} />
+            <InputField label="First Name" id="firstName" name="firstName" placeholder="Enter First Name" value={formState.firstName || ""} onChange={handleChange} />
+            <InputField label="Middle Name" id="middleName" name="middleName" placeholder="Enter Middle Name" value={formState.middleName || ""} onChange={handleChange} />
+          </div>
+          <div>
+            <InputField label="Date of Birth" id="dateOfBirth" name="dateOfBirth" placeholder="Enter Date of Birth" value={formState.dateOfBirth || ""} onChange={handleChange} />
+            <InputField label="Email" id="email" name="email" placeholder="Enter Email" value={formState.email || ""} onChange={handleChange} />
+            <InputField label="Address" id="address" name="address" placeholder="Enter Address" value={formState.address || ""} onChange={handleChange} />
+          </div>
+          <div>
+            <InputField label="Phone Number" id="phoneNumber" name="phoneNumber" placeholder="Enter Phone Number" value={formState.phoneNumber || ""} onChange={handleChange} />
+            <InputField label="Sex" id="sex" name="sex" placeholder="Enter Sex" value={formState.sex || ""} onChange={handleChange} />
+            <InputField label="Barangay Verified" id="isBarangayVerified" name="isBarangayVerified" type="checkbox" checked={formState.isBarangayVerified} onChange={handleChange} />
+          </div>
+          <div>
+            <InputField label="Country" id="country" name="country" placeholder="Enter Country" value={formState.country || ""} onChange={handleChange} />
+            <InputField label="Region" id="region" name="region" placeholder="Enter Region" value={formState.region || ""} onChange={handleChange} />
+            <InputField label="Province" id="province" name="province" placeholder="Enter Province" value={formState.province || ""} onChange={handleChange} />
+          </div>
+          <div>
+            <InputField label="City" id="city" name="city" placeholder="Enter City" value={formState.city || ""} onChange={handleChange} />
+            <InputField label="Barangay" id="barangay" name="barangay" placeholder="Enter Barangay" value={formState.barangay || ""} onChange={handleChange} />
+            <InputField label="Street" id="street" name="street" placeholder="Enter Street" value={formState.street || ""} onChange={handleChange} />
+          </div>
+          <div>
+            <InputField label="Block Number" id="blockNumber" name="blockNumber" placeholder="Enter Block Number" value={formState.blockNumber || ""} onChange={handleChange} />
+            <InputField label="Zip Code" id="zipCode" name="zipCode" placeholder="Enter Zip Code" value={formState.zipCode || ""} onChange={handleChange} />
+            <InputField label="Citizenship" id="citizenship" name="citizenship" placeholder="Enter Citizenship" value={formState.citizenship || ""} onChange={handleChange} />
+          </div>
+          <div>
+            <InputField label="Civil Status" id="civilStatus" name="civilStatus" placeholder="Enter Civil Status" value={formState.civilStatus || ""} onChange={handleChange} />
+            <InputField label="Eye Color" id="eyeColor" name="eyeColor" placeholder="Enter Eye Color" value={formState.eyeColor || ""} onChange={handleChange} />
+            <InputField label="Hair Color" id="hairColor" name="hairColor" placeholder="Enter Hair Color" value={formState.hairColor || ""} onChange={handleChange} />
+          </div>
+          <div>
+            <InputField label="Height (cm)" id="height" name="height" placeholder="Enter Height" value={formState.height || ""} onChange={handleChange} />
+            <InputField label="Weight (kg)" id="weight" name="weight" placeholder="Enter Weight" value={formState.weight || ""} onChange={handleChange} />
+            <InputField label="Complexion" id="complexion" name="complexion" placeholder="Enter Complexion" value={formState.complexion || ""} onChange={handleChange} />
+          </div>
+          <div>
+            <InputField label="Identifying Marks" id="identifyingMarks" name="identifyingMarks" placeholder="Enter Identifying Marks" value={formState.identifyingMarks || ""} onChange={handleChange} />
+          </div>
           </div>
           <FormButtons
             isEditing={isEditing}

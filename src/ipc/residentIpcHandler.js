@@ -40,16 +40,32 @@ ipcMain.handle("add-resident-record", async (event, record) => {
     }
     const user_id = authData.user.id;
 
-    // 2. Insert into profiles table
-    const snakeCaseRecord = toSnakeCase({
-      ...cleanRecord,
-      user_id,
-    });
-    const { data, error } = await supabase.from("profiles").insert([snakeCaseRecord]).select();
+    // Split record for profiles and personal_identity
+    const profilesFields = [
+      "firstName", "middleName", "lastName", "dateOfBirth", "email", "address", "phoneNumber", "sex", "isBarangayVerified"
+    ];
+    const personalIdentityFields = [
+      "country", "region", "province", "city", "barangay", "street", "blockNumber", "zipCode", "citizenship", "civilStatus", "eyeColor", "hairColor", "height", "weight", "complexion", "identifyingMarks"
+    ];
+    const profilesData = { user_id };
+    const personalIdentityData = { user_id };
+    for (const key of Object.keys(cleanRecord)) {
+      if (profilesFields.includes(key)) profilesData[key] = cleanRecord[key];
+      if (personalIdentityFields.includes(key)) personalIdentityData[key] = cleanRecord[key];
+    }
 
-    if (error) throw new Error(`Database error: ${error.message}`);
+    // 2. Insert into profiles table
+    const snakeCaseProfiles = toSnakeCase(profilesData);
+    const { data: profileData, error: profileError } = await supabase.from("profiles").insert([snakeCaseProfiles]).select();
+    if (profileError) throw new Error(`Database error (profiles): ${profileError.message}`);
+
+    // 3. Insert into personal_identity table
+    const snakeCaseIdentity = toSnakeCase(personalIdentityData);
+    const { error: identityError } = await supabase.from("personal_identity").insert([snakeCaseIdentity]);
+    if (identityError) throw new Error(`Database error (personal_identity): ${identityError.message}`);
+
     // Always return userId in camelCase for frontend compatibility
-    return { message: "Resident record added successfully.", data: [{ ...data[0], userId: user_id }] };
+    return { message: "Resident record added successfully.", data: [{ ...profileData[0], userId: user_id }] };
   } catch (err) {
     console.error("Error adding resident record:", err.message);
     return { error: "Failed to add resident record. " + err.message };
@@ -61,17 +77,40 @@ ipcMain.handle("update-resident-record", async (event, record) => {
   try {
     // Remove any image/fingerprint related fields from the main record
     const { faceFileName, fingerprints, ...cleanRecord } = record;
-    const snakeCaseRecord = toSnakeCase(cleanRecord);
-    
     // Use userId (camelCase) from frontend for the update
     const userId = record.userId || record.user_id;
     if (!userId) throw new Error("Missing userId for update");
-    const { error } = await supabase
-      .from("profiles")
-      .update(snakeCaseRecord)
-      .eq("user_id", userId);
 
-    if (error) throw new Error(`Supabase update error: ${error.message}`);
+    // Split record for profiles and personal_identity
+    const profilesFields = [
+      "firstName", "middleName", "lastName", "dateOfBirth", "email", "address", "phoneNumber", "sex", "isBarangayVerified"
+    ];
+    const personalIdentityFields = [
+      "country", "region", "province", "city", "barangay", "street", "blockNumber", "zipCode", "citizenship", "civilStatus", "eyeColor", "hairColor", "height", "weight", "complexion", "identifyingMarks"
+    ];
+    const profilesData = {};
+    const personalIdentityData = {};
+    for (const key of Object.keys(cleanRecord)) {
+      if (profilesFields.includes(key)) profilesData[key] = cleanRecord[key];
+      if (personalIdentityFields.includes(key)) personalIdentityData[key] = cleanRecord[key];
+    }
+
+    // Update profiles table
+    const snakeCaseProfiles = toSnakeCase(profilesData);
+    const { error: profileError } = await supabase
+      .from("profiles")
+      .update(snakeCaseProfiles)
+      .eq("user_id", userId);
+    if (profileError) throw new Error(`Supabase update error (profiles): ${profileError.message}`);
+
+    // Update personal_identity table
+    const snakeCaseIdentity = toSnakeCase(personalIdentityData);
+    const { error: identityError } = await supabase
+      .from("personal_identity")
+      .update(snakeCaseIdentity)
+      .eq("user_id", userId);
+    if (identityError) throw new Error(`Supabase update error (personal_identity): ${identityError.message}`);
+
     return { message: "Resident record updated successfully." };
   } catch (err) {
     console.error("Error updating resident record:", err.message);

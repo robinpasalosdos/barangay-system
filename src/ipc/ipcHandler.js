@@ -1,15 +1,5 @@
 import { ipcMain } from "electron";
 import { supabase } from "../lib/supabase.js";
-import { promisify } from "util";
-import { fileURLToPath } from "url";
-import path from "path";
-import db from "../db/db.js";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const allQuery = promisify(db.all.bind(db));
-const runQuery = promisify(db.run.bind(db));
 
 // Utility functions for case conversion
 const toSnakeCase = (obj) => {

@@ -5,7 +5,6 @@ import { fileURLToPath } from 'url';
 import path from 'path';
 import 'dotenv/config';
 
-import "./src/db/db.js";
 import "./src/ipc/ipcHandler.js";
 import "./src/ipc/userStatusIpcHandler.js";
 import "./src/ipc/loginIpcHandler.js";
