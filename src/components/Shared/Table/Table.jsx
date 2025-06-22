@@ -53,21 +53,6 @@ const Table = ({
       endDate,
       sortOption,
     });
-  const [verifiedFilter, setVerifiedFilter] = useState('all');
-
-  // Filter data for Resident Management feature
-  const filteredData = useMemo(() => {
-    if (featureName !== 'RESIDENT MANAGEMENT') return data;
-    if (verifiedFilter === 'all') return data;
-    if (verifiedFilter === 'verified') {
-      return data.filter((record) => record.isBarangayVerified === true);
-    }
-    if (verifiedFilter === 'unverified') {
-      return data.filter((record) => record.isBarangayVerified === false);
-    }
-    return data;
-  }, [data, featureName, verifiedFilter]);
-
   return (
     <div className="content">
       {isModalOpen && <div className="overlay"></div>}
@@ -151,45 +136,6 @@ const Table = ({
             </div>     
         </div>
 
-        <div>
-          {/* Radio button to filter verified resident, only appears when feature name is 'RESIDENT MANAGEMENT' */}
-          {featureName === 'RESIDENT MANAGEMENT' && (
-            <div style={{ marginBottom: '10px' }}>
-              <span>Filter: </span>
-              <label style={{ marginRight: '10px' }}>
-                <input
-                  type="radio"
-                  name="verifiedFilter"
-                  value="all"
-                  checked={verifiedFilter === 'all'}
-                  onChange={() => setVerifiedFilter('all')}
-                />
-                All
-              </label>
-              <label style={{ marginRight: '10px' }}>
-                <input
-                  type="radio"
-                  name="verifiedFilter"
-                  value="verified"
-                  checked={verifiedFilter === 'verified'}
-                  onChange={() => setVerifiedFilter('verified')}
-                />
-                Verified
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="verifiedFilter"
-                  value="unverified"
-                  checked={verifiedFilter === 'unverified'}
-                  onChange={() => setVerifiedFilter('unverified')}
-                />
-                Unverified
-              </label>
-            </div>
-          )}
-        </div>
-
         <table>
           <TableHeader columns={columns} />
           <tbody>
@@ -199,8 +145,8 @@ const Table = ({
                   <FaSpinner className="spinner" /> {/* Show spinner when loading */}
                 </td>
               </tr>
-            ) : filteredData && filteredData.length > 0 ? (
-              filteredData.map((record) => (
+            ) : data && data.length > 0 ? (
+              data.map((record) => (
                 <TableRow
                   key={record.userId}
                   record={record}
