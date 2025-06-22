@@ -168,12 +168,12 @@ const FingerprintCapture = () => {
 
   return (
     <div style={wrapperStyle} className='resident-fingerprints'>
-      <h3>Left Fingerprint</h3>
+      <p>Left Fingerprint</p>
 
       <div style={rowStyle}>
         {[...fingers].reverse().map(finger => renderFingerBox(finger, 'left'))}
       </div>
-      <h3>Right Fingerprint</h3>
+      <p>Right Fingerprint</p>
 
       <div style={rowStyle}>
         {fingers.map(finger => renderFingerBox(finger, 'right'))}

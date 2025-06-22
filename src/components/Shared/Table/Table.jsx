@@ -202,7 +202,7 @@ const Table = ({
             ) : filteredData && filteredData.length > 0 ? (
               filteredData.map((record) => (
                 <TableRow
-                  key={record.id}
+                  key={record.userId}
                   record={record}
                   columns={columns}
                   featureName={featureName}

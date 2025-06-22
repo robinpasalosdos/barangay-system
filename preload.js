@@ -28,7 +28,7 @@ contextBridge.exposeInMainWorld("api", {
   fetchResidentRecords: (filters) => ipcRenderer.invoke("fetch-resident-records", filters),
   addResidentRecord: (record) => ipcRenderer.invoke("add-resident-record", record),
   updateResidentRecord: (record) => ipcRenderer.invoke("update-resident-record", record),
-  deleteResidentRecord: (user_id) => ipcRenderer.invoke("delete-resident-record", id),
+  deleteResidentRecord: (user_id) => ipcRenderer.invoke("delete-resident-record", user_id),
   saveResidentImage: (base64Image, residentId) => ipcRenderer.invoke("save-resident-image", base64Image, residentId),
 
   capture: () => ipcRenderer.invoke('capture-fingerprint'),

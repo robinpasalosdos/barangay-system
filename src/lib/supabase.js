@@ -7,3 +7,4 @@ if (!supabaseUrl || !supabaseServiceKey) {
 }
 
 export const supabase = createClient(supabaseUrl, supabaseServiceKey);
+export { supabaseUrl, supabaseServiceKey };

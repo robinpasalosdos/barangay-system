@@ -2,7 +2,7 @@ import React, { useRef, useContext } from "react";
 import Webcam from "react-webcam";
 import { ResidentContext } from "../../context";
 
-const FaceCapture = ({ fullName }) => {
+const FaceCapture = () => {
   const 
   {
     image, 
@@ -24,11 +24,6 @@ const FaceCapture = ({ fullName }) => {
 
   return (
     <div className="face-container">
-      <div>
-        <div>
-          <h2>Face Capture</h2>
-        </div>
-        <div>
           <div>
             {!image ? (
               <Webcam
@@ -37,30 +32,19 @@ const FaceCapture = ({ fullName }) => {
                 screenshotQuality={1}
                 videoConstraints={{ facingMode: "user" }}
                 className="face"
+                style={{ cursor: "pointer" }}
+                onClick={handleCapture}
+                title="Click to capture photo"
               />
             ) : (
               <img
                 src={image}
                 alt="Captured"
+                style={{ cursor: "pointer" }}
+                onClick={handleRetry}
+                title="Click to retake photo"
               />
-            )}
-          </div>
-          <div>
-            <h3>{fullName || "Unnamed Profile"}</h3>
-            <div>
-              {!image ? (
-                <button className="teal" onClick={handleCapture}>
-                  Capture
-                </button>
-              ) : (
-                <button className="teal" onClick={handleRetry}>
-                  Open Camera
-                </button>
               )}
-            </div>
-            
-          </div>
-        </div>
       </div>
     </div>
   );

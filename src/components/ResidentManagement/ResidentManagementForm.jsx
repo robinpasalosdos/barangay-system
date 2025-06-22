@@ -4,11 +4,13 @@ import InputField from "../Shared/Form/InputField";
 import FormButtons from "../Shared/Form/FormButtons";
 import FingerprintCapture from "./FingerprintCapture";
 import FaceCapture from "./FaceCapture";
+import { toast } from "react-hot-toast";
 
 const ResidentManagementForm = () => {
   const {
     isModalOpen,
     setIsModalOpen,
+    setIsEditing,
     isEditing,
     selectedData,
     setSelectedData,
@@ -17,6 +19,7 @@ const ResidentManagementForm = () => {
     setImage,
     fingerprints,
     setFingerprints,
+    fetchRecords
   } = useContext(ResidentContext);
 
   // Ref for FingerprintCapture
@@ -122,25 +125,11 @@ const ResidentManagementForm = () => {
     setFormState((prev) => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
   };
 
-  const handleSaveImage = async (residentId) => {
-    if (!image || !image.startsWith("data:image/")) {
-        alert("Invalid image data.");
-        return null;
-    }
-    try {
-        const response = await window.api.saveResidentImage(image, residentId);
-        if (!response || !response.publicUrl) throw new Error("Upload failed or bad response.");
-        const fileName = response.publicUrl.split("/").pop();
-        setFormState((prev) => ({ ...prev, faceFileName: fileName }));
-        return fileName;
-    } catch (error) {
-        console.error("Upload failed:", error);
-        alert("Failed to upload. Please try again.");
-        return null;
-    }
-  };
   const resetForm = () => {
     setFormState(initialFormState);
+    setSelectedData(null);
+    setIsModalOpen(false);
+    setIsEditing(false);
     setSelectedData(null);
   };
 
@@ -154,11 +143,11 @@ const ResidentManagementForm = () => {
     fingerprintRef.current?.stopAcquisition?.();
     try {
         if (!formState.firstName || !formState.lastName || !formState.dateOfBirth) {
-          alert("Please fill in all required fields.");
+          toast.error("Please fill in all required fields.");
           return;
         }
         if (!image || image === 'src/assets/placeholder.jpg') {
-          alert("Please capture a face image.");
+          toast.error("Please capture a face image.");
           return;
         }
 
@@ -168,8 +157,9 @@ const ResidentManagementForm = () => {
           faceFileName: null, // will be set after upload
           fingerprints: {}, // will be set after upload
         };
-        await addOrUpdateRecord(record);
+        
         if (isEditing) {
+          await addOrUpdateRecord(record);
           record.userId = residentId;
           // Upload face image if changed (base64)
           if (image && image.startsWith('data:image/')) {
@@ -194,11 +184,12 @@ const ResidentManagementForm = () => {
         } else {
           // 2. If adding, create record first to get id, then upload images
           const addResult = await window.api.addResidentRecord(record);
-          if (addResult && addResult.data && addResult.data[0] && addResult.data[0].userId) {
+          if (addResult && addResult.data && addResult.data[0]) {
             residentId = addResult.data[0].userId;
             record.userId = residentId;
           } else {
-            alert("Failed to create resident record.");
+            console.error('Resident addResult:', addResult);
+            toast.error("Failed to create resident record.");
             return;
           }
           // Upload face image
@@ -224,16 +215,17 @@ const ResidentManagementForm = () => {
         }
 
         if (!residentId) {
-          alert("Resident ID not found.");
+          toast.error("Resident ID not found.");
           return;
         }
         
         resetForm();
         handleResetImages();
-        setIsModalOpen(false);
+        await fetchRecords();
+        toast.success("Resident record saved successfully!");
     } catch (error) {
         console.error("Submission error:", error);
-        alert(`Failed to save: ${error.message}`);
+        toast.error(`Failed to save: ${error.message}`);
     }
   };
 
@@ -265,13 +257,51 @@ const ResidentManagementForm = () => {
     setFormState((prev) => ({ ...prev, age }));
   };
 
+  console.log("selectedData", selectedData);
+
   if (!isModalOpen) return null;
 
   return (
     <div className="form-container">
       <div className="rmodal">
         <div>
-          <FaceCapture fullName={fullName} />
+          <div>
+            <FaceCapture />
+            <div>
+              <h3>{fullName || "Unnamed Profile"}</h3>
+              <div>
+                {/* Display documents_requested as boxes */}
+                <div style={{ marginBottom: '8px', fontWeight: 600, fontSize: '14px', color: '#ccc' }}>Document Requests</div>
+                {selectedData && Array.isArray(selectedData.documentsRequested) && selectedData.documentsRequested.length > 0 ? (
+                  <div>
+                    {selectedData.documentsRequested.map((doc, idx) => {
+                      // Convert snake_case to Proper Case
+                      const properName = doc
+                        .split('_')
+                        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                        .join(' ');
+                      return (
+                        <div key={idx} style={{
+                          background: '#f5f5f5',
+                          border: '1px solid #ccc',
+                          borderRadius: '6px',
+                          padding: '3px 9px',
+                          fontSize: '12px',
+                          color: '#333',
+                          fontWeight: 500,
+                          width: 'fit-content',
+                        }}>{properName}</div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div style={{ color: '#888', fontSize: '13px', margin: '8px 0' }}>
+                    No document requests.
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>   
           <FingerprintCapture ref={fingerprintRef} />
         </div> 
         <div>

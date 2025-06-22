@@ -1,5 +1,6 @@
 import { ipcMain } from "electron";
-import { supabase } from "../lib/supabase.js";
+import { supabase, supabaseUrl, supabaseServiceKey } from "../lib/supabase.js";
+import { createClient } from '@supabase/supabase-js';
 
 const toSnakeCase = (obj) => {
   if (!obj || typeof obj !== "object") return obj;
@@ -25,6 +26,7 @@ const toCamelCase = (obj) => {
 
 // Add Resident Record Handler
 ipcMain.handle("add-resident-record", async (event, record) => {
+  let user_id = null;
   try {
     // Remove any image/fingerprint/age related fields from the main record
     const { faceFileName, fingerprints, ...cleanRecord } = record;
@@ -35,10 +37,21 @@ ipcMain.handle("add-resident-record", async (event, record) => {
       password: cleanRecord.email + Date.now(), // Use a default password (can be random)
     });
     if (authError) {
+      // Check for duplicate email error
+      if (
+        authError.message &&
+        (authError.message.toLowerCase().includes("already registered") ||
+         authError.message.toLowerCase().includes("email") && authError.message.toLowerCase().includes("exists"))
+      ) {
+        return { error: "This email is already registered. Please use a different email address." };
+      }
       // Return the actual auth error to the frontend and stop further processing
       return { error: `Auth error: ${authError.message}` };
     }
-    const user_id = authData.user.id;
+    if (!authData || !authData.user || !authData.user.id) {
+      return { error: "Failed to create user in authentication. No user ID returned." };
+    }
+    user_id = authData.user.id;
 
     // Split record for profiles and personal_identity
     const profilesFields = [
@@ -65,9 +78,30 @@ ipcMain.handle("add-resident-record", async (event, record) => {
     if (identityError) throw new Error(`Database error (personal_identity): ${identityError.message}`);
 
     // Always return userId in camelCase for frontend compatibility
-    return { message: "Resident record added successfully.", data: [{ ...profileData[0], userId: user_id }] };
+    return { 
+      message: "Resident record added successfully.", 
+      data: [{ userId: user_id }]
+    };
   } catch (err) {
     console.error("Error adding resident record:", err.message);
+    // If user_id exists, delete the user from auth to prevent orphaned accounts
+    if (user_id) {
+      try {
+        // Use the Supabase service role key for admin actions
+        const admin = createClient(supabaseUrl, supabaseServiceKey);
+        await admin.auth.admin.deleteUser(user_id);
+      } catch (cleanupErr) {
+        console.error("Failed to cleanup auth user after error:", cleanupErr.message);
+      }
+    }
+    // If the error is about duplicate email, make it clear for the frontend
+    if (
+      err.message &&
+      (err.message.toLowerCase().includes("already registered") ||
+       err.message.toLowerCase().includes("email") && err.message.toLowerCase().includes("exists"))
+    ) {
+      return { error: "This email is already registered. Please use a different email address." };
+    }
     return { error: "Failed to add resident record. " + err.message };
   }
 });
@@ -129,18 +163,38 @@ ipcMain.handle("fetch-resident-records", async (event, filters = {}) => {
   } = filters;
 
   try {
-    let query = supabase.from("profiles").select("*");
+    // Join profiles with requests, get most recent request per user
+    let query = supabase
+      .from("profiles")
+      .select(`*, requests:requests(requests, date_received)`) // nested select
+      .order("created_at", { ascending: sortOption === "oldest" })
+      .limit(50);
 
     if (searchQuery && searchBy) query = query.ilike(searchBy, `%${searchQuery}%`);
     if (startDate) query = query.gte("created_at", startDate);
     if (endDate) query = query.lte("created_at", endDate);
 
-    query = query.order("created_at", { ascending: sortOption === "oldest" }).limit(50);
-
     const { data: rows, error } = await query;
     if (error) throw error;
 
-    return toCamelCase(rows);
+    // For each row, extract documents_requested from the most recent request
+    const result = rows.map(row => {
+      let documents_requested = [];
+      if (row.requests && Array.isArray(row.requests) && row.requests.length > 0) {
+        // Find the most recent request by date_received
+        const sorted = row.requests.slice().sort((a, b) => new Date(b.date_received) - new Date(a.date_received));
+        const latest = sorted[0];
+        if (latest && latest.requests && latest.requests.documents_requested) {
+          documents_requested = latest.requests.documents_requested;
+        }
+      }
+      return {
+        ...row,
+        documents_requested,
+      };
+    });
+
+    return toCamelCase(result);
   } catch (err) {
     console.error("Error fetching resident records:", err.message);
     return { error: "Failed to fetch resident records. " + err.message };
@@ -150,29 +204,14 @@ ipcMain.handle("fetch-resident-records", async (event, filters = {}) => {
 // Delete Resident Record Handler
 ipcMain.handle("delete-resident-record", async (event, user_id) => {
   try {
-    // Start a transaction to delete related records
-    const { error: residentError } = await supabase
-      .from("profiles")
-      .delete()
-      .eq("user_id", user_id);
-
-    if (residentError) throw new Error(`Error deleting resident: ${residentError.message}`);
-
-    // Delete from resident_images
-    const { error: imageError } = await supabase
-      .from("resident_images")
-      .delete()
-      .eq("user_id", user_id);
-
-    if (imageError) throw new Error(`Error deleting resident images: ${imageError.message}`);
-
-    // Delete from resident_fingerprints
-    const { error: fingerprintError } = await supabase
-      .from("resident_fingerprints")
-      .delete()
-      .eq("user_id", user_id);
-
-    if (fingerprintError) throw new Error(`Error deleting resident fingerprints: ${fingerprintError.message}`);
+    // Delete user from auth.users using the admin client
+    try {
+      const admin = createClient(supabaseUrl, supabaseServiceKey);
+      await admin.auth.admin.deleteUser(user_id);
+    } catch (authErr) {
+      console.error("Error deleting user from auth.users:", authErr.message);
+      throw new Error("Failed to delete user from authentication: " + authErr.message);
+    }
 
     // Delete files from storage bucket
     try {
@@ -186,7 +225,6 @@ ipcMain.handle("delete-resident-record", async (event, user_id) => {
         'left-thumb', 'left-index', 'left-middle', 'left-ring', 'left-pinky',
         'right-thumb', 'right-index', 'right-middle', 'right-ring', 'right-pinky'
       ];
-      
       const fingerprintPaths = fingerTypes.map(type => `${user_id}/${type}.png`);
       await supabase.storage
         .from("resident")
@@ -196,7 +234,7 @@ ipcMain.handle("delete-resident-record", async (event, user_id) => {
       // Continue even if storage deletion fails
     }
 
-    return { message: "Resident record and associated files deleted successfully." };
+    return { message: "User deleted from auth.users and images/fingerprints removed from storage." };
   } catch (err) {
     console.error("Error deleting resident record:", err.message);
     return { error: "Failed to delete resident record. " + err.message };

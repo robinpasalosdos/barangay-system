@@ -583,8 +583,12 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         margin-bottom: 12px;
     }
 
-    h3 {
+    p {
         margin: 24px 0 12px;
+    }
+
+    h3 {
+        margin: 6px 0 9px;
     }
 
     > div {
@@ -592,6 +596,29 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
         &:first-child {
             flex-direction: column;
+            > div:first-child {
+                color: white;
+                gap: 20px;
+
+                > div:last-child {
+                    flex-direction: column;
+                    width: 100%;
+
+                    
+                    > div:last-child {
+                        flex-direction: column;
+                        gap: '20px';
+                        border-radius: 10px;
+                        border: 1px solid #ccc;
+                        padding: 10px;
+                        height: 100%;
+                        > div {
+                            gap: 10px;
+                            flex-wrap: wrap;
+                        }
+                    }
+                }
+            }
             .resident-fingerprints {
                 @include flex(column);
             }
@@ -671,54 +698,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .face-container {
     border-radius: map.get($border-radius, xl);
     z-index: map.get($z-index, modal);
-
-    // Base styles for all divs inside photo-modal
-    div {
-        display: flex;
-    }
-
-    // Main container
-    > div {
-        flex-direction: column;
-        border-radius: map.get($border-radius, xl);
-
-        // Header section
-        > div:first-child {
-            font-size: map.get($font-sizes, l);
-            color: $white;
-            flex-direction: column;
-        }
-
-        // Content section
-        > div:last-child {
-            height: 170px;
-            gap: map.get($spacing, 'xl');
-
-            > div:last-child {
-
-                flex-direction: column;
-                justify-content: space-between;
-                height: 100%;
-                h3 {
-                    font-size: map.get($font-sizes, xl);
-                    color: $white;
-                }
-                button {
-                    @include button-base;
-                    font-size: map.get($font-sizes, xs);
-                    font-weight: 500;
-                    color: $white;
-                    background: $accent-color;
-                    width: 100%;
-                    height: 50px;
-                    border-radius: map.get($border-radius, sm);
-                    align-self: flex-end;
-                }     
-            }
-        }
-    }
-
-    // Video element styles
+    border-radius: map.get($border-radius, xl);
     video, img {
         height: 170px;
         width: 160px;

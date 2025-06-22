@@ -36,8 +36,8 @@ const ActionButtons = ({ record, featureName, handleManage, deleteRecord }) => {
   };
 
   const handleConfirmDelete = () => {
-    deleteRecord(record.user_id);
-    toast.success(`Record "${record.username || record.user_id}" deleted successfully!`);
+    deleteRecord(record.userId);
+    toast.success(`Record "${record.username || record.userId}" deleted successfully!`);
     setShowDeleteDialog(false);
   };
 
