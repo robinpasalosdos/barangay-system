@@ -52,38 +52,19 @@ const createDataContext = (fetchRecordsFn, addRecordFn, updateRecordFn, deleteRe
           // Update logic with proper error handling
           result = await updateRecordFn(record);
           if (result.error) {
-            // Check for duplicate email error
-            if (
-              result.error.toLowerCase().includes("already registered") ||
-              (result.error.toLowerCase().includes("email") && result.error.toLowerCase().includes("exists"))
-            ) {
-              toast.error("This email is already registered. Please use a different email address.");
-              setError(result.error);
-              return;
-            }
-            toast.error(result.error);
-            setError(result.error);
-            return;
+            throw new Error(result.error);
           }
         } else {
           // Add new record
           result = await addRecordFn(record); // Remove double await
           if (result.error) {
-            // Check for duplicate email error
-            if (
-              result.error.toLowerCase().includes("already registered") ||
-              (result.error.toLowerCase().includes("email") && result.error.toLowerCase().includes("exists"))
-            ) {
-              toast.error("This email is already registered. Please use a different email address.");
-              setError(result.error);
-              return;
-            }
-            toast.error(result.error);
-            setError(result.error);
-            return;
+            throw new Error(result.error);
           }
         }
-        await fetchRecords();
+        await fetchRecords(); // Refresh data after adding or updating
+        setIsModalOpen(false); // Close modal after success
+        setIsEditing(false); // Reset editing state
+        setSelectedData(null); // Clear selected data
       } catch (error) {
         console.error("Error adding/updating record:", error);
         toast.error(error.message);
@@ -191,8 +172,6 @@ export const {
     isFaceChanged: false,
     fingerprints: {},
     currentFinger: 0,
-    // documents_requested: array of document names for each resident, fetched from requests table
-    // Display this in ResidentManagementForm or ResidentManagement table as a box/block per document
   }
 );
 
