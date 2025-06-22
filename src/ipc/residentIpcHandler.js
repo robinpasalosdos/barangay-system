@@ -163,34 +163,48 @@ ipcMain.handle("fetch-resident-records", async (event, filters = {}) => {
   } = filters;
 
   try {
-    // Join profiles with requests, get most recent request per user
-    let query = supabase
-      .from("profiles")
-      .select(`*, requests:requests(requests, date_received)`) // nested select
-      .order("created_at", { ascending: sortOption === "oldest" })
-      .limit(50);
-
+    // 1. Fetch all profiles
+    let query = supabase.from("profiles").select("*").order("created_at", { ascending: sortOption === "oldest" }).limit(50);
     if (searchQuery && searchBy) query = query.ilike(searchBy, `%${searchQuery}%`);
     if (startDate) query = query.gte("created_at", startDate);
     if (endDate) query = query.lte("created_at", endDate);
+    const { data: profiles, error: profilesError } = await query;
+    if (profilesError) throw profilesError;
 
-    const { data: rows, error } = await query;
-    if (error) throw error;
+    // 2. Fetch all personal_identity
+    const { data: identities, error: identitiesError } = await supabase.from("personal_identity").select("*");
+    if (identitiesError) throw identitiesError;
 
-    // For each row, extract documents_requested from the most recent request
-    const result = rows.map(row => {
+    // 3. Fetch all requests
+    const { data: requests, error: requestsError } = await supabase.from("requests").select("*");
+    if (requestsError) throw requestsError;
+
+    // 4. Fetch all user_registered_barangay
+    const { data: registered, error: registeredError } = await supabase.from("user_registered_barangay").select("user_id");
+    if (registeredError) throw registeredError;
+    const registeredUserIds = new Set((registered || []).map(r => r.user_id));
+
+    // 5. Merge: for each profile, find their identity, most recent request, and barangay registration
+    const result = profiles.map(profile => {
+      // Find matching personal_identity
+      const identity = identities.find(i => i.user_id === profile.user_id) || {};
+      // Find all requests for this user
+      const userRequests = requests.filter(r => r.user_id === profile.user_id);
+      // Sort by date_received descending
+      userRequests.sort((a, b) => new Date(b.date_received) - new Date(a.date_received));
+      // Get the most recent
+      const latest = userRequests[0];
       let documents_requested = [];
-      if (row.requests && Array.isArray(row.requests) && row.requests.length > 0) {
-        // Find the most recent request by date_received
-        const sorted = row.requests.slice().sort((a, b) => new Date(b.date_received) - new Date(a.date_received));
-        const latest = sorted[0];
-        if (latest && latest.requests && latest.requests.documents_requested) {
-          documents_requested = latest.requests.documents_requested;
-        }
+      if (latest && latest.requests && latest.requests.documents_requested) {
+        documents_requested = latest.requests.documents_requested;
       }
+      // Check barangay registration
+      const isBarangayVerified = registeredUserIds.has(profile.user_id);
       return {
-        ...row,
+        ...profile,
+        ...identity,
         documents_requested,
+        isBarangayVerified,
       };
     });
 

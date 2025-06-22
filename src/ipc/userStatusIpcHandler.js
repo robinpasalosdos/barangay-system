@@ -80,7 +80,7 @@ ipcMain.handle("update-user", async (event, record) => {
         edit_user_action: record.editUserAction,
         search_user_action: record.searchUserAction
       })
-      .eq("user_id", record.user_id);
+      .eq("user_id", record.userId);
 
     if (error) throw error;
 
