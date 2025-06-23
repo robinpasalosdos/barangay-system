@@ -631,7 +631,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
                 &:first-child {
                     flex-direction: column;
                     gap: map.get($spacing, sm);
+
                     > div {
+
                         gap: map.get($spacing, md);
                         div {
                             flex-direction: column;
@@ -682,7 +684,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
     label {
         font-weight: 200;
-        font-size: map.get($font-sizes, xs);
+        font-size: map.get($font-sizes, sm);
         color: $white;
         text-indent: map.get($spacing, xs);
     }
@@ -692,6 +694,87 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         height: 50px;
         font-size: map.get($font-sizes, xl);
         font-weight: 600;
+    }
+}
+
+.bmodal {
+    @include flex;
+    padding: map.get($spacing, '3xl') map.get($spacing, '4xl');
+    gap: map.get($spacing, '2xl');
+    color: white;
+    div {
+        @include flex;
+    }
+
+    > div:first-child {
+        flex-direction: column;
+        gap: map.get($spacing, sm);
+
+        > div:first-child {
+
+            > div:last-child {
+
+                > div {
+                    flex-direction: column;
+                    font-size: map.get($font-sizes, sm);
+                    gap: map.get($spacing, sm);
+                }
+            }
+        }
+
+        > div:last-child {
+            flex-direction: column;
+
+            > div {
+                font-size: map.get($font-sizes, sm);
+            }
+        }
+    }
+
+    > div:last-child {
+        flex-direction: column;
+
+        > div:first-child {
+            flex-direction: column;
+            > :first-child {
+                flex-direction: column;
+                gap: map.get($spacing, sm);
+                > div {
+                    gap: map.get($spacing, md);
+                    div {
+                        flex-direction: column;
+                        gap: map.get($spacing, xs);
+                    }
+                }
+            }
+
+            > :last-child {
+                flex-direction: column;;
+            }
+        }
+
+        > div:nth-child(2) {
+            flex-direction: column;
+            gap: map.get($spacing, sm);
+            > div {
+                gap: map.get($spacing, md);
+                div {
+                    flex-direction: column;
+                    gap: map.get($spacing, xs);
+                }
+            }
+        }
+
+        > div:last-child {
+            
+        }
+    }
+
+    label {
+        font-weight: 200;
+        font-size: map.get($font-sizes, sm);
+        color: $white;
+        text-indent: map.get($spacing, xs);
     }
 }
 

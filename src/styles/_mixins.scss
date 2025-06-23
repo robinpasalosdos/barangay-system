@@ -34,7 +34,7 @@
 
 @mixin input-base {
   all: unset;
-  font-size: map.get($font-sizes, 'xs');
+  font-size: map.get($font-sizes, 'sm');
   text-indent: map.get($spacing, 'base');
   color: $white;
   @include glass-effect;

@@ -47,15 +47,6 @@ const imageStyle = {
   objectFit: "cover",
 };
 
-const faceStyle = {
-  width: "120px",
-  height: "120px",
-  borderRadius: "50%",
-  border: "2px solid #444",
-  objectFit: "cover",
-  marginBottom: "10px",
-};
-
 const searchResultStyle = {
   background: "#f5f5f5",
   border: "1px solid #ccc",
@@ -131,96 +122,136 @@ const BarangayClearanceForm = () => {
       });
   }, [selectedResident]);
 
+  const onChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormState((prev) => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
+  };
+
   // Only display, no editing
   return (
-    <div className="rmodal" style={{ minWidth: 400 }}>
-      <div style={{ marginBottom: 16 }}>
-        <InputField
-          label="Search Resident"
-          id="search"
-          name="search"
-          placeholder="Type last name, first name, or email..."
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-        />
-        {search && searchResults.length > 0 && (
-          <div style={{ maxHeight: 180, overflowY: "auto", marginTop: 4, marginBottom: 8 }}>
-            {searchResults.map(res => (
-              <div
-                key={res.userId || res.user_id}
-                style={searchResultStyle}
-                onClick={() => {
-                  setSelectedResident(res);
-                  setSearch("");
-                  setSearchResults([]);
-                }}
-              >
-                {res.lastName}, {res.firstName} {res.middleName} ({res.email})
+    <div className="form-container">
+      <div className="bmodal">
+        <div>
+          <div>
+            <div className="face-container">
+              <img
+                src={faceUrl || "src/assets/placeholder.jpg"}
+                alt="Profile Picture"
+              />
+            </div>
+            <div>
+              <div>
+                <span style={{ width: 90, textAlign: "center" }}>Left Thumb</span>
+                <div style={thumbStyle}>
+                  {leftThumbUrl ? (
+                    <img src={leftThumbUrl} alt="Left Thumb" style={imageStyle} />
+                  ) : (
+                    <span style={{ color: "#888", fontSize: 12 }}>No Image</span>
+                  )}
+                </div>
               </div>
-            ))}
-          </div>
-        )}
-      </div>
-      <div style={{ display: "flex", alignItems: "center", gap: 24, marginBottom: 24 }}>
-        <div>
-          <img
-            src={faceUrl || "src/assets/placeholder.jpg"}
-            alt="Face"
-            style={faceStyle}
-          />
-          <div style={{ textAlign: "center", fontSize: 13, color: "#888" }}>Face</div>
-        </div>
-        <div>
-          <div style={{ display: "flex", gap: 8 }}>
-            <div style={thumbStyle}>
-              {leftThumbUrl ? (
-                <img src={leftThumbUrl} alt="Left Thumb" style={imageStyle} />
-              ) : (
-                <span style={{ color: "#888", fontSize: 12 }}>No Image</span>
-              )}
-            </div>
-            <div style={thumbStyle}>
-              {rightThumbUrl ? (
-                <img src={rightThumbUrl} alt="Right Thumb" style={imageStyle} />
-              ) : (
-                <span style={{ color: "#888", fontSize: 12 }}>No Image</span>
-              )}
+              <div>
+                <span style={{ width: 90, textAlign: "center" }}>Right Thumb</span>
+                <div style={thumbStyle}>
+                  {rightThumbUrl ? (
+                    <img src={rightThumbUrl} alt="Right Thumb" style={imageStyle} />
+                  ) : (
+                    <span style={{ color: "#888", fontSize: 12 }}>No Image</span>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
-          <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13, color: "#888", marginTop: 4 }}>
-            <span style={{ width: 90, textAlign: "center" }}>Left Thumb</span>
-            <span style={{ width: 90, textAlign: "center" }}>Right Thumb</span>
+          <div>
+            <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: 16 }}>
+              <tbody>
+                <tr><td><b>Last Name</b></td><td>{formState.lastName}</td></tr>
+                <tr><td><b>First Name</b></td><td>{formState.firstName}</td></tr>
+                <tr><td><b>Middle Name</b></td><td>{formState.middleName}</td></tr>
+                <tr><td><b>Date of Birth</b></td><td>{formState.dateOfBirth}</td></tr>
+                <tr><td><b>Email</b></td><td>{formState.email}</td></tr>
+                <tr><td><b>Address</b></td><td>{formState.address}</td></tr>
+                <tr><td><b>Phone Number</b></td><td>{formState.phoneNumber}</td></tr>
+                <tr><td><b>Sex</b></td><td>{formState.sex}</td></tr>
+                <tr><td><b>Country</b></td><td>{formState.country}</td></tr>
+                <tr><td><b>Region</b></td><td>{formState.region}</td></tr>
+                <tr><td><b>Province</b></td><td>{formState.province}</td></tr>
+                <tr><td><b>City</b></td><td>{formState.city}</td></tr>
+                <tr><td><b>Barangay</b></td><td>{formState.barangay}</td></tr>
+                <tr><td><b>Street</b></td><td>{formState.street}</td></tr>
+                <tr><td><b>Block Number</b></td><td>{formState.blockNumber}</td></tr>
+                <tr><td><b>Zip Code</b></td><td>{formState.zipCode}</td></tr>
+                <tr><td><b>Citizenship</b></td><td>{formState.citizenship}</td></tr>
+                <tr><td><b>Civil Status</b></td><td>{formState.civilStatus}</td></tr>
+                <tr><td><b>Eye Color</b></td><td>{formState.eyeColor}</td></tr>
+                <tr><td><b>Hair Color</b></td><td>{formState.hairColor}</td></tr>
+                <tr><td><b>Height (cm)</b></td><td>{formState.height}</td></tr>
+                <tr><td><b>Weight (kg)</b></td><td>{formState.weight}</td></tr>
+                <tr><td><b>Complexion</b></td><td>{formState.complexion}</td></tr>
+                <tr><td><b>Identifying Marks</b></td><td>{formState.identifyingMarks}</td></tr>
+              </tbody>
+            </table>
           </div>
         </div>
-      </div>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-        <InputField label="Last Name" id="lastName" name="lastName" value={formState.lastName} readOnly />
-        <InputField label="First Name" id="firstName" name="firstName" value={formState.firstName} readOnly />
-        <InputField label="Middle Name" id="middleName" name="middleName" value={formState.middleName} readOnly />
-        <InputField label="Date of Birth" id="dateOfBirth" name="dateOfBirth" value={formState.dateOfBirth} readOnly />
-        <InputField label="Email" id="email" name="email" value={formState.email} readOnly />
-        <InputField label="Address" id="address" name="address" value={formState.address} readOnly />
-        <InputField label="Phone Number" id="phoneNumber" name="phoneNumber" value={formState.phoneNumber} readOnly />
-        <InputField label="Sex" id="sex" name="sex" value={formState.sex} readOnly />
-        <InputField label="Country" id="country" name="country" value={formState.country} readOnly />
-        <InputField label="Region" id="region" name="region" value={formState.region} readOnly />
-        <InputField label="Province" id="province" name="province" value={formState.province} readOnly />
-        <InputField label="City" id="city" name="city" value={formState.city} readOnly />
-        <InputField label="Barangay" id="barangay" name="barangay" value={formState.barangay} readOnly />
-        <InputField label="Street" id="street" name="street" value={formState.street} readOnly />
-        <InputField label="Block Number" id="blockNumber" name="blockNumber" value={formState.blockNumber} readOnly />
-        <InputField label="Zip Code" id="zipCode" name="zipCode" value={formState.zipCode} readOnly />
-        <InputField label="Citizenship" id="citizenship" name="citizenship" value={formState.citizenship} readOnly />
-        <InputField label="Civil Status" id="civilStatus" name="civilStatus" value={formState.civilStatus} readOnly />
-        <InputField label="Eye Color" id="eyeColor" name="eyeColor" value={formState.eyeColor} readOnly />
-        <InputField label="Hair Color" id="hairColor" name="hairColor" value={formState.hairColor} readOnly />
-        <InputField label="Height (cm)" id="height" name="height" value={formState.height} readOnly />
-        <InputField label="Weight (kg)" id="weight" name="weight" value={formState.weight} readOnly />
-        <InputField label="Complexion" id="complexion" name="complexion" value={formState.complexion} readOnly />
-        <InputField label="Identifying Marks" id="identifyingMarks" name="identifyingMarks" value={formState.identifyingMarks} readOnly />
+        <div>
+          <div>
+            <InputField
+              label="Search Resident"
+              id="search"
+              name="search"
+              placeholder="Type last name, first name, or email..."
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+            />
+            {search && searchResults.length > 0 && (
+              <div style={{ maxHeight: 180, overflowY: "auto", marginTop: 4, marginBottom: 8 }}>
+                {searchResults.map(res => (
+                  <div
+                    key={res.userId || res.user_id}
+                    style={searchResultStyle}
+                    onClick={() => {
+                      setSelectedResident(res);
+                      setSearch("");
+                      setSearchResults([]);
+                    }}
+                  >
+                    {res.lastName}, {res.firstName} {res.middleName} ({res.email})
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+          <div>
+            <div>
+              <InputField label="Document Number" id="documentNumber" name="documentNumber" value={formState.documentNumber || ''} onChange={onChange} />
+            </div>
+            <div>
+              <InputField label="Barangay Clearance Number" id="barangayClearanceNumber" name="barangayClearanceNumber" value={formState.barangayClearanceNumber || ''} onChange={onChange} />
+            </div>
+            <div>
+              <InputField label="Cedula Number" id="cedulaNumber" name="cedulaNumber" value={formState.cedulaNumber || ''} onChange={onChange} />
+            </div>
+            <div>
+              <InputField label="Place Issued" id="placeIssued" name="placeIssued" value={formState.placeIssued || ''} onChange={onChange} />
+            </div>
+            <div>
+              <InputField label="Date Issued" id="dateIssued" name="dateIssued" type="date" value={formState.dateIssued || ''} onChange={onChange} />
+            </div>
+            <div>
+              <InputField label="OR Number" id="orNumber" name="orNumber" value={formState.orNumber || ''} onChange={onChange} />
+            </div>
+            <div>
+              <InputField label="OR Date" id="orDate" name="orDate" type="date" value={formState.orDate || ''} onChange={onChange} />
+            </div>
+          </div>
+          <div>
+            
+          </div>
+        </div>
       </div>
     </div>
   );
 };
 
 export default BarangayClearanceForm;
+
