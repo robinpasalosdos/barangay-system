@@ -53,20 +53,20 @@ const Table = ({
       endDate,
       sortOption,
     });
-  const [verifiedFilter, setVerifiedFilter] = useState('all');
+  const [registeredFilter, setRegisteredFilter] = useState('all');
 
   // Filter data for Resident Management feature
   const filteredData = useMemo(() => {
     if (featureName !== 'RESIDENT MANAGEMENT') return data;
-    if (verifiedFilter === 'all') return data;
-    if (verifiedFilter === 'verified') {
-      return data.filter((record) => record.isBarangayVerified === true);
+    if (registeredFilter === 'all') return data;
+    if (registeredFilter === 'registered') {
+      return data.filter((record) => record.isBarangayRegistered === true);
     }
-    if (verifiedFilter === 'unverified') {
-      return data.filter((record) => record.isBarangayVerified === false);
+    if (registeredFilter === 'unregistered') {
+      return data.filter((record) => record.isBarangayRegistered === false);
     }
     return data;
-  }, [data, featureName, verifiedFilter]);
+  }, [data, featureName, registeredFilter]);
 
   return (
     <div className="content">
@@ -150,46 +150,6 @@ const Table = ({
               </div>        
             </div>     
         </div>
-
-        <div>
-          {/* Radio button to filter verified resident, only appears when feature name is 'RESIDENT MANAGEMENT' */}
-          {featureName === 'RESIDENT MANAGEMENT' && (
-            <div style={{ marginBottom: '10px' }}>
-              <span>Filter: </span>
-              <label style={{ marginRight: '10px' }}>
-                <input
-                  type="radio"
-                  name="verifiedFilter"
-                  value="all"
-                  checked={verifiedFilter === 'all'}
-                  onChange={() => setVerifiedFilter('all')}
-                />
-                All
-              </label>
-              <label style={{ marginRight: '10px' }}>
-                <input
-                  type="radio"
-                  name="verifiedFilter"
-                  value="verified"
-                  checked={verifiedFilter === 'verified'}
-                  onChange={() => setVerifiedFilter('verified')}
-                />
-                Verified
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="verifiedFilter"
-                  value="unverified"
-                  checked={verifiedFilter === 'unverified'}
-                  onChange={() => setVerifiedFilter('unverified')}
-                />
-                Unverified
-              </label>
-            </div>
-          )}
-        </div>
-
         <table>
           <TableHeader columns={columns} />
           <tbody>
@@ -219,6 +179,44 @@ const Table = ({
             )}
           </tbody>
         </table>
+        <div>
+          {/* Radio button to filter registered resident, only appears when feature name is 'RESIDENT MANAGEMENT' */}
+          {featureName === 'RESIDENT MANAGEMENT' && (
+            <div style={{ marginBottom: '10px' }}>
+              <span>Filter: </span>
+              <label style={{ marginRight: '10px' }}>
+                <input
+                  type="radio"
+                  name="registeredFilter"
+                  value="all"
+                  checked={registeredFilter === 'all'}
+                  onChange={() => setRegisteredFilter('all')}
+                />
+                All
+              </label>
+              <label style={{ marginRight: '10px' }}>
+                <input
+                  type="radio"
+                  name="registeredFilter"
+                  value="registered"
+                  checked={registeredFilter === 'registered'}
+                  onChange={() => setRegisteredFilter('registered')}
+                />
+                Registered
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="registeredFilter"
+                  value="unregistered"
+                  checked={registeredFilter === 'unregistered'}
+                  onChange={() => setRegisteredFilter('unregistered')}
+                />
+                Unregistered
+              </label>
+            </div>
+          )}
+        </div>
         <div>
           {/* {add toggle to filter verified resident, this radio button appears when feature name is = to user management} */}
           {user && user.addUserAction && (

@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import { MainProvider, MainContext } from "./context/MainContext";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import PoliceClearance from "./components/PoliceClearance/PoliceClearance";
+import BarangayClearance from "./components/BarangayClearance/BarangayClearance";
 import UserStatus from "./components/UserStatus/UserStatus";
 import ResidentManagement from "./components/ResidentManagement/ResidentManagement";
 import WarrantBooking from "./components/WarrantBooking/WarrantBooking";
@@ -54,7 +54,7 @@ const AppContent = () => {
                     <SideBar />
                     <Routes>
                         <Route path="/" element={<Dashboard />} />
-                        <Route path="/police-clearance" element={<PoliceClearance />} />
+                        <Route path="/police-clearance" element={<BarangayClearance />} />
                         <Route path="/warrant-booking" element={<WarrantBooking />} />
                         <Route path="/rogue-directory" element={<RogueDirectory />} />
                         <Route path="/user-status" element={<UserStatus />} />

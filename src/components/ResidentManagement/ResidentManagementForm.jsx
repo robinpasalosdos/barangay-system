@@ -35,7 +35,6 @@ const ResidentManagementForm = () => {
     address: "",
     phoneNumber: "",
     sex: "",
-    isBarangayVerified: false,
     // personal_identity table
     country: "",
     region: "",
@@ -64,7 +63,6 @@ const ResidentManagementForm = () => {
   useEffect(() => {
     const fetchBiometrics = async () => {
       if (isEditing && selectedData && selectedData.userId) {
-        console.log("selectedData", selectedData);
         setFormState(selectedData);
 
         // Fetch biometrics from Supabase
@@ -319,7 +317,6 @@ const ResidentManagementForm = () => {
           <div>
             <InputField label="Phone Number" id="phoneNumber" name="phoneNumber" placeholder="Enter Phone Number" value={formState.phoneNumber || ""} onChange={handleChange} />
             <InputField label="Sex" id="sex" name="sex" placeholder="Enter Sex" value={formState.sex || ""} onChange={handleChange} />
-            <InputField label="Barangay Verified" id="isBarangayVerified" name="isBarangayVerified" type="checkbox" checked={formState.isBarangayVerified} onChange={handleChange} />
           </div>
           <div>
             <InputField label="Country" id="country" name="country" placeholder="Enter Country" value={formState.country || ""} onChange={handleChange} />

@@ -129,8 +129,8 @@ const createDataContext = (fetchRecordsFn, addRecordFn, updateRecordFn, deleteRe
 
 // Police Clearance Context
 export const {
-  Context: PoliceClearanceContext,
-  Provider: PoliceClearanceProvider,
+  Context: BarangayClearanceContext,
+  Provider: BarangayClearanceProvider,
 } = createDataContext(
   window.api.fetchPoliceClearanceRecords,
   window.api.addPoliceClearanceRecord,

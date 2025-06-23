@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from "react";
-import { UserStatusProvider, PoliceClearanceProvider, WarrantBookingProvider, RogueDirectoryProvider, ResidentProvider } from "./";
+import { UserStatusProvider, BarangayClearanceProvider, WarrantBookingProvider, RogueDirectoryProvider, ResidentProvider } from "./";
 import { supabase } from "../lib/supabase.js";
 // Create a MainContext for shared global state
 export const MainContext = createContext();
@@ -85,13 +85,13 @@ useEffect(() => {
       {/* Wrap feature-specific providers */}
       <UserStatusProvider>
         <ResidentProvider>
-          <PoliceClearanceProvider>
+          <BarangayClearanceProvider>
             <WarrantBookingProvider>
               <RogueDirectoryProvider>
               {children}
               </RogueDirectoryProvider>
             </WarrantBookingProvider>
-          </PoliceClearanceProvider>
+          </BarangayClearanceProvider>
         </ResidentProvider>
       </UserStatusProvider>
     </MainContext.Provider>

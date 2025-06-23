@@ -1,37 +1,31 @@
 import { ipcMain } from "electron";
 import { supabase } from "../lib/supabase.js";
-
-// Utility functions for case conversion
-const toSnakeCase = (obj) => {
-  if (!obj || typeof obj !== "object") return obj;
-  if (Array.isArray(obj)) return obj.map(toSnakeCase);
-
-  return Object.keys(obj).reduce((acc, key) => {
-    const snakeKey = key.replace(/([A-Z])/g, "_$1").toLowerCase();
-    acc[snakeKey] = toSnakeCase(obj[key]);
-    return acc;
-  }, {});
-};
-
-const toCamelCase = (obj) => {
-  if (!obj || typeof obj !== "object") return obj;
-  if (Array.isArray(obj)) return obj.map(toCamelCase);
-
-  return Object.keys(obj).reduce((acc, key) => {
-    const camelKey = key.replace(/_([a-z])/g, (_, char) => char.toUpperCase());
-    acc[camelKey] = toCamelCase(obj[key]);
-    return acc;
-  }, {});
-};
+import { toSnakeCase, toCamelCase } from "../lib/caseUtils.js";
 
 // Add Record Handler
 ipcMain.handle("add-police-clearance-record", async (event, record) => {
   try {
-    const snakeCaseRecord = toSnakeCase(record);
-    const { data, error } = await supabase.from("barangay_clearance").insert([snakeCaseRecord]);
+    // Insert into documents first
+    const docRecord = toSnakeCase({
+      user_id: record.userId || record.user_id,
+      type: "barangay_clearance",
+      purpose: record.purpose,
+      findings: record.findings,
+      remarks: record.remarks,
+    });
+    const { data: docData, error: docError } = await supabase.from("documents").insert([docRecord]).select();
+    if (docError) throw new Error(`Database error (documents): ${docError.message}`);
+    const document_number = docData[0].document_number;
 
-    if (error) throw new Error(`Database error: ${error.message}`);
-    return { message: "Record added successfully.", data };
+    // Insert into barangay_clearance
+    const clearanceRecord = toSnakeCase({
+      ...record,
+      document_number,
+    });
+    const { data: clearanceData, error: clearanceError } = await supabase.from("barangay_clearance").insert([clearanceRecord]).select();
+    if (clearanceError) throw new Error(`Database error (barangay_clearance): ${clearanceError.message}`);
+
+    return { message: "Record added successfully.", data: { ...docData[0], ...clearanceData[0] } };
   } catch (err) {
     console.error("Error adding record:", err.message);
     return { error: "Failed to add record. " + err.message };
@@ -41,13 +35,26 @@ ipcMain.handle("add-police-clearance-record", async (event, record) => {
 // Update Record Handler
 ipcMain.handle("update-police-clearance-record", async (event, record) => {
   try {
-    const snakeCaseRecord = toSnakeCase(record);
-    const { error } = await supabase
-      .from("barangay_clearance")
-      .update(snakeCaseRecord)
-      .eq("id", record.id);
+    // Update documents
+    const docRecord = toSnakeCase({
+      purpose: record.purpose,
+      findings: record.findings,
+      remarks: record.remarks,
+    });
+    const { error: docError } = await supabase
+      .from("documents")
+      .update(docRecord)
+      .eq("document_number", record.documentNumber || record.document_number);
+    if (docError) throw new Error(`Supabase update error (documents): ${docError.message}`);
 
-    if (error) throw new Error(`Supabase update error: ${error.message}`);
+    // Update barangay_clearance
+    const clearanceRecord = toSnakeCase(record);
+    const { error: clearanceError } = await supabase
+      .from("barangay_clearance")
+      .update(clearanceRecord)
+      .eq("document_number", record.documentNumber || record.document_number);
+    if (clearanceError) throw new Error(`Supabase update error (barangay_clearance): ${clearanceError.message}`);
+
     return { message: "Record updated successfully." };
   } catch (err) {
     console.error("Error updating record:", err.message);
@@ -66,18 +73,23 @@ ipcMain.handle("fetch-police-clearance-records", async (event, filters = {}) => 
   } = filters;
 
   try {
-    let query = supabase.from("barangay_clearance").select("*");
+    // Join documents and barangay_clearance
+    let query = supabase
+      .from("barangay_clearance")
+      .select("*, documents:documents(*)")
+      .order("created_at", { ascending: sortOption === "oldest" })
+      .limit(50);
 
     if (searchQuery && searchBy) query = query.ilike(searchBy, `%${searchQuery}%`);
-    if (startDate) query = query.gte("created_timestamp", startDate);
-    if (endDate) query = query.lte("created_timestamp", endDate);
-
-    query = query.order("created_timestamp", { ascending: sortOption === "oldest" }).limit(50);
+    if (startDate) query = query.gte("created_at", startDate);
+    if (endDate) query = query.lte("created_at", endDate);
 
     const { data: rows, error } = await query;
     if (error) throw error;
 
-    return toCamelCase(rows);
+    // Flatten the joined data
+    const result = rows.map(row => ({ ...row.documents, ...row }));
+    return toCamelCase(result);
   } catch (err) {
     console.error("Error fetching records:", err.message);
     return { error: "Failed to fetch records. " + err.message };
@@ -85,14 +97,22 @@ ipcMain.handle("fetch-police-clearance-records", async (event, filters = {}) => 
 });
 
 // Delete Record Handler
-ipcMain.handle("delete-police-clearance-record", async (event, id) => {
+ipcMain.handle("delete-police-clearance-record", async (event, document_number) => {
   try {
-    const { error } = await supabase
+    // Delete from barangay_clearance first
+    const { error: clearanceError } = await supabase
       .from("barangay_clearance")
       .delete()
-      .eq("id", id);
+      .eq("document_number", document_number);
+    if (clearanceError) throw new Error(`Supabase delete error (barangay_clearance): ${clearanceError.message}`);
 
-    if (error) throw new Error(`Supabase delete error: ${error.message}`);
+    // Then delete from documents
+    const { error: docError } = await supabase
+      .from("documents")
+      .delete()
+      .eq("document_number", document_number);
+    if (docError) throw new Error(`Supabase delete error (documents): ${docError.message}`);
+
     return { message: "Record deleted successfully." };
   } catch (err) {
     console.error("Error deleting record:", err.message);

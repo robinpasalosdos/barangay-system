@@ -1,28 +1,7 @@
 import { ipcMain } from "electron";
 import { supabase, supabaseUrl, supabaseServiceKey } from "../lib/supabase.js";
 import { createClient } from '@supabase/supabase-js';
-
-const toSnakeCase = (obj) => {
-  if (!obj || typeof obj !== "object") return obj;
-  if (Array.isArray(obj)) return obj.map(toSnakeCase);
-
-  return Object.keys(obj).reduce((acc, key) => {
-    const snakeKey = key.replace(/([A-Z])/g, "_$1").toLowerCase();
-    acc[snakeKey] = toSnakeCase(obj[key]);
-    return acc;
-  }, {});
-};
-
-const toCamelCase = (obj) => {
-  if (!obj || typeof obj !== "object") return obj;
-  if (Array.isArray(obj)) return obj.map(toCamelCase);
-
-  return Object.keys(obj).reduce((acc, key) => {
-    const camelKey = key.replace(/_([a-z])/g, (_, char) => char.toUpperCase());
-    acc[camelKey] = toCamelCase(obj[key]);
-    return acc;
-  }, {});
-};
+import { toSnakeCase, toCamelCase } from '../lib/caseUtils.js';
 
 // Add Resident Record Handler
 ipcMain.handle("add-resident-record", async (event, record) => {
@@ -55,7 +34,7 @@ ipcMain.handle("add-resident-record", async (event, record) => {
 
     // Split record for profiles and personal_identity
     const profilesFields = [
-      "firstName", "middleName", "lastName", "dateOfBirth", "email", "address", "phoneNumber", "sex", "isBarangayVerified"
+      "firstName", "middleName", "lastName", "dateOfBirth", "email", "address", "phoneNumber", "sex"
     ];
     const personalIdentityFields = [
       "country", "region", "province", "city", "barangay", "street", "blockNumber", "zipCode", "citizenship", "civilStatus", "eyeColor", "hairColor", "height", "weight", "complexion", "identifyingMarks"
@@ -117,7 +96,7 @@ ipcMain.handle("update-resident-record", async (event, record) => {
 
     // Split record for profiles and personal_identity
     const profilesFields = [
-      "firstName", "middleName", "lastName", "dateOfBirth", "email", "address", "phoneNumber", "sex", "isBarangayVerified"
+      "firstName", "middleName", "lastName", "dateOfBirth", "email", "address", "phoneNumber", "sex", "isBarangayRegistered"
     ];
     const personalIdentityFields = [
       "country", "region", "province", "city", "barangay", "street", "blockNumber", "zipCode", "citizenship", "civilStatus", "eyeColor", "hairColor", "height", "weight", "complexion", "identifyingMarks"
@@ -199,12 +178,12 @@ ipcMain.handle("fetch-resident-records", async (event, filters = {}) => {
         documents_requested = latest.requests.documents_requested;
       }
       // Check barangay registration
-      const isBarangayVerified = registeredUserIds.has(profile.user_id);
+      const isBarangayRegistered = registeredUserIds.has(profile.user_id);
       return {
         ...profile,
         ...identity,
         documents_requested,
-        isBarangayVerified,
+        isBarangayRegistered,
       };
     });
 

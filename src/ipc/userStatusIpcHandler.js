@@ -1,35 +1,6 @@
 import { ipcMain } from "electron";
 import { supabase } from "../lib/supabase.js";
-// import fs from "fs"; never read but maybe in the future
-// import path from "path"; ^^
-
-const toSnakeCase = (obj) => {
-  if (!obj || typeof obj !== "object") return obj;
-
-  if (Array.isArray(obj)) {
-    return obj.map(toSnakeCase);
-  }
-
-  return Object.keys(obj).reduce((acc, key) => {
-    const snakeKey = key.replace(/([A-Z])/g, "_$1").toLowerCase();
-    acc[snakeKey] = toSnakeCase(obj[key]);
-    return acc;
-  }, {});
-};
-
-const toCamelCase = (obj) => {
-  if (!obj || typeof obj !== "object") return obj;
-
-  if (Array.isArray(obj)) {
-    return obj.map(toCamelCase);
-  }
-
-  return Object.keys(obj).reduce((acc, key) => {
-    const camelKey = key.replace(/_([a-z])/g, (_, char) => char.toUpperCase());
-    acc[camelKey] = toCamelCase(obj[key]);
-    return acc;
-  }, {});
-};
+import { toSnakeCase, toCamelCase } from '../lib/caseUtils.js';
 
 // Add User Handler
 ipcMain.handle("add-user", async (event, record) => {
