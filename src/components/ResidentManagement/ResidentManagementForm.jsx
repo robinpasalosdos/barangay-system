@@ -231,8 +231,7 @@ const ResidentManagementForm = () => {
   const handleCancel = () => {
     // Stop fingerprint acquisition
     fingerprintRef.current?.stopAcquisition?.();
-    resetForm(); // Reset the form fields
-    setIsModalOpen(false);
+    resetForm();
     handleResetImages();
   };
 

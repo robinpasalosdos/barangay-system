@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import InputField from "../Shared/Form/InputField";
+import FormButtons from "../Shared/Form/FormButtons";
+import { BarangayClearanceContext } from "../../context";
 
 const initialFormState = {
   lastName: "",
@@ -68,6 +70,38 @@ const BarangayClearanceForm = () => {
   const [rightThumbUrl, setRightThumbUrl] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  const {
+      isModalOpen,
+      setIsModalOpen,
+      setIsEditing,
+      isEditing,
+      selectedData,
+      setSelectedData,
+      addOrUpdateRecord,
+      image,
+      setImage,
+      fingerprints,
+      setFingerprints,
+      fetchRecords
+    } = useContext(BarangayClearanceContext);
+
+    const resetForm = () => {
+      setFormState(initialFormState);
+      setSelectedData(null);
+      setIsModalOpen(false);
+      setIsEditing(false);
+      setSelectedData(null);
+    };
+
+    const handleCancel = () => {
+      resetForm();
+      setIsModalOpen(false);
+    };
+
+    const handleSubmit= () => {
+
+    };
+
   // Search residents
   useEffect(() => {
     if (!search) {
@@ -127,6 +161,7 @@ const BarangayClearanceForm = () => {
     setFormState((prev) => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
   };
 
+  if (!isModalOpen) return null;
   // Only display, no editing
   return (
     <div className="form-container">
@@ -169,9 +204,6 @@ const BarangayClearanceForm = () => {
                 <tr><td><b>First Name</b></td><td>{formState.firstName}</td></tr>
                 <tr><td><b>Middle Name</b></td><td>{formState.middleName}</td></tr>
                 <tr><td><b>Date of Birth</b></td><td>{formState.dateOfBirth}</td></tr>
-                <tr><td><b>Email</b></td><td>{formState.email}</td></tr>
-                <tr><td><b>Address</b></td><td>{formState.address}</td></tr>
-                <tr><td><b>Phone Number</b></td><td>{formState.phoneNumber}</td></tr>
                 <tr><td><b>Sex</b></td><td>{formState.sex}</td></tr>
                 <tr><td><b>Country</b></td><td>{formState.country}</td></tr>
                 <tr><td><b>Region</b></td><td>{formState.region}</td></tr>
@@ -245,7 +277,11 @@ const BarangayClearanceForm = () => {
             </div>
           </div>
           <div>
-            
+          <FormButtons
+            isEditing={isEditing}
+            onClose={handleCancel}
+            onSubmit={handleSubmit}
+          />
           </div>
         </div>
       </div>
