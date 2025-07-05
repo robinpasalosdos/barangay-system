@@ -5,6 +5,7 @@ import { toSnakeCase, toCamelCase } from "../lib/caseUtils.js";
 // Add Record Handler
 ipcMain.handle("add-police-clearance-record", async (event, record) => {
   try {
+    console.log("Submitting record:", record);
     // Insert into documents first
     const docRecord = toSnakeCase({
       user_id: record.userId || record.user_id,
@@ -19,8 +20,13 @@ ipcMain.handle("add-police-clearance-record", async (event, record) => {
 
     // Insert into barangay_clearance
     const clearanceRecord = toSnakeCase({
-      ...record,
       document_number,
+      barangay_clearance_number: record.barangayClearanceNumber,
+      cedula_number: record.cedulaNumber,
+      place_issued: record.placeIssued,
+      date_issued: record.dateIssued,
+      or_number: record.orNumber,
+      or_date: record.orDate,
     });
     const { data: clearanceData, error: clearanceError } = await supabase.from("barangay_clearance").insert([clearanceRecord]).select();
     if (clearanceError) throw new Error(`Database error (barangay_clearance): ${clearanceError.message}`);
@@ -145,5 +151,48 @@ ipcMain.handle("save-police-clearance-image", async (event, imageData) => {
   } catch (error) {
     console.error("Upload error:", error);
     return { error: "Upload failed: " + error.message };
+  }
+});
+
+// Fetch Barangay Clearance Full Details Handler
+ipcMain.handle("fetch-barangay-clearance-full-details", async (event, userId) => {
+  try {
+    // Fetch the latest document for this user
+    const { data: documents, error: docError } = await supabase
+      .from("documents")
+      .select("*")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .single();
+    if (docError) throw docError;
+    // Fetch barangay_clearance by document_number
+    let barangayClearance = null;
+    if (documents && documents.document_number) {
+      const { data: bc, error: bcError } = await supabase
+        .from("barangay_clearance")
+        .select("*")
+        .eq("document_number", documents.document_number)
+        .single();
+      if (bcError && bcError.code !== 'PGRST116') throw bcError;
+      barangayClearance = bc;
+    }
+    // Fetch profile
+    const { data: profile, error: profileError } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("user_id", userId)
+      .single();
+    if (profileError && profileError.code !== 'PGRST116') throw profileError;
+    // Fetch personal_identity
+    const { data: personalIdentity, error: piError } = await supabase
+      .from("personal_identity")
+      .select("*")
+      .eq("user_id", userId)
+      .single();
+    if (piError && piError.code !== 'PGRST116') throw piError;
+    return { documents, barangayClearance, profile, personalIdentity };
+  } catch (err) {
+    return { error: err.message };
   }
 });

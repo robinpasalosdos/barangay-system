@@ -28,6 +28,9 @@ const initialFormState = {
   weight: "",
   complexion: "",
   identifyingMarks: "",
+  purpose: "",
+  findings: "",
+  remarks: "",
 };
 
 const thumbStyle = {
@@ -99,7 +102,12 @@ const BarangayClearanceForm = () => {
     };
 
     const handleSubmit= () => {
-
+      const record = {
+        ...formState,
+        userId: selectedResident?.userId || selectedResident?.user_id || formState.userId || formState.user_id,
+      };
+      addOrUpdateRecord(record);
+      resetForm();
     };
 
   // Search residents
@@ -155,6 +163,34 @@ const BarangayClearanceForm = () => {
         }
       });
   }, [selectedResident]);
+
+  // Fetch all details for editing (display-only mode)
+  useEffect(() => {
+    if (isEditing && selectedData) {
+      const userId = selectedData.userId || selectedData.user_id;
+      window.api.fetchBarangayClearanceFullDetails(userId).then((res) => {
+        if (res && !res.error) {
+          // Merge all data into formState
+          setFormState({
+            ...initialFormState,
+            ...res.documents,
+            ...res.barangayClearance,
+            ...res.profile,
+            ...res.personalIdentity,
+          });
+          // Set images if available
+          if (res.profile && res.profile.image_path) {
+            setFaceUrl(
+              `https://quxrkmkoadnsdqvqztyo.supabase.co/storage/v1/object/public/resident/${res.profile.image_path}?t=${Date.now()}`
+            );
+          } else {
+            setFaceUrl("src/assets/placeholder.jpg");
+          }
+          // Optionally set fingerprints if you have them in personalIdentity or elsewhere
+        }
+      });
+    }
+  }, [isEditing, selectedData]);
 
   const onChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -234,6 +270,7 @@ const BarangayClearanceForm = () => {
               placeholder="Type last name, first name, or email..."
               value={search}
               onChange={e => setSearch(e.target.value)}
+              readOnly={isEditing}
             />
             {search && searchResults.length > 0 && (
               <div style={{ maxHeight: 180, overflowY: "auto", marginTop: 4, marginBottom: 8 }}>
@@ -255,32 +292,41 @@ const BarangayClearanceForm = () => {
           </div>
           <div>
             <div>
-              <InputField label="Document Number" id="documentNumber" name="documentNumber" value={formState.documentNumber || ''} onChange={onChange} />
+              <InputField label="Document Number" id="documentNumber" name="documentNumber" value={formState.documentNumber || ''} onChange={onChange} readOnly={isEditing} />
             </div>
             <div>
-              <InputField label="Barangay Clearance Number" id="barangayClearanceNumber" name="barangayClearanceNumber" value={formState.barangayClearanceNumber || ''} onChange={onChange} />
+              <InputField label="Barangay Clearance Number" id="barangayClearanceNumber" name="barangayClearanceNumber" value={formState.barangayClearanceNumber || ''} onChange={onChange} readOnly={isEditing} />
             </div>
             <div>
-              <InputField label="Cedula Number" id="cedulaNumber" name="cedulaNumber" value={formState.cedulaNumber || ''} onChange={onChange} />
+              <InputField label="Cedula Number" id="cedulaNumber" name="cedulaNumber" value={formState.cedulaNumber || ''} onChange={onChange} readOnly={isEditing} />
             </div>
             <div>
-              <InputField label="Place Issued" id="placeIssued" name="placeIssued" value={formState.placeIssued || ''} onChange={onChange} />
+              <InputField label="Place Issued" id="placeIssued" name="placeIssued" value={formState.placeIssued || ''} onChange={onChange} readOnly={isEditing} />
             </div>
             <div>
-              <InputField label="Date Issued" id="dateIssued" name="dateIssued" type="date" value={formState.dateIssued || ''} onChange={onChange} />
+              <InputField label="Date Issued" id="dateIssued" name="dateIssued" type="date" value={formState.dateIssued || ''} onChange={onChange} readOnly={isEditing} />
             </div>
             <div>
-              <InputField label="OR Number" id="orNumber" name="orNumber" value={formState.orNumber || ''} onChange={onChange} />
+              <InputField label="OR Number" id="orNumber" name="orNumber" value={formState.orNumber || ''} onChange={onChange} readOnly={isEditing} />
             </div>
             <div>
-              <InputField label="OR Date" id="orDate" name="orDate" type="date" value={formState.orDate || ''} onChange={onChange} />
+              <InputField label="OR Date" id="orDate" name="orDate" type="date" value={formState.orDate || ''} onChange={onChange} readOnly={isEditing} />
+            </div>
+            <div>
+              <InputField label="Purpose" id="purpose" name="purpose" value={formState.purpose || ''} onChange={onChange} readOnly={isEditing} />
+            </div>
+            <div>
+              <InputField label="Findings" id="findings" name="findings" value={formState.findings || ''} onChange={onChange} readOnly={isEditing} />
+            </div>
+            <div>
+              <InputField label="Remarks" id="remarks" name="remarks" value={formState.remarks || ''} onChange={onChange} readOnly={isEditing} />
             </div>
           </div>
           <div>
           <FormButtons
             isEditing={isEditing}
             onClose={handleCancel}
-            onSubmit={handleSubmit}
+            {...(!isEditing && { onSubmit: handleSubmit })}
           />
           </div>
         </div>

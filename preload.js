@@ -39,4 +39,6 @@ contextBridge.exposeInMainWorld("api", {
   scanFingerprint: () => ipcRenderer.invoke('scan-fingerprint'),
 
   fetchResidentBiometrics: (residentId) => ipcRenderer.invoke("fetch-resident-biometrics", residentId),
+
+  fetchBarangayClearanceFullDetails: (userId) => ipcRenderer.invoke("fetch-barangay-clearance-full-details", userId),
 });
