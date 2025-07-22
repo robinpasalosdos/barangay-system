@@ -96,7 +96,7 @@ ipcMain.handle("update-resident-record", async (event, record) => {
 
     // Split record for profiles and personal_identity
     const profilesFields = [
-      "firstName", "middleName", "lastName", "dateOfBirth", "email", "address", "phoneNumber", "sex", "isBarangayRegistered"
+      "firstName", "middleName", "lastName", "dateOfBirth", "email", "address", "phoneNumber", "sex"
     ];
     const personalIdentityFields = [
       "country", "region", "province", "city", "barangay", "street", "blockNumber", "zipCode", "citizenship", "civilStatus", "eyeColor", "hairColor", "height", "weight", "complexion", "identifyingMarks"

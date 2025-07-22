@@ -4,7 +4,6 @@ import { UserStatusContext } from "../../context";
 import UserForm from "./Form";
 
 const UserStatus = () => {
-  const featureName = "User Management";
   const context = useContext(UserStatusContext);
 
   const sortOptions = [
@@ -63,7 +62,6 @@ const UserStatus = () => {
   return (
     <Table
       columns={columns}
-      featureName={featureName.toUpperCase()}
       searchOptions={searchOptions}
       sortOptions={sortOptions}
       context={context}

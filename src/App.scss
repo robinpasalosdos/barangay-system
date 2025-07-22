@@ -572,9 +572,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .rmodal {
-    @include flex;
+    @include flex(column);
     padding: map.get($spacing, '3xl') map.get($spacing, '4xl');
-    gap: map.get($spacing, '2xl');
+    gap: map.get($spacing, 'md');
     div {
         @include flex;
     }
@@ -591,96 +591,69 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         margin: 6px 0 9px;
     }
 
-    > div {
-        gap: map.get($spacing, sm);
+    > div:last-child{
+        gap: map.get($spacing, '2xl');
+        > div {
+            gap: map.get($spacing, sm);
 
-        &:first-child {
-            flex-direction: column;
-            > div:first-child {
-                color: white;
-                gap: 20px;
+            &:first-child {
+                flex-direction: column;
+                > div:first-child {
+                    color: white;
+                    gap: 20px;
 
-                > div:last-child {
-                    flex-direction: column;
-                    width: 100%;
-
-                    
                     > div:last-child {
                         flex-direction: column;
-                        gap: '20px';
-                        border-radius: 10px;
-                        border: 1px solid #ccc;
-                        padding: 10px;
-                        height: 100%;
-                        > div {
-                            gap: 10px;
-                            flex-wrap: wrap;
-                        }
-                    }
-                }
-            }
-            .resident-fingerprints {
-                @include flex(column);
-            }
-        }
+                        width: 100%;
 
-        &:last-child {
-            justify-content: space-between;
-            flex-direction: column;
-            > div {
-                &:first-child {
-                    flex-direction: column;
-                    gap: map.get($spacing, sm);
-
-                    > div {
-
-                        gap: map.get($spacing, md);
-                        div {
+                        
+                        > div:last-child {
                             flex-direction: column;
-                            gap: map.get($spacing, xs);
+                            gap: '20px';
+                            border-radius: 10px;
+                            border: 1px solid #ccc;
+                            padding: 10px;
+                            height: 100%;
+                            > div {
+                                gap: 10px;
+                                flex-wrap: wrap;
+                            }
                         }
                     }
                 }
-                
-                &:last-child {
-                    gap: map.get($spacing, sm);
-                    justify-content: flex-end;
-                    align-items: flex-end;
+                .resident-fingerprints {
+                    @include flex(column);
+                }
+            }
+
+            &:last-child {
+                justify-content: space-between;
+                flex-direction: column;
+                > div {
+                    &:first-child {
+                        flex-direction: column;
+                        gap: map.get($spacing, sm);
+
+                        > div {
+
+                            gap: map.get($spacing, md);
+                            div {
+                                flex-direction: column;
+                                gap: map.get($spacing, xs);
+                            }
+                        }
+                    }
+                    
+                    &:last-child {
+                        gap: map.get($spacing, sm);
+                        justify-content: flex-end;
+                        align-items: flex-end;
+                    }
                 }
             }
         }
-        
-        // gap: map.get($spacing, sm);
-
-        // > div {
-        //     gap: map.get($spacing, xs);
-        //     flex-direction: column;
-
-        //     &:first-child{
-        //         .resident-fingerprints {
-        //             @include flex(column);
-        //         }
-        //     }
-
-        //     &:last-child {
-        //         > div {
-        //             gap: map.get($spacing, md);
-
-        //             div {
-        //                 flex-direction: column;
-        //                 gap: map.get($spacing, xs);
-        //                 justify-content: end;
-
-        //                 &:nth-child(5) {
-        //                     > div {
-        //                         flex-direction: column;
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
     }
+    
 
     label {
         font-weight: 200;
@@ -700,81 +673,131 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .bmodal {
     @include flex;
     padding: map.get($spacing, '3xl') map.get($spacing, '4xl');
-    gap: map.get($spacing, '2xl');
     color: white;
     div {
         @include flex;
     }
-
-    > div:first-child {
-        flex-direction: column;
-        gap: map.get($spacing, sm);
-
+    gap: map.get($spacing, 'lg');
+    flex-direction: column;
+    > div:last-child{
+        gap: map.get($spacing, '2xl');
         > div:first-child {
+            flex-direction: column;
+            gap: map.get($spacing, md);
+
+            
+
+            > div:first-child{
+                > div:last-child {
+                    
+                    > div {
+                        flex-direction: column;
+                        font-size: map.get($font-sizes, sm);
+                        gap: map.get($spacing, sm);
+                    }
+                }
+            }
+
+            > div:nth-child(2) {
+         
+            }
 
             > div:last-child {
+                flex-direction: column;
 
                 > div {
-                    flex-direction: column;
                     font-size: map.get($font-sizes, sm);
+                }
+            }
+        }
+
+        > div:last-child {
+            flex-direction: column;
+            justify-content: space-between;
+                > div:first-child {
+                    flex-direction: column;
+                    > div:first-child {
+                        flex-direction: column;
+                        margin-bottom: map.get($spacing, sm);
+
+                        > :first-child {
+                            flex-direction: column;
+                            gap: map.get($spacing, sm);
+                            > div {
+                                gap: map.get($spacing, md);
+                                div {
+                                    flex-direction: column;
+                                    gap: map.get($spacing, xs);
+                                }
+                            }
+                        }
+
+                        > :last-child {
+                            flex-direction: column;;
+                        }
+                    }
+
+                > div:last-child {
+                    flex-direction: column;
+                    gap: map.get($spacing, sm);
+                    > div {
+                        gap: map.get($spacing, md);
+                        div {
+                            flex-direction: column;
+                            gap: map.get($spacing, xs);
+                        }
+                    }
+
+                }
+            }
+
+            > div:last-child {
+                align-self: flex-end;
+                justify-content: end;
+                > div {
                     gap: map.get($spacing, sm);
                 }
             }
         }
 
-        > div:last-child {
-            flex-direction: column;
-
-            > div {
-                font-size: map.get($font-sizes, sm);
-            }
-        }
     }
 
-    > div:last-child {
-        flex-direction: column;
-
-        > div:first-child {
-            flex-direction: column;
-            > :first-child {
-                flex-direction: column;
-                gap: map.get($spacing, sm);
-                > div {
-                    gap: map.get($spacing, md);
-                    div {
-                        flex-direction: column;
-                        gap: map.get($spacing, xs);
-                    }
-                }
-            }
-
-            > :last-child {
-                flex-direction: column;;
-            }
-        }
-
-        > div:nth-child(2) {
-            flex-direction: column;
-            gap: map.get($spacing, sm);
-            > div {
-                gap: map.get($spacing, md);
-                div {
-                    flex-direction: column;
-                    gap: map.get($spacing, xs);
-                }
-            }
-        }
-
-        > div:last-child {
-            
-        }
-    }
+    
 
     label {
         font-weight: 200;
         font-size: map.get($font-sizes, sm);
         color: $white;
         text-indent: map.get($spacing, xs);
+    }
+
+    .search-results {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        max-height: 180px; /* Assuming each item ~60px, adjust as needed */
+        overflow-y: auto;
+        background: $primary-color;
+        border: 1px solid $accent-color;
+        border-radius: map.get($border-radius, base);
+        z-index: 10;
+    }
+
+    .search-result {
+        padding: 10px;
+        cursor: pointer;
+        border-bottom: 1px solid $accent-color;
+        border-radius: map.get($border-radius, base);
+        font-size: map.get($font-sizes, base);
+    }
+
+    .search-result:last-child {
+        border-bottom: none;
+    }
+
+    .search-result:hover {
+        border: 1px solid $secondary-color;
     }
 }
 

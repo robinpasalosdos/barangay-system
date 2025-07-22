@@ -1,13 +1,13 @@
 import React, { useContext } from "react";
 import { MainContext } from '../../../context/MainContext';
 
-const FormButtons = ({ isEditing, onClose, onSubmit}) => {
+const FormButtons = ({ isEditing, onClose, onSubmit, featureName}) => {
   const { user } = useContext(MainContext);
   return (
     <div>
       {isEditing ? (
         <>
-          {user && user.editUserAction && (
+          {user && user.editUserAction && featureName !== 'Barangay Clearance' && (
             <button id="updateDataBtn" className="yellow" onClick={onSubmit}>UPDATE</button>
           )}
           {user && user.prinUserAction && (

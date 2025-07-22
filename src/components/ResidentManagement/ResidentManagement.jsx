@@ -4,7 +4,6 @@ import { ResidentContext } from "../../context";
 import ResidentManagementForm from "./ResidentManagementForm";
 
 const ResidentManagement = () => {
-  const featureName = "Resident Management";
   const context = useContext(ResidentContext);
 
   const sortOptions = [
@@ -37,7 +36,6 @@ const ResidentManagement = () => {
   return (
     <Table
       columns={columns}
-      featureName={featureName.toUpperCase()}
       searchOptions={searchOptions}
       sortOptions={sortOptions}
       context={context}

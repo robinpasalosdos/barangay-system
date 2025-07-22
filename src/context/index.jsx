@@ -143,7 +143,8 @@ export const {
     isFaceChanged: false,
     fingerprints: {},
     isLeftFingerprintVisible: false,
-    isRightFingerprintVisible: false
+    isRightFingerprintVisible: false,
+    featureName: 'Barangay Clearance'
   }
 );
 
@@ -155,7 +156,10 @@ export const {
   window.api.fetchUsers,
   window.api.addUser,
   window.api.updateUser,
-  window.api.deleteUser
+  window.api.deleteUser,
+  {
+    featureName: 'User Management'
+  }
 );
 
 export const {
@@ -172,6 +176,7 @@ export const {
     isFaceChanged: false,
     fingerprints: {},
     currentFinger: 0,
+    featureName: 'Resident Management'
   }
 );
 
@@ -191,7 +196,8 @@ export const {
     activeStep: 0,
     isCaptured: false,
     isFingerprintCaptureVisible: false,
-    fingerprints: {}
+    fingerprints: {},
+    featureName: 'Booking'
   }
 );
 
@@ -208,5 +214,6 @@ export const {
     savedImagePath: null,
     image: null,
     isFaceChanged: false,
+    featureName: 'Rogue Directory'
   }
 );

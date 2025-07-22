@@ -9,7 +9,6 @@ import { FaPlus, FaSpinner } from 'react-icons/fa';
 
 const Table = ({ 
   columns,
-  featureName,
   searchOptions,
   sortOptions,
   additionalComponents,
@@ -35,6 +34,7 @@ const Table = ({
     setEndDate,
     sortOption,
     setSortOption,
+    featureName
   } = context;
   const {
       handleManage,
@@ -57,7 +57,7 @@ const Table = ({
 
   // Filter data for Resident Management feature
   const filteredData = useMemo(() => {
-    if (featureName !== 'RESIDENT MANAGEMENT') return data;
+    if (featureName !== 'Resident Management') return data;
     if (registeredFilter === 'all') return data;
     if (registeredFilter === 'registered') {
       return data.filter((record) => record.isBarangayRegistered === true);
@@ -162,7 +162,7 @@ const Table = ({
             ) : filteredData && filteredData.length > 0 ? (
               filteredData.map((record) => (
                 <TableRow
-                  key={record.id}
+                  key={record.userId}
                   record={record}
                   columns={columns}
                   featureName={featureName}

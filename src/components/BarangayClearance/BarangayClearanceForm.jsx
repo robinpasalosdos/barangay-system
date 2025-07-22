@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import InputField from "../Shared/Form/InputField";
 import FormButtons from "../Shared/Form/FormButtons";
 import { BarangayClearanceContext } from "../../context";
+import { toCamelCase } from "../../lib/caseUtils";
 
 const initialFormState = {
   lastName: "",
@@ -81,6 +82,7 @@ const BarangayClearanceForm = () => {
       selectedData,
       setSelectedData,
       addOrUpdateRecord,
+      featureName,
       image,
       setImage,
       fingerprints,
@@ -94,6 +96,12 @@ const BarangayClearanceForm = () => {
       setIsModalOpen(false);
       setIsEditing(false);
       setSelectedData(null);
+      setImage(null); // Reset face image
+      setFingerprints(null); // Reset fingerprints
+      setFaceUrl(null); // Also reset displayed face image
+      setLeftThumbUrl(null); // Reset left thumb
+      setRightThumbUrl(null); // Reset right thumb
+      setSearch(""); // Reset search input
     };
 
     const handleCancel = () => {
@@ -108,6 +116,7 @@ const BarangayClearanceForm = () => {
       };
       addOrUpdateRecord(record);
       resetForm();
+      fetchRecords();
     };
 
   // Search residents
@@ -131,13 +140,20 @@ const BarangayClearanceForm = () => {
   // When resident is selected, fill form and fetch biometrics
   useEffect(() => {
     if (!selectedResident) {
-      setFormState(initialFormState);
+      setFormState({
+        ...initialFormState,
+        dateIssued: !isEditing ? new Date().toISOString().slice(0, 10) : initialFormState.dateIssued
+      });
       setFaceUrl(null);
       setLeftThumbUrl(null);
       setRightThumbUrl(null);
       return;
     }
-    setFormState({ ...initialFormState, ...selectedResident });
+    setFormState({
+      ...initialFormState,
+      ...selectedResident,
+      dateIssued: !isEditing ? new Date().toISOString().slice(0, 10) : selectedResident.dateIssued || initialFormState.dateIssued
+    });
     // Fetch biometrics
     window.api.fetchResidentBiometrics(selectedResident.userId || selectedResident.user_id)
       .then((result) => {
@@ -170,23 +186,48 @@ const BarangayClearanceForm = () => {
       const userId = selectedData.userId || selectedData.user_id;
       window.api.fetchBarangayClearanceFullDetails(userId).then((res) => {
         if (res && !res.error) {
-          // Merge all data into formState
+          // Convert sub-objects to camelCase before merging
+          const documents = toCamelCase(res.documents || {});
+          const barangayClearance = toCamelCase(res.barangayClearance || {});
+          const profile = toCamelCase(res.profile || {});
+          const personalIdentity = toCamelCase(res.personalIdentity || {});
           setFormState({
             ...initialFormState,
-            ...res.documents,
-            ...res.barangayClearance,
-            ...res.profile,
-            ...res.personalIdentity,
+            ...documents,
+            ...barangayClearance,
+            ...profile,
+            ...personalIdentity,
           });
-          // Set images if available
-          if (res.profile && res.profile.image_path) {
-            setFaceUrl(
-              `https://quxrkmkoadnsdqvqztyo.supabase.co/storage/v1/object/public/resident/${res.profile.image_path}?t=${Date.now()}`
-            );
+          // Fetch biometrics using profile.userId (or user_id)
+          const biometricsUserId = profile.userId || profile.user_id || userId;
+          if (biometricsUserId) {
+            window.api.fetchResidentBiometrics(biometricsUserId).then((result) => {
+              if (result && !result.error) {
+                if (result.image_path) {
+                  setFaceUrl(
+                    `https://quxrkmkoadnsdqvqztyo.supabase.co/storage/v1/object/public/resident/${result.image_path}?t=${Date.now()}`
+                  );
+                } else {
+                  setFaceUrl("src/assets/placeholder.jpg");
+                }
+                let left = null, right = null;
+                (result.fingerprints || []).forEach(fp => {
+                  if (fp.finger_type === "left-thumb") left = `https://quxrkmkoadnsdqvqztyo.supabase.co/storage/v1/object/public/resident/${fp.fingerprint_path}?t=${Date.now()}`;
+                  if (fp.finger_type === "right-thumb") right = `https://quxrkmkoadnsdqvqztyo.supabase.co/storage/v1/object/public/resident/${fp.fingerprint_path}?t=${Date.now()}`;
+                });
+                setLeftThumbUrl(left);
+                setRightThumbUrl(right);
+              } else {
+                setFaceUrl("src/assets/placeholder.jpg");
+                setLeftThumbUrl(null);
+                setRightThumbUrl(null);
+              }
+            });
           } else {
             setFaceUrl("src/assets/placeholder.jpg");
+            setLeftThumbUrl(null);
+            setRightThumbUrl(null);
           }
-          // Optionally set fingerprints if you have them in personalIdentity or elsewhere
         }
       });
     }
@@ -202,134 +243,222 @@ const BarangayClearanceForm = () => {
   return (
     <div className="form-container">
       <div className="bmodal">
+        <h2>{isEditing ? 'View Barangay Clearance Detail' : 'Add Barangay Clearance'}</h2>
         <div>
           <div>
-            <div className="face-container">
-              <img
-                src={faceUrl || "src/assets/placeholder.jpg"}
-                alt="Profile Picture"
+            <div>
+              <div className="face-container">
+                <img
+                  src={faceUrl || "src/assets/placeholder.jpg"}
+                  alt="Profile Picture"
+                />
+              </div>
+              <div>
+                <div>
+                  <span style={{ width: 90, textAlign: "center" }}>Left Thumb</span>
+                  <div style={thumbStyle}>
+                    {leftThumbUrl ? (
+                      <img src={leftThumbUrl} alt="Left Thumb" style={imageStyle} />
+                    ) : (
+                      <span style={{ color: "#888", fontSize: 12 }}>No Image</span>
+                    )}
+                  </div>
+                </div>
+                <div>
+                  <span style={{ width: 90, textAlign: "center" }}>Right Thumb</span>
+                  <div style={thumbStyle}>
+                    {rightThumbUrl ? (
+                      <img src={rightThumbUrl} alt="Right Thumb" style={imageStyle} />
+                    ) : (
+                      <span style={{ color: "#888", fontSize: 12 }}>No Image</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h3>
+                {formState.lastName || formState.firstName || formState.middleName
+                  ? `${formState.lastName || ""}${formState.lastName ? ", " : ""}${formState.firstName || ""} ${formState.middleName || ""}`.trim()
+                  : "No name"}
+              </h3>
+            </div>
+            <div>
+              <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: 16 }}>
+                <tbody>
+                  <tr><td><b>Date of Birth</b></td><td>{formState.dateOfBirth}</td></tr>
+                  <tr><td><b>Province</b></td><td>{formState.province}</td></tr>
+                  <tr><td><b>City</b></td><td>{formState.city}</td></tr>
+                  <tr><td><b>Barangay</b></td><td>{formState.barangay}</td></tr>
+                  <tr><td><b>Street</b></td><td>{formState.street}</td></tr>
+                  <tr><td><b>Block Number</b></td><td>{formState.blockNumber}</td></tr>
+                  <tr><td><b>Zip Code</b></td><td>{formState.zipCode}</td></tr>
+                  <tr><td><b>Citizenship</b></td><td>{formState.citizenship}</td></tr>
+                  <tr><td><b>Civil Status</b></td><td>{formState.civilStatus}</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div>
+            <div>
+              <div style={{ position: "relative" }}>
+                {!isEditing && (
+                  <InputField
+                    label="Search Resident"
+                    id="search"
+                    name="search"
+                    width="99%"
+                    placeholder="Type last name, first name, or email..."
+                    value={search}
+                    onChange={e => setSearch(e.target.value)}
+                  />
+                )}
+                {!isEditing && search && (
+                  <div className="search-results">
+                    {searchResults.length > 0 ? (
+                      searchResults.map(res => (
+                        <div
+                          className="search-result"
+                          key={res.userId || res.user_id}
+                          onClick={() => {
+                            setSelectedResident(res);
+                            setSearch("");
+                            setSearchResults([]);
+                          }}
+                        >
+                          {res.lastName}, {res.firstName} {res.middleName} ({res.email})
+                        </div>
+                      ))
+                    ) : (
+                      <div style={{ color: "#888", fontSize: 14, padding: "8px 8px" }}>
+                        No results
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+              <div>
+  <div>
+    {isEditing && (
+      <InputField
+        label="Document Number"
+        id="documentNumber"
+        name="documentNumber"
+        value={formState.documentNumber || ''}
+        onChange={onChange}
+        readOnly={isEditing}
+        placeholder={!isEditing ? "Enter Document Number" : undefined}
+      />
+    )}
+    <InputField
+      label="Barangay Clearance Number"
+      id="barangayClearanceNumber"
+      name="barangayClearanceNumber"
+      value={formState.barangayClearanceNumber || ''}
+      onChange={onChange}
+      readOnly={isEditing}
+      placeholder={!isEditing ? "Enter Barangay Clearance Number" : undefined}
+    />
+  </div>
+  <div>
+    <InputField
+      label="Cedula Number"
+      id="cedulaNumber"
+      name="cedulaNumber"
+      value={formState.cedulaNumber || ''}
+      onChange={onChange}
+      readOnly={isEditing}
+      placeholder={!isEditing ? "Enter Cedula Number" : undefined}
+    />
+    <InputField
+      label="Place Issued"
+      id="placeIssued"
+      name="placeIssued"
+      value={formState.placeIssued || ''}
+      onChange={onChange}
+      readOnly={isEditing}
+      placeholder={!isEditing ? "Enter Place Issued" : undefined}
+    />
+  </div>
+  <div>
+    <InputField
+      label="Date Issued"
+      id="dateIssued"
+      name="dateIssued"
+      type="date"
+      value={
+        !isEditing
+          ? new Date().toISOString().slice(0, 10)
+          : formState.dateIssued || ''
+      }
+      onChange={onChange}
+      readOnly={!isEditing || isEditing}
+      placeholder={!isEditing ? "Select Date Issued" : undefined}
+    />
+    <InputField
+      label="OR Number"
+      id="orNumber"
+      name="orNumber"
+      value={formState.orNumber || ''}
+      onChange={onChange}
+      readOnly={isEditing}
+      placeholder={!isEditing ? "Enter OR Number" : undefined}
+    />
+  </div>
+  <div>
+    <InputField
+      label="OR Date"
+      id="orDate"
+      name="orDate"
+      type="date"
+      value={formState.orDate || ''}
+      onChange={onChange}
+      readOnly={isEditing}
+      placeholder={!isEditing ? "Select OR Date" : undefined}
+    />
+    <InputField
+      label="Purpose"
+      id="purpose"
+      name="purpose"
+      value={formState.purpose || ''}
+      onChange={onChange}
+      readOnly={isEditing}
+      placeholder={!isEditing ? "Enter Purpose" : undefined}
+    />
+  </div>
+  <div>
+    <InputField
+      label="Findings"
+      id="findings"
+      name="findings"
+      value={formState.findings || ''}
+      onChange={onChange}
+      readOnly={isEditing}
+      placeholder={!isEditing ? "Enter Findings" : undefined}
+    />
+    <InputField
+      label="Remarks"
+      id="remarks"
+      name="remarks"
+      value={formState.remarks || ''}
+      onChange={onChange}
+      readOnly={isEditing}
+      placeholder={!isEditing ? "Enter Remarks" : undefined}
+    />
+  </div>
+</div>
+            </div>
+            <div>
+              <FormButtons
+                isEditing={isEditing}
+                onClose={handleCancel}
+                featureName={featureName}
+                {...(!isEditing && { onSubmit: handleSubmit })}
               />
             </div>
-            <div>
-              <div>
-                <span style={{ width: 90, textAlign: "center" }}>Left Thumb</span>
-                <div style={thumbStyle}>
-                  {leftThumbUrl ? (
-                    <img src={leftThumbUrl} alt="Left Thumb" style={imageStyle} />
-                  ) : (
-                    <span style={{ color: "#888", fontSize: 12 }}>No Image</span>
-                  )}
-                </div>
-              </div>
-              <div>
-                <span style={{ width: 90, textAlign: "center" }}>Right Thumb</span>
-                <div style={thumbStyle}>
-                  {rightThumbUrl ? (
-                    <img src={rightThumbUrl} alt="Right Thumb" style={imageStyle} />
-                  ) : (
-                    <span style={{ color: "#888", fontSize: 12 }}>No Image</span>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-          <div>
-            <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: 16 }}>
-              <tbody>
-                <tr><td><b>Last Name</b></td><td>{formState.lastName}</td></tr>
-                <tr><td><b>First Name</b></td><td>{formState.firstName}</td></tr>
-                <tr><td><b>Middle Name</b></td><td>{formState.middleName}</td></tr>
-                <tr><td><b>Date of Birth</b></td><td>{formState.dateOfBirth}</td></tr>
-                <tr><td><b>Sex</b></td><td>{formState.sex}</td></tr>
-                <tr><td><b>Country</b></td><td>{formState.country}</td></tr>
-                <tr><td><b>Region</b></td><td>{formState.region}</td></tr>
-                <tr><td><b>Province</b></td><td>{formState.province}</td></tr>
-                <tr><td><b>City</b></td><td>{formState.city}</td></tr>
-                <tr><td><b>Barangay</b></td><td>{formState.barangay}</td></tr>
-                <tr><td><b>Street</b></td><td>{formState.street}</td></tr>
-                <tr><td><b>Block Number</b></td><td>{formState.blockNumber}</td></tr>
-                <tr><td><b>Zip Code</b></td><td>{formState.zipCode}</td></tr>
-                <tr><td><b>Citizenship</b></td><td>{formState.citizenship}</td></tr>
-                <tr><td><b>Civil Status</b></td><td>{formState.civilStatus}</td></tr>
-                <tr><td><b>Eye Color</b></td><td>{formState.eyeColor}</td></tr>
-                <tr><td><b>Hair Color</b></td><td>{formState.hairColor}</td></tr>
-                <tr><td><b>Height (cm)</b></td><td>{formState.height}</td></tr>
-                <tr><td><b>Weight (kg)</b></td><td>{formState.weight}</td></tr>
-                <tr><td><b>Complexion</b></td><td>{formState.complexion}</td></tr>
-                <tr><td><b>Identifying Marks</b></td><td>{formState.identifyingMarks}</td></tr>
-              </tbody>
-            </table>
           </div>
         </div>
-        <div>
-          <div>
-            <InputField
-              label="Search Resident"
-              id="search"
-              name="search"
-              placeholder="Type last name, first name, or email..."
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              readOnly={isEditing}
-            />
-            {search && searchResults.length > 0 && (
-              <div style={{ maxHeight: 180, overflowY: "auto", marginTop: 4, marginBottom: 8 }}>
-                {searchResults.map(res => (
-                  <div
-                    key={res.userId || res.user_id}
-                    style={searchResultStyle}
-                    onClick={() => {
-                      setSelectedResident(res);
-                      setSearch("");
-                      setSearchResults([]);
-                    }}
-                  >
-                    {res.lastName}, {res.firstName} {res.middleName} ({res.email})
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-          <div>
-            <div>
-              <InputField label="Document Number" id="documentNumber" name="documentNumber" value={formState.documentNumber || ''} onChange={onChange} readOnly={isEditing} />
-            </div>
-            <div>
-              <InputField label="Barangay Clearance Number" id="barangayClearanceNumber" name="barangayClearanceNumber" value={formState.barangayClearanceNumber || ''} onChange={onChange} readOnly={isEditing} />
-            </div>
-            <div>
-              <InputField label="Cedula Number" id="cedulaNumber" name="cedulaNumber" value={formState.cedulaNumber || ''} onChange={onChange} readOnly={isEditing} />
-            </div>
-            <div>
-              <InputField label="Place Issued" id="placeIssued" name="placeIssued" value={formState.placeIssued || ''} onChange={onChange} readOnly={isEditing} />
-            </div>
-            <div>
-              <InputField label="Date Issued" id="dateIssued" name="dateIssued" type="date" value={formState.dateIssued || ''} onChange={onChange} readOnly={isEditing} />
-            </div>
-            <div>
-              <InputField label="OR Number" id="orNumber" name="orNumber" value={formState.orNumber || ''} onChange={onChange} readOnly={isEditing} />
-            </div>
-            <div>
-              <InputField label="OR Date" id="orDate" name="orDate" type="date" value={formState.orDate || ''} onChange={onChange} readOnly={isEditing} />
-            </div>
-            <div>
-              <InputField label="Purpose" id="purpose" name="purpose" value={formState.purpose || ''} onChange={onChange} readOnly={isEditing} />
-            </div>
-            <div>
-              <InputField label="Findings" id="findings" name="findings" value={formState.findings || ''} onChange={onChange} readOnly={isEditing} />
-            </div>
-            <div>
-              <InputField label="Remarks" id="remarks" name="remarks" value={formState.remarks || ''} onChange={onChange} readOnly={isEditing} />
-            </div>
-          </div>
-          <div>
-          <FormButtons
-            isEditing={isEditing}
-            onClose={handleCancel}
-            {...(!isEditing && { onSubmit: handleSubmit })}
-          />
-          </div>
-        </div>
+        
       </div>
     </div>
   );
